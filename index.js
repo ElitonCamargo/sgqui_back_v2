@@ -96,7 +96,7 @@ app.use((err, req, res, next) => {
     res.status(500).json(retorno);
 });
 
-const PORT = 3000; 
+const PORT = 3031; 
 app.listen(PORT,()=>{
     console.log(`API: Rodando - PORT: ${PORT}`);
 });
