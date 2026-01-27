@@ -27,9 +27,9 @@ app.use(cors());
 app.get('/',(req,res)=>{
     const rootDomain = req.protocol + '://' + req.get('host');
     res.status(200).json({     
-        status_server: '(DEV - 3) ok - API SGQUI v2.0',
+        status_server: '(DEV - v2) ok - API SGQUI v2.5',
         dominio_raiz : rootDomain,
-        atualização: '26/01/2026 - 18:42',
+        atualização: '26/01/2026 - 21:00',
         rotas:[
             `${rootDomain}/usuario/login`,
             `${rootDomain}/usuario`,
