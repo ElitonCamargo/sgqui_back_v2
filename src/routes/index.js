@@ -3,6 +3,7 @@ import * as responses from '../utils/responses.js';
 
 import infoRoutes from './info.js';
 import usuarioRoutes from './usuarioRoute.js';
+import rbacRoutes from './rbac.js';
 //import autenticacao from './src/routes/autenticacao.js';
 //import * as middleware from './src/controllers/token.js';
 //import nutriente from './src/routes/nutriente.js';
@@ -20,6 +21,7 @@ const routes = Router();
 
 routes.use('/', infoRoutes);
 routes.use('/', usuarioRoutes);
+routes.use('/', rbacRoutes);
 
 // routes.use('/', elemento);
 // routes.use('/', nutriente);

@@ -2,6 +2,7 @@ import * as sessoesModel from '../models/SessoesModel.js';
 import * as sessoesCache from '../utils/sessoesCache.js';
 import * as responses from '../utils/responses.js'
 import * as helpers from '../utils/helpers.js';
+import * as rbacModel from '../models/RbacModel.js';
 
 export default async function autenticar(req, res, next) {
     try {        
@@ -28,6 +29,8 @@ export default async function autenticar(req, res, next) {
 
         if(sessao_usuario){
             req.loginId = sessaoUsuario;
+            req.perfis = sessao_usuario.perfis ?? [];
+            req.permissoes = new Set(sessao_usuario.permissoes ?? []);
             next();
             return;
         }
@@ -51,8 +54,13 @@ export default async function autenticar(req, res, next) {
             if(t_ex) console.log("Token Extendico por mais 24 para o ID"+sessaoUsuario);
         }
 
-        sessoesCache.addSessao(sessao_usuario.id,sessao_usuario.usuario,sessao_usuario.token);
+        const perfis = await rbacModel.listarNomesPerfisDoUsuario(sessaoUsuario);
+        const permissoes = await rbacModel.listarPermissoesChavePorUsuario(sessaoUsuario);
+
+        sessoesCache.addSessaoComRbac(sessao_usuario.id, sessao_usuario.usuario, sessao_usuario.token, { perfis, permissoes });
         req.loginId = sessaoUsuario;
+        req.perfis = perfis;
+        req.permissoes = new Set(permissoes);
         next();
         return;
                

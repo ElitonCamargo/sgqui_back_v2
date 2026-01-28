@@ -9,11 +9,14 @@ let sessoes = [];
  * @param {string} token - token de 128 bit da sessão do usuário logado.
  * @returns {void} Sem retorno
  */
-export function addSessao(id, usuario, token) {
+
+export function addSessao(id, usuario, token, { perfis = [], permissoes = [] } = {}) {
   sessoes.push({
     id,
     usuario,
     token,
+    perfis,
+    permissoes,
     criadoEm: Date.now()
   });
 }

@@ -316,7 +316,7 @@ export const estruturarProjeto = (dados) => {
 
 export const consultarPorId = async (id) => {
     try {
-        await pool.execute("CALL projeto_marcarVisualizacao(?)", [id]);
+        await pool.execute("UPDATE projeto SET updatedAt = CURRENT_TIMESTAMP WHERE projeto.id = ?;", [id]);
         const cmdSql = 'SELECT * FROM projeto WHERE id = ?;';
         const [dados] = await pool.execute(cmdSql, [id]);
         return dados;
