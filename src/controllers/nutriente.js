@@ -1,14 +1,14 @@
 import * as Nutriente from '../models/Nutriente.js';
-import * as View from '../view/index.js';
+import * as responses from '../utils/responses.js';
 
 export const consultar = async (req, res)=>{
     try {
         let nome = req.query.nome;
         nome = nome?nome:'';
         const data = await Nutriente.consultar(nome);
-        View.result(res,'GET',data);
+        return responses.success(res, { data });
     } catch (error) {
-        View.erro(res, error);
+        return responses.error(res, { message: error.message });
     }
 }
 
@@ -16,9 +16,9 @@ export const consultarPorId = async (req, res)=>{
     try {
         let id = req.params.id;
         const data = await Nutriente.consultarPorId(id);
-        View.result(res,'GET',data);
+        return responses.success(res, { data });
     } catch (error) {
-        View.erro(res, error);
+        return responses.error(res, { message: error.message });
     }
 }
 
@@ -26,9 +26,9 @@ export const deletar = async (req, res)=>{
     try {
         let id = req.params.id;
         const data = await Nutriente.deletar(id);
-        View.result(res,'DELETE',data);
+        return responses.success(res, { data });
     } catch (error) {
-        View.erro(res, error);
+        return responses.error(res, { message: error.message });
     }
 }
 
@@ -36,9 +36,9 @@ export const cadastrada = async (req, res)=>{
     try {
         const nutriente = req.body; 
         const novoNutriente = await Nutriente.cadastrar(nutriente);
-        View.result(res, 'POST',novoNutriente);
+        return responses.created(res, { data: novoNutriente });
     } catch (error) {
-        View.erro(res,error);
+        return responses.error(res,{ message: error.message });
     }
 }
 
@@ -47,9 +47,9 @@ export const alterar = async (req, res)=>{
         let nutriente = req.body;
         nutriente.id = req.params.id;
         const nutrienteAlterado = await Nutriente.alterar(nutriente);
-        View.result(res, 'PUT',nutrienteAlterado);
+        return responses.success(res, { data: nutrienteAlterado });
     } catch (error) {
-        View.erro(res,error);
+        return responses.error(res,{ message: error.message });
     }
 }
 

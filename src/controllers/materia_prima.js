@@ -1,5 +1,5 @@
 import * as MateriaPrima from '../models/MateriaPrima.js';
-import * as View from '../view/index.js';
+import * as responses from '../utils/responses.js';
 
 export const consultar = async (req, res)=>{
     try {
@@ -31,9 +31,9 @@ export const consultar = async (req, res)=>{
         else{
             data = await MateriaPrima.consultar();
         }        
-        View.result(res,'GET',data);
+        return responses.success(res, { data });
     } catch (error) {
-        View.erro(res, error);
+        return responses.error(res, { message: error.message });
     }
 }
 
@@ -41,9 +41,9 @@ export const consultarPorId = async (req, res)=>{
     try {
         const id = req.params.id;
         const data = await MateriaPrima.consultarPorId(id);
-        View.result(res,'GET',data);
+        return responses.success(res, { data });
     } catch (error) {
-        View.erro(res, error);
+        return responses.error(res, { message: error.message });
     }
 }
 
@@ -52,9 +52,9 @@ export const consultarMP_precentual_nutriente = async (req, res)=>{
         const nutriente = req.params.nutriente
         const percentual = req.params.percentual;
         const data = await MateriaPrima.consultarMP_precentual_nutriente(nutriente,percentual);
-        View.result(res,'GET',data);
+        return responses.success(res, { data });
     } catch (error) {
-        View.erro(res, error);
+        return responses.error(res, { message: error.message });
     }
 }
 
@@ -62,9 +62,9 @@ export const deletar = async (req, res)=>{
     try {
         const id = req.params.id;
         const data = await MateriaPrima.deletar(id);
-        View.result(res,'DELETE',data);
+        return responses.success(res, { data });
     } catch (error) {
-        View.erro(res, error);
+        return responses.error(res, { message: error.message });
     }
 }
 
@@ -72,9 +72,9 @@ export const cadastrada = async (req, res)=>{
     try {
         const materia_prima = req.body; 
         const novoMateria_prima= await MateriaPrima.cadastrar(materia_prima);
-        View.result(res, 'POST',novoMateria_prima);
+        return responses.created(res, { data: novoMateria_prima });
     } catch (error) {
-        View.erro(res,error);
+        return responses.error(res,{ message: error.message });
     }
 }
 
@@ -83,9 +83,9 @@ export const alterar = async (req, res)=>{
         let materia_prima = req.body;
         materia_prima.id = req.params.id;
         const materia_primaAlterado = await MateriaPrima.alterar(materia_prima);
-        View.result(res, 'PUT',materia_primaAlterado);
+        return responses.success(res, { data: materia_primaAlterado });
     } catch (error) {
-        View.erro(res,error);
+        return responses.error(res,{ message: error.message });
     }
 }
 

@@ -1,5 +1,5 @@
 import * as Etapa_MP from '../models/Etapa_MP.js';
-import * as View from '../view/index.js';
+import * as responses from '../utils/responses.js';
 
 export const cadastrar = async (req, res) => {
     try {
@@ -7,9 +7,9 @@ export const cadastrar = async (req, res) => {
         
         const novoEtapa_MP = await Etapa_MP.cadastrar(etapa_mp);
         
-        return View.result(res, 'POST', novoEtapa_MP);
+        return responses.created(res, { data: novoEtapa_MP });
     } catch (error) {
-        return View.erro(res, error);
+        return responses.error(res, { message: error.message });
     }
 }
 
@@ -21,9 +21,9 @@ export const alterar = async (req, res) => {
         
         const etapa_mpAlterada = await Etapa_MP.alterar(etapa_mp);
         
-        return View.result(res, 'PUT', etapa_mpAlterada);
+        return responses.success(res, { data: etapa_mpAlterada });
     } catch (error) {
-        return View.erro(res, error);
+        return responses.error(res, { message: error.message });
     }
 }
 
@@ -33,9 +33,9 @@ export const consultarPorId = async (req, res) => {
         
         const data = await Etapa_MP.consultarPorId(id);
         
-        return View.result(res, 'GET', data);
+        return responses.success(res, { data });
     } catch (error) {
-        return View.erro(res, error);
+        return responses.error(res, { message: error.message });
     }
 }
 
@@ -45,9 +45,9 @@ export const consultarPorEtapa = async (req, res) => {
         
         const data = await Etapa_MP.consultarPorEtapa(id_projeto);
         
-        return View.result(res, 'GET', data);
+        return responses.success(res, { data });
     } catch (error) {
-        return View.erro(res, error);
+        return responses.error(res, { message: error.message });
     }
 }
 
@@ -57,9 +57,9 @@ export const deletar = async (req, res) => {
         
         const data = await Etapa_MP.deletar(id);
         
-        return View.result(res, 'DELETE', data);
+        return responses.success(res, { data });
     } catch (error) {
-        return View.erro(res, error);
+        return responses.error(res, { message: error.message });
     }
 }
 
@@ -67,9 +67,12 @@ export const alterarOrdem = async (req, res) => {
     try {
         const ordemetapa_mp = req.body;
         const ordemetapa_mpReordenadas = await Etapa_MP.alterarOrdem(ordemetapa_mp);        
-        return View.result(res, 'PUT', ordemetapa_mpReordenadas,"Nenhuma alteração realizada");
+        const message = Array.isArray(ordemetapa_mpReordenadas) && ordemetapa_mpReordenadas.length === 0
+            ? "Nenhuma alteração realizada"
+            : undefined;
+        return responses.success(res, { data: ordemetapa_mpReordenadas, ...(message ? { message } : {}) });
     } catch (error) {
-        return View.erro(res, error);
+        return responses.error(res, { message: error.message });
     }
 }
 

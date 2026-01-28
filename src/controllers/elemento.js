@@ -1,5 +1,5 @@
 import * as Elemento from '../models/Elemento.js';
-import * as View from '../view/index.js';
+import * as responses from '../utils/responses.js';
 
 export const consultar = async (req, res)=>{
     try {
@@ -20,9 +20,9 @@ export const consultar = async (req, res)=>{
         else{            
             data = await Elemento.consultar();
         }
-        View.result(res,'GET',data);
+        return responses.success(res, { data });
     } catch (error) {
-        View.erro(res, error);
+        return responses.error(res, { message: error.message });
     }
 }
 
@@ -30,9 +30,9 @@ export const consultarPorId = async (req, res)=>{
     try {
         let id = req.params.id;
         let data = await Elemento.consultarPorId(id);
-        View.result(res,'GET',data);
+        return responses.success(res, { data });
     } catch (error) {
-        View.erro(res, error);
+        return responses.error(res, { message: error.message });
     }
 }
 
@@ -40,9 +40,9 @@ export const deletar = async (req, res)=>{
     try {
         const id = req.params.id;
         const data = await Elemento.deletar(id);
-        View.result(res,'DELETE',data);
+        return responses.success(res, { data });
     } catch (error) {
-        View.erro(res, error);
+        return responses.error(res, { message: error.message });
     }
 }
 
@@ -50,9 +50,9 @@ export const cadastrada = async (req, res)=>{
     try {
         const elemento = req.body; 
         const novoElemento = await Elemento.cadastrar(elemento);
-        View.result(res, 'POST',novoElemento);
+        return responses.created(res, { data: novoElemento });
     } catch (error) {
-        View.erro(res,error);
+        return responses.error(res,{ message: error.message });
     }
 }
 
@@ -61,9 +61,9 @@ export const alterar = async (req, res)=>{
         let elemento = req.body;
         elemento.id = req.params.id;
         const elementoAlterado = await Elemento.alterar(elemento);
-        View.result(res, 'PUT',elementoAlterado);
+        return responses.success(res, { data: elementoAlterado });
     } catch (error) {
-        View.erro(res,error);
+        return responses.error(res,{ message: error.message });
     }
 }
 

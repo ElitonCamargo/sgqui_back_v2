@@ -1,7 +1,6 @@
 // Importa todos os métodos do módulo 'Etapa' da model Etapa.js e os associa ao objeto 'Etapa'.
 import * as Etapa from '../models/Etapa.js';
-// Importa todos os métodos do módulo 'View' da view index.js e os associa ao objeto 'View'.
-import * as View from '../view/index.js';
+import * as responses from '../utils/responses.js';
 
 // Define e exporta uma função assíncrona chamada 'cadastrar' para cadastrar uma nova etapa.
 export const cadastrar = async (req, res) => {
@@ -12,11 +11,9 @@ export const cadastrar = async (req, res) => {
         // Chama a função 'cadastrar' do módulo 'Etapa' com os dados da nova etapa e aguarda a conclusão.
         const novoEtapa = await Etapa.cadastrar(etapa);
         
-        // Retorna a resposta com o resultado da operação usando a função 'result' do módulo 'View'.
-        return View.result(res, 'POST', novoEtapa);
+        return responses.created(res, { data: novoEtapa });
     } catch (error) {
-        // Em caso de erro, retorna a resposta de erro usando a função 'erro' do módulo 'View'.
-        return View.erro(res, error);
+        return responses.error(res, { message: error.message });
     }
 }
 
@@ -29,11 +26,9 @@ export const consultarPorId = async (req, res) => {
         // Chama a função 'consultarPorId' do módulo 'Etapa' com o ID e aguarda a conclusão.
         const data = await Etapa.consultarPorId(id);
         
-        // Retorna a resposta com o resultado da operação usando a função 'result' do módulo 'View'.
-        return View.result(res, 'GET', data);
+        return responses.success(res, { data });
     } catch (error) {
-        // Em caso de erro, retorna a resposta de erro usando a função 'erro' do módulo 'View'.
-        return View.erro(res, error);
+        return responses.error(res, { message: error.message });
     }
 }
 
@@ -46,11 +41,9 @@ export const consultarPorProjeto = async (req, res) => {
         // Chama a função 'consultarPorProjeto' do módulo 'Etapa' com o ID do projeto e aguarda a conclusão.
         const data = await Etapa.consultarPorProjeto(id_projeto);
         
-        // Retorna a resposta com o resultado da operação usando a função 'result' do módulo 'View'.
-        return View.result(res, 'GET', data);
+        return responses.success(res, { data });
     } catch (error) {
-        // Em caso de erro, retorna a resposta de erro usando a função 'erro' do módulo 'View'.
-        return View.erro(res, error);
+        return responses.error(res, { message: error.message });
     }
 }
 
@@ -63,11 +56,9 @@ export const deletar = async (req, res) => {
         // Chama a função 'deletar' do módulo 'Etapa' com o ID e aguarda a conclusão.
         const data = await Etapa.deletar(id);
         
-        // Retorna a resposta com o resultado da operação usando a função 'result' do módulo 'View'.
-        return View.result(res, 'DELETE', data);
+        return responses.success(res, { data });
     } catch (error) {
-        // Em caso de erro, retorna a resposta de erro usando a função 'erro' do módulo 'View'.
-        return View.erro(res, error);
+        return responses.error(res, { message: error.message });
     }
 }
 
@@ -83,11 +74,9 @@ export const alterar = async (req, res) => {
         // Chama a função 'alterar' do módulo 'Etapa' com os novos dados da etapa e aguarda a conclusão.
         const etapaAlterada = await Etapa.alterar(etapa);
         
-        // Retorna a resposta com o resultado da operação usando a função 'result' do módulo 'View'.
-        return View.result(res, 'PUT', etapaAlterada);
+        return responses.success(res, { data: etapaAlterada });
     } catch (error) {
-        // Em caso de erro, retorna a resposta de erro usando a função 'erro' do módulo 'View'.
-        return View.erro(res, error);
+        return responses.error(res, { message: error.message });
     }
 }
 
@@ -101,11 +90,12 @@ export const alterarOrdem = async (req, res) => {
         // Chama a função 'alterarOrdem' do módulo 'Etapa' com os dados da nova ordem e aguarda a conclusão.
         const etapasReordenadas = await Etapa.alterarOrdem(ordemEtapa);
         
-        // Retorna a resposta com o resultado da operação usando a função 'result' do módulo 'View'.
-        return View.result(res, 'PUT', etapasReordenadas,"Nenhuma alteração realizada");
+        const message = Array.isArray(etapasReordenadas) && etapasReordenadas.length === 0
+            ? "Nenhuma alteração realizada"
+            : undefined;
+        return responses.success(res, { data: etapasReordenadas, ...(message ? { message } : {}) });
     } catch (error) {
-        // Em caso de erro, retorna a resposta de erro usando a função 'erro' do módulo 'View'.
-        return View.erro(res, error);
+        return responses.error(res, { message: error.message });
     }
 }
 
