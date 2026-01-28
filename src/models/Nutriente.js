@@ -1,102 +1,109 @@
 import pool from '../database/data.js';
 
-export const consultar = async (filtro = '') => {
-    let cx;
+export const cadastrar = async (nutriente={}) => {    
     try {
-        cx = await pool.getConnection();
-        const cmdSql = 'SELECT * FROM nutriente WHERE nome LIKE ?;';
-        const [dados, meta_dados] = await cx.query(cmdSql, [`%${filtro}%`]);
-        return dados;
-    } 
-    catch (error) {
-        throw error;
-    } 
-    finally {
-        if (cx) cx.release(); // Libere a conexão após o uso
-    }
-};
+        let valores = [];
+        let campos = '';
+        let placeholders = '';
+        
+        for(const key in nutriente){
+            campos += `${key},`;            
+            placeholders += '?,';
+            valores.push(nutriente[key]);            
+        }
+        campos = campos.slice(0, -1);
+        placeholders = placeholders.slice(0, -1);
+        const cmdSql = `INSERT INTO nutriente (${campos}) VALUES (${placeholders});`;        
+        await pool.execute(cmdSql, valores);
 
-export const consultarPorId = async (id) => {
-    let cx;
-    try {
-        cx = await pool.getConnection();
-        const cmdSql = 'SELECT * FROM nutriente WHERE id = ?;';
-        const [dados, meta_dados] = await cx.query(cmdSql, [id]);
-        return dados;
-    } 
-    catch (error) {
-        throw error;
-    } 
-    finally {
-        if (cx) cx.release(); // Libere a conexão após o uso
-    }
-};
-
-export const cadastrar = async (nutriente) => {
-    let cx;
-    try {
-        const {nome, formula} = nutriente;
-        cx = await pool.getConnection();
-        const cmdSql = 'INSERT INTO nutriente (nome, formula) VALUES (?, ?)';
-        await cx.query(cmdSql, [nome, formula]);
-
-        // Recuperar o último ID inserido
-        const [result] = await cx.query('SELECT LAST_INSERT_ID() as lastId');
+        const [result] = await pool.execute('SELECT LAST_INSERT_ID() as lastId');
         const lastId = result[0].lastId;
 
-        // Consultar a empresa recém-cadastrada pelo último ID
-        const [dados, meta_dados] = await cx.query('SELECT * FROM nutriente WHERE id = ?;', [lastId]);
+        const [dados] = await pool.execute('SELECT * FROM nutriente WHERE id = ?;', [lastId]);
         return dados;
     } 
     catch (error) {
         throw error;
-    } 
-    finally {
-        if (cx) cx.release(); // Libere a conexão após o uso
     }
 };
 
-export const alterar = async (nutriente) => {
-    let cx;
+export const alterar = async (nutriente={}) => {
     try {
         let valores = [];
         let cmdSql = 'UPDATE nutriente SET ';
+
         for(const key in nutriente){
             valores.push(nutriente[key]);
             cmdSql += `${key} = ?, `;
         }
+
         cmdSql = cmdSql.replace(', id = ?,', '');
         cmdSql += 'WHERE id = ?;';
-        cx = await pool.getConnection();
-        const [execucao] = await cx.query(cmdSql, valores);
+        const [execucao] = await pool.execute(cmdSql, valores);
         if(execucao.affectedRows > 0){
-            const [dados, meta_dados] = await cx.query('SELECT * FROM nutriente WHERE id = ?;', nutriente.id);
+            const [dados] = await pool.execute('SELECT * FROM nutriente WHERE id = ?;', nutriente.id);
             return dados;
         }
         return [];
 
-    } 
+    }
     catch (error) {
         throw error;
-    } 
-    finally {
-        if (cx) cx.release(); // Libere a conexão após o uso
     }
 };
 
-export const deletar = async (id) => {
-    let cx;
-    try {
-        cx = await pool.getConnection();
-        const cmdSql = 'DELETE FROM nutriente WHERE id = ?;';
-        const [dados, meta_dados] = await cx.query(cmdSql, [id]);
+export const consultar = async (filtro = '') => {
+    try {  
+        const cmdSql = 'SELECT * FROM nutriente WHERE nome LIKE ? or formula LIKE ? ORDER BY updatedAt DESC;';
+        const [dados] = await pool.execute(cmdSql, [`%${filtro}%`,`%${filtro}%`]);
         return dados;
     } 
     catch (error) {
         throw error;
+    }
+};
+
+export const consultarPorId = async (id) => {
+    try {
+        const cmdSql = 'SELECT * FROM nutriente WHERE id = ?;';
+        const [dados] = await pool.execute(cmdSql, [id]);
+        return dados;
     } 
-    finally {
-        if (cx) cx.release(); // Libere a conexão após o uso
+    catch (error) {
+        throw error;
+    }
+};
+
+export const consultarPorNome = async (nome) => {
+    try {
+        const cmdSql = 'SELECT * FROM nutriente WHERE nome like ?;';
+        const [dados] = await pool.execute(cmdSql, [nome]);
+        return dados;
+    } 
+    catch (error) {
+        throw error;
+    }
+};
+
+export const consultarPorFormula = async (formula) => {
+    try {
+        const cmdSql = 'SELECT * FROM nutriente WHERE formula like ?;';
+        const [dados] = await pool.execute(cmdSql, [formula]);
+        return dados;
+    } 
+    catch (error) {
+        throw error;
+    }
+};
+
+export const deletar = async (id) => {
+    try {
+        const cmdSql = 'DELETE FROM nutriente WHERE id = ?;';
+        const [dados] = await pool.execute(cmdSql, [id]);
+        return dados;
+    } 
+    catch (error) {
+        throw error;
     }
 };
 

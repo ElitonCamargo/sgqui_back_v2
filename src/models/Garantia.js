@@ -58,62 +58,98 @@ export const consultarPorMateria_prima = async (materia_primaId) => {
     }
 };
 
-export const cadastrar = async (garantia) => {
-    let cx;
+export const cadastrar = async (garantia={}) => {    
     try {
-        const { materia_prima, nutriente, percentual } = garantia;
-        const cmdSql = 'INSERT INTO garantia (materia_prima, nutriente, percentual) VALUES (?, ?, ?);';
-        cx = await pool.getConnection();
-        await cx.query(cmdSql, [materia_prima, nutriente, percentual]);
+        let valores = [];
+        let campos = '';
+        let placeholders = '';
+        
+        for(const key in garantia){
+            campos += `${key},`;            
+            placeholders += '?,';
+            valores.push(garantia[key]);            
+        }
+        campos = campos.slice(0, -1);
+        placeholders = placeholders.slice(0, -1);
+        const cmdSql = `INSERT INTO garantia (${campos}) VALUES (${placeholders});`;        
+        await pool.execute(cmdSql, valores);
 
-        const [result] = await cx.query('SELECT LAST_INSERT_ID() as lastId');
+        const [result] = await pool.execute('SELECT LAST_INSERT_ID() as lastId');
         const lastId = result[0].lastId;
- 
-        const [dados, meta_dados] = await cx.query('SELECT * FROM garantia WHERE id = ?;', [lastId]);
-        return dados;
 
+        const [dados] = await pool.execute('SELECT * FROM garantia WHERE id = ?;', [lastId]);
+        return dados;
     } 
     catch (error) {
         throw error;
-    } 
-    finally {
-        if (cx) cx.release(); // Libere a conexão após o uso
     }
 };
 
-export const atualizar = async (garantia) => {
-    let cx;
+export const alterar = async (garantia={}) => {
     try {
-        const { percentual, id } = garantia;
-        const cmdSql = 'UPDATE garantia SET percentual = ? WHERE id = ?;';
-        cx = await pool.getConnection();
-        const [execucao] = await cx.query(cmdSql, [percentual, id]);
+        let valores = [];
+        let cmdSql = 'UPDATE garantia SET ';
+
+        for(const key in garantia){
+            valores.push(garantia[key]);
+            cmdSql += `${key} = ?, `;
+        }
+
+        cmdSql = cmdSql.replace(', id = ?,', '');
+        cmdSql += 'WHERE id = ?;';
+        const [execucao] = await pool.execute(cmdSql, valores);
         if(execucao.affectedRows > 0){
-            const [dados, meta_dados] = await cx.query('SELECT * FROM garantia WHERE id = ?;', id);
+            const [dados] = await pool.execute('SELECT * FROM garantia WHERE id = ?;', garantia.id);
             return dados;
         }
         return [];
+
+    }
+    catch (error) {
+        throw error;
+    }
+};
+
+export const consultar = async (filtro = '') => {
+    try {  
+        const cmdSql = 'SELECT * FROM garantia ORDER BY updatedAt DESC;';
+        const [dados] = await pool.execute(cmdSql);
+        return dados;
     } 
     catch (error) {
         throw error;
+    }
+};
+
+export const consultarPorId = async (id) => {
+    try {
+        const cmdSql = 'SELECT * FROM garantia WHERE id = ?;';
+        const [dados] = await pool.execute(cmdSql, [id]);
+        return dados;
     } 
-    finally {
-        if (cx) cx.release(); // Libere a conexão após o uso
+    catch (error) {
+        throw error;
+    }
+};
+
+export const consultarPorMP = async (mp_id) => {
+    try {
+        const cmdSql = 'SELECT * FROM garantia WHERE mp_id = ?;';
+        const [dados] = await pool.execute(cmdSql, [mp_id]);
+        return dados;
+    } 
+    catch (error) {
+        throw error;
     }
 };
 
 export const deletar = async (id) => {
-    let cx;
     try {
         const cmdSql = 'DELETE FROM garantia WHERE id = ?;';
-        cx = await pool.getConnection();
-        const [dados, meta_dados] = await cx.query(cmdSql, [id]);
+        const [dados] = await pool.execute(cmdSql, [id]);
         return dados;
     } 
     catch (error) {
         throw error;
-    } 
-    finally {
-        if (cx) cx.release(); // Libere a conexão após o uso
     }
 };
