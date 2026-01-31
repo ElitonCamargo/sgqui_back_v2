@@ -18,6 +18,10 @@ async function syncPermissions() {
                 throw new Error('Número de permissões removidas não corresponde ao esperado');
             }            
             console.log('✔ Permissões existentes removidas');
+
+            // Zerar autoincremento da tabela permissoes
+            await cx.execute('ALTER TABLE permissoes AUTO_INCREMENT = 1;');
+            console.log('✔ Auto-incremento da tabela permissoes reiniciado');
         }
 
 

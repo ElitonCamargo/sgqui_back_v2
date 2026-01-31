@@ -18,7 +18,8 @@ export const listarTodas = async () => {
         id: perm.id,
         metodo: perm.metodo,
         rota_template: perm.rota_template,
-        descricao: perm.descricao
+        descricao: perm.descricao,
+        eh_publica: (perm.eh_publica == 1)
     });
 
     return acc;
