@@ -45,6 +45,22 @@ export const deletar = async (req, res)=>{
     try {
         const id = req.params.id;
         const data = await Usuario.deletar(id);
+        if(!data){
+            return responses.notFound(res, {message: "Usuário não encontrado"});
+        }
+        return responses.noContent(res, {message: "Usuário deletado com sucesso", data });
+    } catch (error) {
+        return responses.error(res, { message: error.message });
+    }
+}
+
+export const deletarPerfil = async (req, res)=>{
+    try {
+        const id = req.loginId;
+        const data = await Usuario.deletar(id);
+        if(!data){
+            return responses.notFound(res, {message: "Usuário não encontrado"});
+        }
         return responses.noContent(res, {message: "Usuário deletado com sucesso", data });
     } catch (error) {
         return responses.error(res, { message: error.message });
@@ -92,6 +108,20 @@ export const cadastrar = async (req, res)=>{
 
         const novoUsuario = await Usuario.cadastrar(req.body);
         return responses.created(res, {message: "Usuário cadastrado com sucesso", data: novoUsuario });
+    } catch (error) {
+        return responses.error(res,{ message: error.message });
+    }
+}
+
+export const alterarPerfil = async (req, res)=>{
+    try {
+        let usuario = req.body;
+        if(Object.keys(usuario).length === 0){
+            return responses.badRequest(res,{message:"Nenhum dado para alterar"});
+        }
+        let id = req.loginId;
+        const usuarioAlterado = await Usuario.alterar(id, usuario);
+        return responses.success(res, {message: "Usuário alterado com sucesso", data: usuarioAlterado });
     } catch (error) {
         return responses.error(res,{ message: error.message });
     }

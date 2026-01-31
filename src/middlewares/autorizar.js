@@ -1,45 +1,29 @@
 import * as responses from '../utils/responses.js';
 
-export const normalizeRouteTemplate = (template = '') => {
-  let t = String(template || '').trim();
-  if (!t) return '/';
 
-  if (!t.startsWith('/')) t = `/${t}`;
 
-  // Remove querystring se alguém passar por engano
-  const qIndex = t.indexOf('?');
-  if (qIndex !== -1) t = t.slice(0, qIndex);
 
-  // Normaliza múltiplas barras
-  t = t.replace(/\/+/, '/');
+export default async function autorizar(req, res, next) { 
 
-  // Remove barra final (exceto raiz)
-  if (t.length > 1) t = t.replace(/\/+$/, '');
+  const concederPermissao = ( endpoint, permissoes ) => {
+    // Se não houver permissões definidas, negar acesso
+    if (!permissoes) return false;
+    
+    // Verifica se o endpoint requerido está nas permissões do usuário
+    if (Array.isArray(permissoes)) return permissoes.includes(endpoint);
 
-  // Normaliza nomes de params (/:id, /:codigo, etc.) para /:param
-  t = t.replace(/\/:([^/]+)/g, '/:param');
-
-  return t;
-};
-
-const hasPermission = (permissoes, key) => {
-  if (!permissoes) return false;
-  if (permissoes instanceof Set) return permissoes.has(key);
-  if (Array.isArray(permissoes)) return permissoes.includes(key);
-  return false;
-};
-
-export default function autorizar(rotaTemplate = '') {
-  const rotaNormalizada = normalizeRouteTemplate(rotaTemplate);
-
-  return async function autorizarMiddleware(req, res, next) {
-    const metodo = String(req.method || '').toUpperCase();
-    const key = `${metodo} ${rotaNormalizada}`;
-
-    if (hasPermission(req.permissoes, key)) {
-      return next();
-    }
-
-    return responses.forbidden(res, { message: 'Acesso negado' });
+    // Verifica se o endpoint requerido está nas permissões do usuário
+    if (permissoes instanceof Set) return permissoes.has(endpoint);
+    return false;
   };
-}
+  
+  const metodo = req.method.toUpperCase();
+  const rotaTemplate = req.route.path; // ← mágica acontece aqui
+
+  const endpoint = `${metodo} ${rotaTemplate}`;
+
+  if (!concederPermissao(endpoint, req.permissoes)) {
+    return responses.forbidden(res, { message: 'Acesso negado' });
+  }
+  return next();
+};

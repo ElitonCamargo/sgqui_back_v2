@@ -1,3 +1,5 @@
+import e from "express";
+
 const sendResponse = (res, {
   success = true,
   status = 200,
@@ -48,11 +50,14 @@ export const unauthorized = (res, { message = "Credenciais inválidas" } = {}) =
   return sendResponse(res, { success: false, status: 401, message, erro: message, data: null, quant: 0 });
 };
 
+export const conflict = (res, { message = "Conflito de dados" } = {}) => {
+  return sendResponse(res, { success: false, status: 409, message, erro: message, data: null, quant: 0 });
+}
+
 export const forbidden = (res, { message = "Acesso negado" } = {}) => {
   return sendResponse(res, { success: false, status: 403, message, erro: message, data: null, quant: 0 });
 };
 
-export const error = (res, { status = 500, message = "Erro interno do servidor", data = null } = {}) => {
-  console.error(`Error response sent: [${status}] ${message}`);
+export const error = (res, { status = 500, message = "Erro interno do servidor", data = null} = {}) => {  
   return sendResponse(res, { success: false, status, message, erro: message, data });
 };

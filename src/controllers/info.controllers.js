@@ -1,10 +1,5 @@
-// api/src/routes/info.js
-import express from 'express';
 import * as responses from '../utils/responses.js';
-
-const router = express.Router();
-
-router.get('/', (req,res)=>{
+export const obterInfoSistema = async (req, res)=>{
     const rootDomain = req.protocol + '://' + req.get('host');
     const data ={
         status_server: '(DEV - v2) ok - API SGQUI v2.5',
@@ -24,8 +19,5 @@ router.get('/', (req,res)=>{
             `${rootDomain}/upload`
         ]
     };
-    return responses.success(res, data);
-});
-
-
-export default router;
+    return responses.success(res, { data });
+}

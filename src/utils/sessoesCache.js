@@ -21,6 +21,11 @@ export function addSessao(id, usuario, token, { perfis = [], permissoes = [] } =
   });
 }
 
+// Compatibilidade: versões anteriores do middleware chamavam este nome.
+export function addSessaoComRbac(id, usuario, token, { perfis = [], permissoes = [] } = {}) {
+  return addSessao(id, usuario, token, { perfis, permissoes });
+}
+
 
 /**
  * Busca sessão por id e usuario

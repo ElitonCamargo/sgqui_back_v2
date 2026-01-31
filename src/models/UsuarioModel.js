@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 
 export const consultar = async (filtro = '') => {    
     try {
-        const cmdSql = 'SELECT id, nome, email, permissao, avatar, status, createdAt, updatedAt FROM usuario WHERE nome LIKE ?;';
+        const cmdSql = 'SELECT id, nome, email,  avatar, status, createdAt, updatedAt FROM usuario WHERE nome LIKE ?;';
         const [dados] = await pool.execute(cmdSql, [`%${filtro}%`]);
         return dados;
     } 
@@ -14,7 +14,7 @@ export const consultar = async (filtro = '') => {
 
 export const consultarPorId = async (id) => {
     try {
-        const cmdSql = 'SELECT id,nome,email,permissao,avatar,status,createdAt,updatedAt FROM usuario WHERE id = ?;';
+        const cmdSql = 'SELECT id,nome,email,avatar,status,createdAt,updatedAt FROM usuario WHERE id = ?;';
         const [dados] = await pool.execute(cmdSql, [id]);
         return dados[0];
     } 
@@ -25,7 +25,7 @@ export const consultarPorId = async (id) => {
 
 export const consultarPorEmail = async (email) => {
     try {
-        const cmdSql = 'SELECT id,nome,email,permissao,avatar,status,createdAt,updatedAt FROM usuario WHERE email = ?;';
+        const cmdSql = 'SELECT id,nome,email,avatar,status,createdAt,updatedAt FROM usuario WHERE email = ?;';
         const [dados] = await pool.execute(cmdSql, [email]);
         return dados[0];
     } 
@@ -110,9 +110,11 @@ export const deletar = async (id) => {
     try {
         const cmdSql = 'DELETE FROM usuario WHERE id = ?;';
         const [dados] = await pool.execute(cmdSql, [id]);
-        return dados;
+        return dados.affectedRows > 0;
     } 
     catch (error) {
         throw error;
     }
 };
+
+

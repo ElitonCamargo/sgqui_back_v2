@@ -9,3 +9,6 @@ node_modules/
 
 # Ignore o dir docs
 docs/
+
+# Ignore nota.txt files
+nota.txt

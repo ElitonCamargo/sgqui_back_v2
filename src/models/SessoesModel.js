@@ -1,5 +1,5 @@
-import crypto from "crypto";
 import pool from "../database/data.js";
+import crypto from "crypto";
 
 const consultarPorId = async (sessoes_id) => {
   try {    
