@@ -31,7 +31,7 @@ export default async function autenticar(req, res, next) {
         if(sessao_usuario){
             req.loginId = sessaoUsuario;
             req.perfis = sessao_usuario.perfis ?? [];
-            req.permissoes = [...new Set(sessao_usuario.permissoes ?? [])];
+            req.permissoes = new Set(sessao_usuario.permissoes ?? []);
             next();
             return;
         }
@@ -62,7 +62,7 @@ export default async function autenticar(req, res, next) {
         sessoesCache.addSessaoComRbac(sessao_usuario.id, sessao_usuario.usuario, sessao_usuario.token, { perfis, permissoes });
         req.loginId = sessaoUsuario;
         req.perfis = perfis;
-        req.permissoes = [...new Set(permissoes)];
+        req.permissoes = new Set(permissoes);
         next();
         return;
                

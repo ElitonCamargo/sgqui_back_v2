@@ -29,6 +29,7 @@ export const cadastrar = async (configuracao={}) => {
 
 export const alterar = async (configuracao={}) => {
     try {
+        console.log(configuracao);
         let valores = [];
         let cmdSql = 'UPDATE configuracao SET ';
 

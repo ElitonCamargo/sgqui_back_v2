@@ -6,7 +6,7 @@ export default [
     rota: '/usuario/logado',
     functionExec: usuarioController.consultarLogado,
     recurso: 'Usuários',
-    descricao: 'Obter dados do usuário logado',
+    descricao: 'Usuário logado pode obter seus próprios dados',
     ehPublica: true
   },
   {
@@ -14,7 +14,7 @@ export default [
     rota: '/usuario',
     functionExec: usuarioController.consultar,
     recurso: 'Usuários',
-    descricao: 'Listar usuários',
+    descricao: 'Usuário logado pode listar outros usuários',
     ehPublica: false
   },
   {
@@ -22,7 +22,7 @@ export default [
     rota: '/usuario/:id',
     functionExec: usuarioController.consultarPorId,
     recurso: 'Usuários',
-    descricao: 'Obter usuário por ID',
+    descricao: 'Usuário logado pode listar dados DETALHADOS de outros usuários',
     ehPublica: false
   },
   {
@@ -30,31 +30,31 @@ export default [
     rota: '/usuario/perfil',
     functionExec: usuarioController.alterarPerfil,
     recurso: 'Usuários',
-    descricao: 'Alterar perfil do usuário logado',
+    descricao: 'Usuário logado pode alterar seu próprio perfil',
     ehPublica: true
   },
   {
     metodo: 'DELETE',
     rota: '/usuario/perfil',
+    functionExec: usuarioController.deletarPerfil,
     recurso: 'Usuários',
-    descricao: 'Deletar perfil do usuário logado',
-    ehPublica: true,
-    functionExec: usuarioController.deletarPerfil
+    descricao: 'Usuário logado pode deletar sua própria conta',
+    ehPublica: true
   },
   {
     metodo: 'DELETE',
     rota: '/usuario/:id',
+    functionExec: usuarioController.deletar,
     recurso: 'Usuários',
-    descricao: 'Deletar usuário por ID',
-    ehPublica: false,
-    functionExec: usuarioController.deletar
+    descricao: 'Usuário logado pode deletar outros usuários',
+    ehPublica: false
   },
   {
     metodo: 'PUT',
     rota: '/usuario/:id',
     functionExec: usuarioController.alterar,
     recurso: 'Usuários',
-    descricao: 'Alterar usuário por ID',
+    descricao: 'Usuário logado pode alterar outros usuários',
     ehPublica: false
   },
   {
@@ -62,7 +62,7 @@ export default [
     rota: '/usuario',
     functionExec: usuarioController.cadastrar,
     recurso: 'Usuários',
-    descricao: 'Cadastrar novo usuário',
+    descricao: 'Usuário logado pode cadastrar novos usuários',
     ehPublica: false
   }
 ];
