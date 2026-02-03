@@ -6,7 +6,7 @@ export const obterInfoSistema = async (req, res)=>{
     const data ={
         status_server: '(DEV - v2) ok - API SGQUI v2.5',
         dominio_raiz : rootDomain,
-        atualização: '26/01/2026 - 21:00',
+        atualização: '03/02/2026 - 13:18',
         rotas:[
             `${rootDomain}/usuario/login`,
             `${rootDomain}/usuario`,
@@ -15,8 +15,8 @@ export const obterInfoSistema = async (req, res)=>{
             `${rootDomain}/nutriente`,
             `${rootDomain}/garantia`,
             `${rootDomain}/projeto`,
-            `${rootDomain}/etepa`,
-            `${rootDomain}/etepa_mp`,
+            `${rootDomain}/etapa`,
+            `${rootDomain}/etapa_mp`,
             `${rootDomain}/configuracao`,
             `${rootDomain}/upload`
         ]
