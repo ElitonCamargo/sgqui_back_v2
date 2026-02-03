@@ -382,7 +382,7 @@ export const deletar = async (id) => {
 
 export const consultaDetalhada = async (id) => {
     try { 
-        await pool.execute("CALL projeto_marcarVisualizacao(?)", [id]);
+        await pool.execute("UPDATE projeto SET updatedAt = CURRENT_TIMESTAMP WHERE projeto.id = ?;", [id]);
         const cmdSql = 'SELECT * FROM projeto_detalhado WHERE projeto_id = ?;';
         const [dados] = await pool.execute(cmdSql, [id]);
         return estruturarProjeto(dados);
