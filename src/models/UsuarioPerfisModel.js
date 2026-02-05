@@ -1,11 +1,23 @@
 import pool from '../database/data.js';
 
+
+export const consultarPorId = async (id) => {
+  try {
+    const cmdSql = 'SELECT * FROM usuario_perfis WHERE id = ?;';
+    const [rows] = await pool.execute(cmdSql, [id]);
+    return rows[0];
+  } catch (error) {
+    console.error('Erro ao consultar vínculo por ID:', error);
+    throw error;
+  }
+};
+
 // Vincular um perfil com permissoões de acesso ja definidas ao usuario
 export const vincular = async (usuarioId, perfilId) => {
   try {
     const cmdSql = 'INSERT IGNORE INTO usuario_perfis (usuario_id, perfil_id) VALUES (?, ?);';
     const [result] = await pool.execute(cmdSql, [usuarioId, perfilId]);
-    return result.affectedRows > 0;
+    return await consultarPorId(result.insertId);
   } catch (error) {
     console.error('Erro ao vincular perfil ao usuário:', error);
     throw error;
@@ -32,7 +44,7 @@ export const listar = async () => {
             up.id as vinculo_id,
             p.id as perfil_id,
             p.nome as perfil_nome,
-            p.descricao as perfil_descricaqo,
+            p.descricao as perfil_descricao,
             u.id as usuario_id, 
             u.nome as usuario_nome, 
             u.email as usuario_email, 

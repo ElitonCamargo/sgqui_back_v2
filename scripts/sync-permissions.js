@@ -28,8 +28,9 @@ async function syncPermissions() {
 
 
         // Depois, insere as permissões definidas no código
-        const values = permissions.map(perm => '(?, ?, ?, ?, ?)').join(', ');
+        const values = permissions.map(perm => '(?, ?, ?, ?, ?, ?)').join(', ');
         const params = permissions.flatMap(perm => [
+            perm.codigo,
             perm.recurso,
             perm.metodo,
             perm.rota,
@@ -37,7 +38,7 @@ async function syncPermissions() {
             perm.ehPublica ? 1 : 0
         ]);
 
-        const sqlInsert = `INSERT INTO permissoes (recurso, metodo, rota_template, descricao, eh_publica) VALUES ${values}`;
+        const sqlInsert = `INSERT INTO permissoes (codigo, recurso, metodo, rota_template, descricao, eh_publica) VALUES ${values}`;
 
         const result = await cx.execute(sqlInsert, params);
         if(result[0].affectedRows !== permissions.length) {

@@ -2,6 +2,7 @@ import * as usuarioController from '../../controllers/usuario.controllers.js';
 
 export default [
   {
+    codigo: 'usuario:consultarLogado',
     metodo: 'GET',
     rota: '/usuario/logado',
     functionExec: usuarioController.consultarLogado,
@@ -10,6 +11,7 @@ export default [
     ehPublica: true
   },
   {
+    codigo: 'usuario:consultar',
     metodo: 'GET',
     rota: '/usuario',
     functionExec: usuarioController.consultar,
@@ -18,6 +20,7 @@ export default [
     ehPublica: false
   },
   {
+    codigo: 'usuario:consultarPorId',
     metodo: 'GET',
     rota: '/usuario/:id',
     functionExec: usuarioController.consultarPorId,
@@ -26,6 +29,7 @@ export default [
     ehPublica: false
   },
   {
+    codigo: 'usuario:alterarPerfilLogado',
     metodo: 'PUT',
     rota: '/usuario/perfil',
     functionExec: usuarioController.alterarPerfil,
@@ -34,6 +38,7 @@ export default [
     ehPublica: true
   },
   {
+    codigo: 'usuario:deletarPerfilLogado',
     metodo: 'DELETE',
     rota: '/usuario/perfil',
     functionExec: usuarioController.deletarPerfil,
@@ -42,27 +47,30 @@ export default [
     ehPublica: true
   },
   {
+    codigo: 'usuario:deletar',
     metodo: 'DELETE',
     rota: '/usuario/:id',
     functionExec: usuarioController.deletar,
     recurso: 'Usuários',
-    descricao: 'Usuário logado pode deletar outros usuários',
+    descricao: 'Remover usuários do sistema',
     ehPublica: false
   },
   {
+    codigo: 'usuario:alterar',
     metodo: 'PUT',
     rota: '/usuario/:id',
     functionExec: usuarioController.alterar,
     recurso: 'Usuários',
-    descricao: 'Usuário logado pode alterar outros usuários',
+    descricao: 'Alterar informações de usuários do sistema',
     ehPublica: false
   },
   {
+    codigo: 'usuario:cadastrar',
     metodo: 'POST',
     rota: '/usuario',
     functionExec: usuarioController.cadastrar,
     recurso: 'Usuários',
-    descricao: 'Usuário logado pode cadastrar novos usuários',
+    descricao: 'Cadastrar novos usuários no sistema',
     ehPublica: false
   }
 ];

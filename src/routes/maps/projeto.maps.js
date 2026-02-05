@@ -2,38 +2,43 @@ import * as projeto from '../../controllers/projeto.controllers.js';
 
 export default [
   {
+    codigo: 'projeto:consultar',
     metodo: 'GET',
     rota: '/projeto',
     functionExec: projeto.consultar,
     recurso: 'Projetos',
     descricao: 'Visualizar todos os projetos',
-    ehPublica: true
+    ehPublica: false
   },
   {
+    codigo: 'projeto:consultarPorId',
     metodo: 'GET',
     rota: '/projeto/:id',
     functionExec: projeto.consultarPorId,
     recurso: 'Projetos',
-    descricao: 'Obter projeto por ID',
+    descricao: 'Consultar um projeto pelo seu ID',
     ehPublica: false
   },
   {
+    codigo: 'projeto:consultarPorCodigo',
     metodo: 'GET',
     rota: '/projeto/codigo/:codigo',
     functionExec: projeto.consultarPorCodigo,
     recurso: 'Projetos',
-    descricao: 'Obter projeto por código',
+    descricao: 'Consultar um projeto pelo seu código',
     ehPublica: false
   },
   {
+    codigo: 'projeto:consultarDetalhado',
     metodo: 'GET',
     rota: '/projeto/detalhado/:id',
     functionExec: projeto.consultaDetalhada,
     recurso: 'Projetos',
-    descricao: 'Obter detalhes do projeto por ID',
+    descricao: 'Visualizar a formulação detalhada de um projeto',
     ehPublica: false
   },
   {
+    codigo: 'projeto:consultarPorData',
     metodo: 'GET',
     rota: '/projeto/data/:inicio/:termino',
     functionExec: projeto.consultarPorData,
@@ -42,6 +47,7 @@ export default [
     ehPublica: false
   },
   {
+    codigo: 'projeto:cadastrar',
     metodo: 'POST',
     rota: '/projeto',
     functionExec: projeto.cadastrar,
@@ -50,27 +56,30 @@ export default [
     ehPublica: false
   },
   {
+    codigo: 'projeto:duplicar',
     metodo: 'POST',
     rota: '/projeto/:id',
     functionExec: projeto.duplicar,
     recurso: 'Projetos',
-    descricao: 'Duplicar projeto por ID',
+    descricao: 'Duplicar projeto',
     ehPublica: false
   },
   {
+    codigo: 'projeto:alterar',
     metodo: 'PUT',
     rota: '/projeto/:id',
     functionExec: projeto.alterar,
     recurso: 'Projetos',
-    descricao: 'Alterar projeto por ID',
+    descricao: 'Alterar projeto',
     ehPublica: false
   },
   {
+    codigo: 'projeto:deletar',
     metodo: 'DELETE',
     rota: '/projeto/:id',
     functionExec: projeto.deletar,
     recurso: 'Projetos',
-    descricao: 'Deletar projeto por ID',
+    descricao: 'Deletar projeto',
     ehPublica: false
   }
 ];

@@ -16,10 +16,10 @@ export const listarPermissoesPorUsuario = async (usuarioId) => {
   try {
     const sql = `
       SELECT DISTINCT
-          p.recurso, p.metodo, p.rota_template, p.descricao, p.eh_publica
+        p.*
       FROM (
           SELECT 
-            permissoes.recurso, permissoes.metodo, permissoes.rota_template, permissoes.descricao, permissoes.eh_publica
+            permissoes.*
           FROM usuario_perfis
           JOIN perfis
               ON usuario_perfis.perfil_id = perfis.id
@@ -32,7 +32,7 @@ export const listarPermissoesPorUsuario = async (usuarioId) => {
           UNION ALL
 
           SELECT
-            recurso, metodo, rota_template, descricao, eh_publica
+            permissoes.*
           FROM permissoes
           WHERE eh_publica = 1
       ) p

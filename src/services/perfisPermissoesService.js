@@ -54,6 +54,7 @@ export const listarPermissoesPorPerfil = async (perfilId=undefined) => {
       };
     }
     acc[perfilId].permissoes.push({
+      vinculoId: item.vinculo_id,
       id: item.permissoes_id,
       recurso: item.permissoes_recurso,
       metodo: item.permissoes_metodo,

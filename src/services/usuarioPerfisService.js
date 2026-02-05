@@ -31,7 +31,33 @@ export const desvincular = async (vinculoID) => {
 // Listar todos os perfis e quais usuários estão vinculados a eles
 export const listar = async () => {
   const dados = await UsuarioPerfisModel.listar();
-  return dados;  
+  if (!dados || dados.length === 0) {
+    throw new AppError('Nenhum perfil vinculado a usuários encontrado', 404);
+  }
+  const resultado = dados.reduce((acc, item) => {
+    const perfilId = item.perfil_id;
+    if (!acc[perfilId]) {
+      acc[perfilId] = {
+        perfil: {
+          id: item.perfil_id,
+          nome: item.perfil_nome,
+          descricao: item.perfil_descricao
+        },
+        usuarios: []
+      };
+    }
+    acc[perfilId].usuarios.push({
+      vinculoId: item.vinculo_id,
+      usuarioId: item.usuario_id,
+      nome: item.usuario_nome,
+      email: item.usuario_email,
+      avatar: item.usuario_avatar,
+      status: item.usuario_status
+    });
+    return acc;
+  }, {});
+
+  return Object.values(resultado);
 };
 
 // Listar os perfis vinculados a um usuário específico
@@ -41,9 +67,9 @@ export const listarPerfisPorUsuario = async (usuarioId) => {
     throw new AppError('usuarioId inválido', 400);
   }
   const dados = await UsuarioPerfisModel.listarPerfisPorUsuario(usuarioIdNum);
-  if (!dados || dados.length === 0) {
-    throw new AppError('Nenhum perfil vinculado ao usuário', 404);
-  }
+  // if (!dados || dados.length === 0) {
+  //   throw new AppError('Nenhum perfil vinculado ao usuário', 404);
+  // }
   return dados;
 };
 
@@ -52,7 +78,7 @@ export const listarNomesPerfisDoUsuario = async (usuarioId) => {
     if (!usuarioIdNumber) {
         throw new AppError('usuarioId inválido', 400);
     }
-    const perfis = await UsuarioPerfisModel.listarPerfisPorUsuario(usuarioId);
+    const perfis = await UsuarioPerfisModel.listarPerfisPorUsuario(usuarioIdNumber);
     return perfis.map((r) => r.nome);
 };
 

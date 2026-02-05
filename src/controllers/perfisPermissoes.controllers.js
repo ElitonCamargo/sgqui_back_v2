@@ -6,8 +6,8 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 
 
 export const vincular = asyncHandler(async (req, res, next) => {
-    const { perfilId, permissaoId } = req.body;
-    const data = await perfisPermissoes.vincular(perfilId, permissaoId);
+    const { perfilId, permissoesIds } = req.body;
+    const data = await perfisPermissoes.vincular(perfilId, permissoesIds);
     responses.success(res, {
         message: 'Permissões vinculadas ao perfil com sucesso',
         data

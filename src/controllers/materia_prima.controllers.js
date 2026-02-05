@@ -31,7 +31,7 @@ export const consultar = async (req, res)=>{
         else{
             data = await MateriaPrima.consultar();
         }        
-        return responses.success(res, { data });
+        return responses.success(res, { message: "Consulta realizada com sucesso", data });
     } catch (error) {
         return responses.error(res, { message: error.message });
     }
@@ -41,7 +41,7 @@ export const consultarPorId = async (req, res)=>{
     try {
         const id = req.params.id;
         const data = await MateriaPrima.consultarPorId(id);
-        return responses.success(res, { data });
+        return responses.success(res, { message: "Consulta realizada com sucesso", data });
     } catch (error) {
         return responses.error(res, { message: error.message });
     }
@@ -52,7 +52,7 @@ export const consultarMP_precentual_nutriente = async (req, res)=>{
         const nutriente = req.params.nutriente
         const percentual = req.params.percentual;
         const data = await MateriaPrima.consultarMP_precentual_nutriente(nutriente,percentual);
-        return responses.success(res, { data });
+        return responses.success(res, { message: "Consulta realizada com sucesso", data });
     } catch (error) {
         return responses.error(res, { message: error.message });
     }
@@ -61,20 +61,23 @@ export const consultarMP_precentual_nutriente = async (req, res)=>{
 export const deletar = async (req, res)=>{
     try {
         const id = req.params.id;
-        const data = await MateriaPrima.deletar(id);
-        return responses.success(res, { data });
+        const result = await MateriaPrima.deletar(id);
+        if(!result){
+            return responses.notFound(res, { message: "Matéria-prima não encontrada para remoção" });
+        }
+        return responses.success(res, { message: "Matéria-prima removida com sucesso", data: null });
     } catch (error) {
         return responses.error(res, { message: error.message });
     }
 }
 
-export const cadastrada = async (req, res)=>{
+export const cadastrar = async (req, res)=>{
     try {
         const materia_prima = req.body; 
         const novoMateria_prima= await MateriaPrima.cadastrar(materia_prima);
-        return responses.created(res, { data: novoMateria_prima });
+        return responses.created(res, { message: "Matéria-prima cadastrada com sucesso", data: novoMateria_prima });
     } catch (error) {
-        return responses.error(res,{ message: error.message });
+        return responses.error(res, { message: error.message });
     }
 }
 
@@ -83,9 +86,9 @@ export const alterar = async (req, res)=>{
         let materia_prima = req.body;
         materia_prima.id = req.params.id;
         const materia_primaAlterado = await MateriaPrima.alterar(materia_prima);
-        return responses.success(res, { data: materia_primaAlterado });
+        return responses.success(res, { message: "Matéria-prima alterada com sucesso", data: materia_primaAlterado });
     } catch (error) {
-        return responses.error(res,{ message: error.message });
+        return responses.error(res, { message: error.message });
     }
 }
 

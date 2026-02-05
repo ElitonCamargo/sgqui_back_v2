@@ -2,6 +2,7 @@ import * as configuracao from '../../controllers/configuracao.controllers.js';
 
 export default [
 	{
+		codigo:'config:cadastrar',
 		metodo: 'POST',
 		rota: '/configuracao',
 		functionExec: configuracao.cadastrar,
@@ -10,6 +11,7 @@ export default [
 		ehPublica: false
 	},
 	{
+		codigo:'config:consultar',
 		metodo: 'GET',
 		rota: '/configuracao',
 		functionExec: configuracao.consultar,
@@ -18,6 +20,7 @@ export default [
 		ehPublica: false
 	},
 	{
+		codigo:'config:consultarPorId',
 		metodo: 'GET',
 		rota: '/configuracao/:id',
 		functionExec: configuracao.consultarPorId,
@@ -26,6 +29,7 @@ export default [
 		ehPublica: false
 	},
 	{
+		codigo:'config:alterar',
 		metodo: 'PUT',
 		rota: '/configuracao/:id',
 		functionExec: configuracao.alterar,
@@ -34,6 +38,7 @@ export default [
 		ehPublica: false
 	},
 	{
+		codigo:'config:deletar',
 		metodo: 'DELETE',
 		rota: '/configuracao/:id',
 		functionExec: configuracao.deletar,

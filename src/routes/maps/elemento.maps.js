@@ -2,6 +2,7 @@ import * as elemento from '../../controllers/elemento.controllers.js';
 
 export default [
 	{
+		codigo:'elemento:consultar',
 		metodo: 'GET',
 		rota: '/elemento',
 		functionExec: elemento.consultar,
@@ -10,19 +11,21 @@ export default [
 		ehPublica: true
 	},
 	{
+		codigo:'elemento:consultarPorId',
 		metodo: 'GET',
 		rota: '/elemento/:id',
 		functionExec: elemento.consultarPorId,
 		recurso: 'Elementos',
-		descricao: 'Exibir dados detalhados dos elementos cadastrados',
+		descricao: 'Exibir dados dos elementos pelo ID',
 		ehPublica: true
 	},
 	{
+		codigo:'elemento:consultarPorSimbolo',
 		metodo: 'GET',
 		rota: '/elemento/simbolo/:simbolo',
 		functionExec: elemento.consultarPorSimbolo,
 		recurso: 'Elementos',
-		descricao: 'Exibir dados detalhados dos elementos cadastrados',
+		descricao: 'Exibir dados dos elementos pelo símbolo',
 		ehPublica: true
 	},
 	// ,
