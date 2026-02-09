@@ -1,4 +1,4 @@
-import * as Configuracao from '../models/Configuracao.js';
+import * as Configuracao from '../models/Configuracao.model.js';
 import * as responses from '../utils/responses.js';
 
 
@@ -15,18 +15,19 @@ export const cadastrar = async (req, res)=>{
 export const alterar = async (req, res)=>{
     try {
         let configuracao = req.body;
-        configuracao.id = req.params.id;
-        const result = await Configuracao.alterar(configuracao);
+        configuracao.key = req.params.key;
+
+        const result = await Configuracao.alterar(configuracao, req.loginId);
         return responses.success(res, { data: result });
     } catch (error) {
         return responses.error(res,{ message: error.message });
     }
 }
 
-export const consultarPorId = async (req, res)=>{
+export const consultarPorKey = async (req, res)=>{
     try {
-        const id = req.params.id;
-        const result = await Configuracao.consultarPorId(id);
+        const key = req.params.key;
+        const result = await Configuracao.consultarPorKey(key);
         return responses.success(res, { data: result });
     } catch (error) {
         return responses.error(res, { message: error.message });
@@ -51,9 +52,12 @@ export const consultar = async (req, res)=>{
 
 export const deletar = async (req, res)=>{
     try {
-        let id = req.params.id;
-        const result = await Configuracao.deletar(id);
-        return responses.success(res, { data: result });
+        let key = req.params.key;
+        const result = await Configuracao.deletar(key);
+        if(!result){
+            return responses.notFound(res, { message: 'Configuração não encontrada' });
+        }
+        return responses.success(res, { message: 'Configuração deletada com sucesso', data: [] });
     } catch (error) {
         return responses.error(res, { message: error.message });
     }

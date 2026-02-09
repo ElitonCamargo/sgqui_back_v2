@@ -22,8 +22,8 @@ export default [
 	{
 		codigo:'config:consultarPorId',
 		metodo: 'GET',
-		rota: '/configuracao/:id',
-		functionExec: configuracao.consultarPorId,
+		rota: '/configuracao/:key',
+		functionExec: configuracao.consultarPorKey,
 		recurso: 'Configurações',
 		descricao: 'Obter configuração por ID',
 		ehPublica: false
@@ -31,7 +31,7 @@ export default [
 	{
 		codigo:'config:alterar',
 		metodo: 'PUT',
-		rota: '/configuracao/:id',
+		rota: '/configuracao/:key',
 		functionExec: configuracao.alterar,
 		recurso: 'Configurações',
 		descricao: 'Alterar configuração por ID',
@@ -40,7 +40,7 @@ export default [
 	{
 		codigo:'config:deletar',
 		metodo: 'DELETE',
-		rota: '/configuracao/:id',
+		rota: '/configuracao/:key',
 		functionExec: configuracao.deletar,
 		recurso: 'Configurações',
 		descricao: 'Deletar configuração por ID',
