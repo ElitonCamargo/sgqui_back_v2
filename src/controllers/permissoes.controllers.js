@@ -10,7 +10,7 @@ export const listarTodas = asyncHandler(async (req, res, next) => {
   });
 });
 
-export const listarDisponiveisParaVisualizacao = asyncHandler(async (req, res, next) => { 
+export const listarDisponiveisParaVinculacao = asyncHandler(async (req, res, next) => { 
   const data = await permissoesService.listarTodas("0");
   return responses.success(res, {
     message: 'Permissões consultadas com sucesso', 

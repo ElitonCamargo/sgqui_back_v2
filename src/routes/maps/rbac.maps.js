@@ -136,12 +136,12 @@ export default [
 		ehPublica: true
 	},	
 	{
-		codigo: 'permissoes:listarDisponiveisParaVisualizacao',
+		codigo: 'permissoes:listarDisponiveisParaVinculacao',
 		metodo: 'GET',
-		rota: '/rbac/permissoes/disponiveis_visualizacao',
-		functionExec: permissoes.listarDisponiveisParaVisualizacao,
+		rota: '/rbac/permissoes/disponiveis_vinculacao',
+		functionExec: permissoes.listarDisponiveisParaVinculacao,
 		recurso: 'Controle de Acesso',
-		descricao: 'Listar permissões disponíveis para visualização',
+		descricao: 'Listar permissões disponíveis para vinculação',
 		ehPublica: true
 	},	
 	{
