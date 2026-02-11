@@ -3,7 +3,7 @@
       "node_modules":true,
       "package-lock.json":true,
       ".github":true,
-      "README.md":true,
+      "README.md":false,
       ".gitignore":true,
     }
   }
