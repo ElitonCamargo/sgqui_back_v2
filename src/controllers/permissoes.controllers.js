@@ -1,9 +1,17 @@
-import * as permissoesService from '../services/permissoesService.js';
+import * as permissoesService from '../services/permissoes.service.js';
 import * as responses from '../utils/responses.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 
 export const listarTodas = asyncHandler(async (req, res, next) => { 
   const data = await permissoesService.listarTodas();
+  return responses.success(res, {
+    message: 'Permissões consultadas com sucesso', 
+    data 
+  });
+});
+
+export const listarDisponiveisParaVisualizacao = asyncHandler(async (req, res, next) => { 
+  const data = await permissoesService.listarTodas("0");
   return responses.success(res, {
     message: 'Permissões consultadas com sucesso', 
     data 

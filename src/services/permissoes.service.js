@@ -1,8 +1,8 @@
 import e from 'express';
 import * as PermissoesModel from '../models/PermissoesModel.js';
 
-export const listarTodas = async () => {
-    const permissoes = await PermissoesModel.listar();
+export const listarTodas = async (acesso=undefined) => {    
+    const permissoes = await PermissoesModel.listar(acesso);
     
     const agrupado = permissoes.reduce((acc, perm) => {
     const recurso = perm.recurso;

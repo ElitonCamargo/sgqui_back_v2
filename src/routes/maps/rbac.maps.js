@@ -136,6 +136,15 @@ export default [
 		ehPublica: true
 	},	
 	{
+		codigo: 'permissoes:listarDisponiveisParaVisualizacao',
+		metodo: 'GET',
+		rota: '/rbac/permissoes/disponiveis_visualizacao',
+		functionExec: permissoes.listarDisponiveisParaVisualizacao,
+		recurso: 'Controle de Acesso',
+		descricao: 'Listar permissões disponíveis para visualização',
+		ehPublica: true
+	},	
+	{
 		codigo: 'permissoes:listarPorUsuario',
 		metodo: 'GET',
 		rota: '/rbac/permissoes/usuario/:usuarioId',

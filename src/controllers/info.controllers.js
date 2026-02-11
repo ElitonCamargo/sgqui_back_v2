@@ -1,4 +1,4 @@
-import { listarTodas } from '../services/permissoesService.js';
+import { listarTodas } from '../services/permissoes.service.js';
 import * as responses from '../utils/responses.js';
 
 export const obterInfoSistema = async (req, res)=>{

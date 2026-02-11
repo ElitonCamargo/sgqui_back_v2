@@ -3,7 +3,7 @@ import * as sessoesCache from '../utils/sessoesCache.js';
 import * as responses from '../utils/responses.js'
 import * as helpers from '../utils/helpers.js';
 import * as upService from '../services/usuarioPerfisService.js';
-import * as pService from '../services/permissoesService.js';
+import * as pService from '../services/permissoes.service.js';
 
 export default async function autenticar(req, res, next) {
     try {        

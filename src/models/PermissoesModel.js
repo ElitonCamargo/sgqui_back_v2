@@ -1,9 +1,10 @@
 import pool from '../database/data.js';
 
-export const listar = async () => {
+export const listar = async (acesso=undefined) => {
   try {
-    let cmdSql = 'SELECT * FROM permissoes ORDER BY recurso, metodo, rota_template;';
-    const [dados] = await pool.execute(cmdSql);
+    const where = acesso ? `WHERE eh_publica = ?` : '';
+    let cmdSql = `SELECT * FROM permissoes ${where} ORDER BY recurso, metodo, rota_template;`;
+    const [dados] = await pool.execute(cmdSql, acesso ? [acesso] : []);
     return dados;
   } catch (error) {
     console.error('Erro em listar permissoes:', error);
