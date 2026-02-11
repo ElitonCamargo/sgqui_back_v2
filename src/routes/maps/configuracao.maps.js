@@ -25,7 +25,7 @@ export default [
 		rota: '/configuracao/:key',
 		functionExec: configuracao.consultarPorKey,
 		recurso: 'Configurações',
-		descricao: 'Obter configuração por ID',
+		descricao: 'Obter configuração por KEY',
 		ehPublica: false
 	},
 	{
@@ -34,7 +34,7 @@ export default [
 		rota: '/configuracao/:key',
 		functionExec: configuracao.alterar,
 		recurso: 'Configurações',
-		descricao: 'Alterar configuração por ID',
+		descricao: 'Alterar configuração por KEY',
 		ehPublica: false
 	},
 	{
@@ -43,7 +43,7 @@ export default [
 		rota: '/configuracao/:key',
 		functionExec: configuracao.deletar,
 		recurso: 'Configurações',
-		descricao: 'Deletar configuração por ID',
+		descricao: 'Deletar configuração por KEY',
 		ehPublica: false
 	}
 ];

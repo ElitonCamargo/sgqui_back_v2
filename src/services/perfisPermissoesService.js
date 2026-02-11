@@ -1,5 +1,6 @@
 import { AppError } from "../utils/AppError.js";
 import * as perfisPermissoes from "../models/PerfisPermissoesModel.js";
+import * as PermissoesModel from "../models/PermissoesModel.js";
 
 // Vincular uma lista de permissões a um perfil
 export const vincular = async (perfilId, permissoesIds = []) => {
@@ -56,6 +57,7 @@ export const listarPermissoesPorPerfil = async (perfilId=undefined) => {
     acc[perfilId].permissoes.push({
       vinculoId: item.vinculo_id,
       id: item.permissoes_id,
+      codigo: item.permissoes_codigo,
       recurso: item.permissoes_recurso,
       metodo: item.permissoes_metodo,
       rota_template: item.permissoes_rota_template,
@@ -64,4 +66,24 @@ export const listarPermissoesPorPerfil = async (perfilId=undefined) => {
     return acc;
   }, {});
   return Object.values(resultado);
+};
+
+export const permissoesPorPerfil = async (perfilId) => {
+    const perfilIdNumber = Number(perfilId);
+    if (!perfilIdNumber) {
+        throw new AppError('perfilId inválido', 400);
+    }
+    const permissoesPerfil = await perfisPermissoes.permissoesPorPerfil(perfilIdNumber);
+    const todasPermissoes = await PermissoesModel.listar();
+
+    let permissoes = { }
+    todasPermissoes.forEach(perm => {
+        const possuiPermissao = permissoesPerfil.some(userPerm => userPerm.id === perm.id);
+        if (possuiPermissao) {
+            permissoes[perm.codigo] = true;
+        } else {
+            permissoes[perm.codigo] = false;
+        }
+    });    
+    return permissoes;
 };

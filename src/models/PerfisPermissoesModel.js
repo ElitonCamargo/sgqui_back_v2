@@ -42,6 +42,7 @@ export const listarPermissoesPorPerfil = async (perfilId=undefined) => {
         perfis.nome as perfis_nome,
         perfis.descricao as perfis_descricao,
         permissoes.id as permissoes_id,
+        permissoes.codigo as permissoes_codigo,
         permissoes.recurso as permissoes_recurso,
         permissoes.metodo as permissoes_metodo,
         permissoes.rota_template as permissoes_rota_template,
@@ -65,4 +66,35 @@ export const listarPermissoesPorPerfil = async (perfilId=undefined) => {
 };
 
 
+export const permissoesPorPerfil = async (perfilId) => {
+  try {
+    const sql = `
+      SELECT DISTINCT
+        p.*
+      FROM (
+          SELECT 
+            permissoes.*
+          FROM 
+            perfis_permissoes
+              JOIN 
+            permissoes ON perfis_permissoes.permissao_id = permissoes.id
+          WHERE 
+            perfis_permissoes.perfil_id = ?
 
+          UNION ALL
+
+          SELECT
+            permissoes.*
+          FROM permissoes
+          WHERE eh_publica = 1
+      ) p
+      ORDER BY p.metodo, p.rota_template;
+    `;
+
+    const [dados] = await pool.execute(sql, [perfilId]);
+    return dados;
+  } catch (error) {
+    console.error('Erro ao listar permissões do perfil:', error);
+    throw error;
+  }
+};

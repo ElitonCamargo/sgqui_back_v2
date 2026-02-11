@@ -25,7 +25,8 @@ export const desvincular = asyncHandler(async (req, res, next) => {
 
 export const listarVinculos = asyncHandler(async (req, res, next) => {
     const perfilId = req.params.perfilId;
-    const data = await perfisPermissoes.listarPermissoesPorPerfil(perfilId);
+    // const data = await perfisPermissoes.listarPermissoesPorPerfil(perfilId);
+    const data = await perfisPermissoes.permissoesPorPerfil(perfilId);
     responses.success(res, {
         message: 'Permissões listadas com sucesso',
         data
