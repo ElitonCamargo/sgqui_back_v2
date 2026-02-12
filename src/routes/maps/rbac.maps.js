@@ -155,39 +155,30 @@ export default [
 	},	
 	// Rotas de Perfis-Permissões
 	{
-		codigo: 'perfis_permissoes:listarVinculos',
-		metodo: 'GET',
-		rota: '/rbac/perfil_permissoes',
-		functionExec: perfisPermissoes.listarVinculos,
-		recurso: 'Controle de Acesso',
-		descricao: 'Listar as permissões vinculadas aos perfis',
-		ehPublica: false
-	},
-	{
-		codigo: 'perfis_permissoes:listarVinculosPorPerfil',
-		metodo: 'GET',
-		rota: '/rbac/perfil_permissoes/perfil/:perfilId',
-		functionExec: perfisPermissoes.listarVinculos,
-		recurso: 'Controle de Acesso',
-		descricao: 'Listar permissões por perfil',
-		ehPublica: false
-	},
-	{
 		codigo: 'perfis_permissoes:vincular',
 		metodo: 'POST',
 		rota: '/rbac/perfil_permissoes',
 		functionExec: perfisPermissoes.vincular,
 		recurso: 'Controle de Acesso',
-		descricao: 'Atribuir permissão ao perfis',
+		descricao: 'Atribuir permissões aos perfis',
 		ehPublica: false
 	},
 	{
-		codigo: 'perfis_permissoes:desvincular',
-		metodo: 'DELETE',
-		rota: '/rbac/perfil_permissoes/:vinculoID',
-		functionExec: perfisPermissoes.desvincular,
+		codigo: 'perfis_permissoes:listarVinculos',
+		metodo: 'GET',
+		rota: '/rbac/perfil_permissoes/:perfilId/',
+		functionExec: perfisPermissoes.listarVinculos,
 		recurso: 'Controle de Acesso',
-		descricao: 'Remover permissão de perfis',
-		ehPublica: false
-	}	
+		descricao: 'Listar as permissões vinculadas aos perfis',
+		ehPublica: false	
+	},
+	{
+		codigo: 'perfis_permissoes:permissoesPerfilAcessos',
+		metodo: 'GET',
+		rota: '/rbac/perfil_permissoes/acessos/:perfilId',
+		functionExec: perfisPermissoes.permissoesPerfilAcessos,
+		recurso: 'Controle de Acesso',
+		descricao: 'Controla os acessos do perfil por meio das permissões vinculadas',
+		ehPublica: true		
+	}
 ];

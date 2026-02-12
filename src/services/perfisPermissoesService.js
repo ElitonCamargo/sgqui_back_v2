@@ -20,60 +20,51 @@ export const vincular = async (perfilId, permissoesIds = []) => {
 
 };
 
-// Desvincular uma permissão de um perfil pelo ID do vínculo
-export const desvincular = async (vinculo_id) => {
-  const vinculoIdNum = Number(vinculo_id);
-  if (!vinculoIdNum) {
-    throw new AppError('vinculoID inválido', 400);
-  }
-  const alterou = await perfisPermissoes.desvincular(vinculoIdNum);
-  if (!alterou) {
-    throw new AppError('Vínculo não encontrado', 404);
-  }
-  return alterou;
-};
+
 
 // Listar as permissões vinculadas aos perfis
-export const listarPermissoesPorPerfil = async (perfilId=undefined) => {
-  const perfilIdNum = perfilId !== undefined ? Number(perfilId) : undefined;
+export const listarVinculos = async (perfilId=undefined) => {
+  const perfilIdNum = Number(perfilId);
 
-  const dados = await perfisPermissoes.listarPermissoesPorPerfil(perfilIdNum);
-  if (!dados || dados.length === 0) {
-    throw new AppError('Nenhuma informação sobre permissões vinculadas aos perfis', 404);
+  if (perfilId !== undefined && isNaN(perfilIdNum)) {
+    throw new AppError('perfilId inválido', 400);
   }
 
-  const resultado = dados.reduce((acc, item) => {
-    const perfilId = item.perfis_id;
-    if (!acc[perfilId]) {
-      acc[perfilId] = {
-        perfil: {
-          id: item.perfis_id,
-          nome: item.perfis_nome,
-          descricao: item.perfis_descricao
-        },
-        permissoes: []
-      };
-    }
-    acc[perfilId].permissoes.push({
-      vinculoId: item.vinculo_id,
-      id: item.permissoes_id,
-      codigo: item.permissoes_codigo,
-      recurso: item.permissoes_recurso,
-      metodo: item.permissoes_metodo,
-      rota_template: item.permissoes_rota_template,
-      descricao: item.permissoes_descricao
+  const permissoesJaVinculadas = await perfisPermissoes.listarVinculos(perfilIdNum);
+  const permissoesPrivadas = await PermissoesModel.listar("0"); //0 => apenas as permissões privadas
+  let dados = [];
+  
+  
+  permissoesPrivadas.forEach(perm => {
+        if (permissoesJaVinculadas.some(userPerm => userPerm.id === perm.id)) {
+            perm.vinculada = true;
+          } else {
+            perm.vinculada = false;
+          }
+          dados.push(perm);
     });
-    return acc;
-  }, {});
+
+    const resultado = dados.reduce((acc, perm) => {
+      const recurso = perm.recurso;
+      if (!acc[recurso]) {
+        acc[recurso] = {
+          recurso: recurso,
+          permissoes: []
+        };
+      }
+      acc[recurso].permissoes.push(perm);
+      return acc;
+    }, {});
   return Object.values(resultado);
+  
 };
 
-export const permissoesPorPerfil = async (perfilId) => {
+export const permissoesPerfilAcessos = async (perfilId) => {
     const perfilIdNumber = Number(perfilId);
     if (!perfilIdNumber) {
         throw new AppError('perfilId inválido', 400);
     }
-    const permissoesPerfil = await perfisPermissoes.permissoesPorPerfil(perfilIdNumber);
+    const permissoesPerfil = await perfisPermissoes.permissoesPerfilAcessos(perfilIdNumber);
     const todasPermissoes = await PermissoesModel.listar();
 
     let permissoes = { }

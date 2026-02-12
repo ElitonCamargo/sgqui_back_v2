@@ -21,7 +21,7 @@ const routes = Router();
 
 	// Cria rotas dinâmicas com base nas permissões definidas
 	routesMaps.forEach((map) => {
-		routes[map.metodo.toLowerCase()](map.rota, autenticar, autorizar, map.functionExec);
+		routes[map.metodo.toLowerCase()](map.rota, autenticar, autorizar, map.functionExec);		
 	});
 
 

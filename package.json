@@ -9,7 +9,7 @@
     "dev": "nodemon .",
     "test": "echo \"Error: no test specified\" && exit 1",
   
-    "inserir-permissoes": "node ./scripts/sync-permissions.js"
+    "sp": "node ./scripts/sync-permissions.js"
   },
   "keywords": [],
   "author": "",
