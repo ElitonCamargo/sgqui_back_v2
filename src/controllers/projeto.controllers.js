@@ -1,5 +1,6 @@
 import * as Projeto from '../models/Projeto.js';
 import * as responses from '../utils/responses.js';
+import * as projetoService from '../services/projeto.service.js';
 
 export const consultar = async (req, res)=>{
     try {
@@ -97,6 +98,20 @@ export const alterar = async (req, res)=>{
         projeto.id = req.params.id;
         const projetoAlterado = await Projeto.alterar(projeto,req.loginId);
         return responses.success(res, { data: projetoAlterado });
+    } catch (error) {
+        return responses.error(res,{ message: error.message });
+    }
+}
+
+export const addResultado = async (req, res)=>{
+    try {
+        const resultado = req.body;
+        const projetoId = req.params.id;
+        const responsavelId = req.loginId;
+
+        const data = await projetoService.addResultado(projetoId, responsavelId, resultado);
+
+        return responses.success(res, { data });
     } catch (error) {
         return responses.error(res,{ message: error.message });
     }

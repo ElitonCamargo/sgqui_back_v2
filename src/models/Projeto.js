@@ -88,6 +88,21 @@ export const alterar = async (projeto={},loginId=0) => {
     }
 };
 
+export const addResultado = async (projetoId, resultado={}) => {
+    try {
+        let cmdSql = 'UPDATE projeto SET resultado = ? WHERE id = ?;';
+
+        const resultadoJson = JSON.stringify(resultado);
+        await pool.execute(cmdSql, [resultadoJson, projetoId]);
+        const [dados] = await pool.execute('SELECT resultado FROM projeto WHERE id = ?;', [projetoId]);
+        return dados[0].resultado;
+    }
+    catch (error) {
+        throw error;
+    }
+};
+
+
 export const consultar = async (filtro = '') => {
     try {  
         const cmdSql = 'SELECT * FROM projeto WHERE nome LIKE ? or descricao LIKE ? ORDER BY updatedAt DESC;';

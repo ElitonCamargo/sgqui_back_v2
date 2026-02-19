@@ -74,6 +74,15 @@ export default [
     ehPublica: false
   },
   {
+    codigo: 'projeto:addResultado',
+    metodo: 'PUT',
+    rota: '/projeto/:id/resultado',
+    functionExec: projeto.addResultado,
+    recurso: 'Projetos',
+    descricao: 'Cadastrar resultados (Acompanhamento)',
+    ehPublica: false
+  },
+  {
     codigo: 'projeto:deletar',
     metodo: 'DELETE',
     rota: '/projeto/:id',
@@ -82,4 +91,5 @@ export default [
     descricao: 'Deletar projeto',
     ehPublica: false
   }
+
 ];
