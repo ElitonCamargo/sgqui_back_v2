@@ -45,8 +45,8 @@ export const cadastrada = async (req, res)=>{
 export const alterar = async (req, res)=>{
     try {
         let nutriente = req.body;
-        nutriente.id = req.params.id;
-        const nutrienteAlterado = await Nutriente.alterar(nutriente);
+        let id = req.params.id;
+        const nutrienteAlterado = await Nutriente.alterar(id, nutriente);
         return responses.success(res, { data: nutrienteAlterado });
     } catch (error) {
         return responses.error(res,{ message: error.message });

@@ -27,27 +27,23 @@ export const cadastrar = async (nutriente={}) => {
     }
 };
 
-export const alterar = async (nutriente={}) => {
+export const alterar = async (id, nutriente={}) => {
     try {
-        let valores = [];
-        let cmdSql = 'UPDATE nutriente SET ';
 
-        for(const key in nutriente){
-            valores.push(nutriente[key]);
-            cmdSql += `${key} = ?, `;
-        }
+        const keys = Object.keys(nutriente);
+        const values = Object.values(nutriente);
+        const setClause = keys.map(k => `${k} = ?`).join(', ');
 
-        cmdSql = cmdSql.replace(', id = ?,', '');
-        cmdSql += 'WHERE id = ?;';
-        const [execucao] = await pool.execute(cmdSql, valores);
-        if(execucao.affectedRows > 0){
-            const [dados] = await pool.execute('SELECT * FROM nutriente WHERE id = ?;', nutriente.id);
-            return dados;
-        }
-        return [];
+        const sql = `
+        UPDATE nutriente
+        SET ${setClause}, updatedAt = CURRENT_TIMESTAMP
+        WHERE id = ? `;  
+        
+        await pool.execute(sql, [...values, id]);
+        return await consultarPorId(id);
 
-    }
-    catch (error) {
+    } catch (error) {
+        console.error('Erro em alterar:', error);
         throw error;
     }
 };
