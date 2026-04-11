@@ -4,6 +4,6 @@
       "package-lock.json":true,
       ".github":true,
       "README.md":false,
-      ".gitignore":true,
+      ".gitignore":false,
     }
   }
