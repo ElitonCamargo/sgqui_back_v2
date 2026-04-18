@@ -64,9 +64,6 @@ export const alterar = async (projeto={},loginId=0) => {
             cmdSql += `aplicacao = '${aplic}', `;
             delete projeto['aplicacao'];
         }
-        else{
-            cmdSql += `aplicacao = null, `;
-        }
 
         for(const key in projeto){
             valores.push(projeto[key]);
@@ -77,7 +74,7 @@ export const alterar = async (projeto={},loginId=0) => {
         cmdSql += 'WHERE id = ?;';
         const [execucao] = await pool.execute(cmdSql, valores);
         if(execucao.affectedRows > 0){
-            const [dados] = await pool.execute('SELECT * FROM projeto WHERE id = ?;', projeto.id);
+            const [dados] = await pool.execute('SELECT * FROM projeto WHERE id = ?;', [projeto.id]);
             return dados;
         }
         return [];
