@@ -18,7 +18,11 @@ export const vincular = async (perfilId, permissoesIds = []) => {
     const [result] = await pool.execute(cmdSql, params);
     return result.affectedRows;
   } catch (error) {
-    throw new AppError('Erro ao vincular permissões ao perfil', error.message, 500);
+    throw new AppError({
+      message: 'Erro ao vincular permissões ao perfil',
+      reason: `Falha ao sincronizar permissões do perfil; o DELETE das vinculações antigas ou o INSERT das novas falhou no banco de dados — verifique se o perfil e as permissões informadas existem. Detalhe: ${error.message}`,
+      code: 500
+    });
   }
 };
 
@@ -39,7 +43,11 @@ export const listarVinculos = async (perfilId) => {
     const [dados] = await pool.execute(cmdSql, [perfilId]);
     return dados;
   } catch (error) {
-    throw new AppError('Erro ao listar permissões de perfil', error.message, 500);
+    throw new AppError({
+      message: 'Erro ao listar permissões de perfil',
+      reason: `Falha na execução do SELECT com JOIN entre 'perfis_permissoes' e 'permissoes' para o perfil informado; verifique a conectividade com o banco. Detalhe: ${error.message}`,
+      code: 500
+    });
   }
 };
 
@@ -72,6 +80,10 @@ export const permissoesPerfilAcessos = async (perfilId) => {
     const [dados] = await pool.execute(sql, [perfilId]);
     return dados;
   } catch (error) {
-    throw new AppError('Erro ao listar acessos de permissões do perfil', error.message, 500);
+    throw new AppError({
+      message: 'Erro ao listar acessos de permissões do perfil',
+      reason: `Falha na execução da consulta UNION entre permissões vinculadas ao perfil e permissões públicas; verifique a conectividade com o banco. Detalhe: ${error.message}`,
+      code: 500
+    });
   }
 };

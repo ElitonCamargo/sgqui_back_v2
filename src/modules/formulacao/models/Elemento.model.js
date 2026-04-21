@@ -18,7 +18,11 @@ export const consultar = async (query={}) => {
         return dados;
     } 
     catch (error) {
-        throw new AppError('Erro ao consultar elementos', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao consultar elementos',
+            reason: `Falha na execução do SELECT na tabela 'elementos'; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };
 
@@ -29,7 +33,11 @@ export const consultarPorId = async (id) => {
         return dados;
     } 
     catch (error) {
-        throw new AppError('Erro ao consultar elemento por ID', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao consultar elemento por ID',
+            reason: `Falha na execução do SELECT na tabela 'elementos' filtrando por ID; verifique se o ID fornecido é válido e a conectividade com o banco. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };
 
@@ -40,7 +48,11 @@ export const consultarPorSimbolo = async (simbolo) => {
         return dados;
     } 
     catch (error) {
-        throw new AppError('Erro ao consultar elemento por símbolo', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao consultar elemento por símbolo',
+            reason: `Falha na execução do SELECT na tabela 'elementos' filtrando pelo símbolo químico; verifique se o símbolo fornecido é válido. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };
 

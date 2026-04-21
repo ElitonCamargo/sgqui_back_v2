@@ -8,7 +8,11 @@ export const listar = async (acesso=undefined) => {
     const [dados] = await pool.execute(cmdSql, acesso ? [acesso] : []);
     return dados;
   } catch (error) {
-    throw new AppError('Erro ao listar permissões', error.message, 500);
+    throw new AppError({
+      message: 'Erro ao listar permissões',
+      reason: `Falha na execução do SELECT na tabela 'permissoes'; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+      code: 500
+    });
   }
 };
 
@@ -43,6 +47,10 @@ export const listarPermissoesPorUsuario = async (usuarioId) => {
     const [dados] = await pool.execute(sql, [usuarioId]);
     return dados;
   } catch (error) {
-    throw new AppError('Erro ao listar permissões por usuário', error.message, 500);
+    throw new AppError({
+      message: 'Erro ao listar permissões por usuário',
+      reason: `Falha na execução da consulta JOIN entre 'usuario_perfis', 'perfis_permissoes' e 'permissoes' para o usuário informado; verifique a conectividade com o banco. Detalhe: ${error.message}`,
+      code: 500
+    });
   }
 };

@@ -15,7 +15,11 @@ export const cadastrar = async (usuario) => {
         return await consultarPorId(result.insertId);
     }
     catch(error){
-        throw new AppError('Erro ao cadastrar usuário', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao cadastrar usuário',
+            reason: `Falha na execução do INSERT na tabela 'usuario'; verifique se já existe um usuário com o mesmo e-mail ou se os dados fornecidos são inválidos. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 
 };
@@ -35,7 +39,11 @@ export const alterar = async (id, usuario) => {
         return consultarPorId(id);
     }
     catch (error) {
-        throw new AppError('Erro ao alterar usuário', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao alterar usuário',
+            reason: `Falha na execução do UPDATE na tabela 'usuario'; o ID pode ser inválido ou os dados fornecidos são incompatíveis com o esquema. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 
 };
@@ -47,7 +55,11 @@ export const consultarPorEmail = async (email) => {
         return dados[0];
     }
     catch (error) {
-        throw new AppError('Erro ao consultar usuário por email', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao consultar usuário por email',
+            reason: `Falha na execução do SELECT na tabela 'usuario' filtrando por e-mail; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 
 };
@@ -59,7 +71,11 @@ export const consultar = async (filtro = '') => {
         return dados;
     }
     catch (error) {
-        throw new AppError('Erro ao consultar usuários', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao consultar usuários',
+            reason: `Falha na execução do SELECT na tabela 'usuario'; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 
 };
@@ -71,7 +87,11 @@ export const consultarPorId = async (id) => {
         return dados[0];
     }
     catch (error) {
-        throw new AppError('Erro ao consultar usuário por ID', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao consultar usuário por ID',
+            reason: `Falha na execução do SELECT na tabela 'usuario' filtrando por ID; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };
 
@@ -83,7 +103,11 @@ export const deletar = async (id) => {
         return dados.affectedRows > 0;
     }
     catch (error) {
-        throw new AppError('Erro ao deletar usuário', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao deletar usuário',
+            reason: `Falha na execução do DELETE na tabela 'usuario'; o registro pode possuir dependências em outras tabelas que impedem a exclusão. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };
 

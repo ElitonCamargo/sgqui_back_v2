@@ -23,6 +23,10 @@ export const listarFormulacoesLiberadas = async (filtro = '') => {
         return dados;
     } 
     catch (error) {
-        throw new AppError('Erro ao listar formulações liberadas', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao listar formulações liberadas',
+            reason: `Falha na execução do SELECT com JOIN entre 'produtos' e 'projeto' para listar formulações com status 'Liberado'; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };

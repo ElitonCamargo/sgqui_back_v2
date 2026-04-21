@@ -24,7 +24,11 @@ export const cadastrar = async (nutriente={}) => {
         return dados;
     } 
     catch (error) {
-        throw new AppError('Erro ao cadastrar nutriente', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao cadastrar nutriente',
+            reason: `Falha na execução do INSERT na tabela 'nutrientes'; verifique se há duplicidade de nome ou fórmula, ou se os dados fornecidos são inválidos. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };
 
@@ -44,7 +48,11 @@ export const alterar = async (id, nutriente={}) => {
         return await consultarPorId(id);
 
     } catch (error) {
-        throw new AppError('Erro ao alterar nutriente', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao alterar nutriente',
+            reason: `Falha na execução do UPDATE na tabela 'nutrientes'; verifique se o ID fornecido existe e se os dados são compatíveis com o esquema. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };
 
@@ -55,7 +63,11 @@ export const consultar = async (filtro = '') => {
         return dados;
     } 
     catch (error) {
-        throw new AppError('Erro ao consultar nutrientes', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao consultar nutrientes',
+            reason: `Falha na execução do SELECT na tabela 'nutrientes'; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };
 
@@ -66,7 +78,11 @@ export const consultarPorId = async (id) => {
         return dados;
     } 
     catch (error) {
-        throw new AppError('Erro ao consultar nutriente por ID', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao consultar nutriente por ID',
+            reason: `Falha na execução do SELECT na tabela 'nutrientes' filtrando por ID; verifique se o ID fornecido é válido. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };
 
@@ -77,7 +93,11 @@ export const consultarPorNome = async (nome) => {
         return dados;
     } 
     catch (error) {
-        throw new AppError('Erro ao consultar nutriente por nome', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao consultar nutriente por nome',
+            reason: `Falha na execução do SELECT na tabela 'nutrientes' filtrando pelo nome; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };
 
@@ -88,7 +108,11 @@ export const consultarPorFormula = async (formula) => {
         return dados;
     } 
     catch (error) {
-        throw new AppError('Erro ao consultar nutriente por fórmula', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao consultar nutriente por fórmula',
+            reason: `Falha na execução do SELECT na tabela 'nutrientes' filtrando pela fórmula química; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };
 
@@ -99,7 +123,11 @@ export const deletar = async (id) => {
         return dados;
     } 
     catch (error) {
-        throw new AppError('Erro ao deletar nutriente', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao deletar nutriente',
+            reason: `Falha na execução do DELETE na tabela 'nutrientes'; o registro pode não existir ou possuir garantias vinculadas que impedem a exclusão. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };
 

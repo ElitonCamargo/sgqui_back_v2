@@ -15,7 +15,11 @@ export const cadastrar = async (configuracao={key:'', value:{}}) => {
         return await consultarPorKey(key);
     } 
     catch (error) {
-        throw new AppError('Erro ao cadastrar configuração', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao cadastrar configuração',
+            reason: `Falha na execução do INSERT na tabela 'configuracoes'; verifique se já existe uma configuração com a mesma chave ou se os dados fornecidos são inválidos. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };
 
@@ -36,7 +40,11 @@ export const alterar = async (configuracao={}, responsavel) => {
         return await consultarPorKey(key);
     }
     catch (error) {
-        throw new AppError('Erro ao alterar configuração', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao alterar configuração',
+            reason: `Falha na execução do UPDATE na tabela 'configuracoes'; verifique se a chave informada existe e se os dados fornecidos são válidos. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };
 
@@ -47,7 +55,11 @@ export const consultar = async () => {
         return rows;
     } 
     catch (error) {
-        throw new AppError('Erro ao consultar configurações', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao consultar configurações',
+            reason: `Falha na execução do SELECT na tabela 'configuracoes'; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };
 
@@ -58,7 +70,11 @@ export const consultarPorKey = async (key) => {
         return rows[0];
     } 
     catch (error) {
-        throw new AppError('Erro ao consultar configuração por chave', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao consultar configuração por chave',
+            reason: `Falha na execução do SELECT na tabela 'configuracoes' filtrando pela chave informada; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };
 
@@ -69,6 +85,10 @@ export const deletar = async (key) => {
         return rows.affectedRows > 0;
     } 
     catch (error) {
-        throw new AppError('Erro ao deletar configuração', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao deletar configuração',
+            reason: `Falha na execução do DELETE na tabela 'configuracoes'; a configuração pode não existir ou possuir dependências que impedem a exclusão. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };

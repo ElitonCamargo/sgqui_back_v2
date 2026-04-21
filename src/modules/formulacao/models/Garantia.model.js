@@ -23,7 +23,11 @@ export const consultarPorNutriente = async (nutrienteId) => {
         return dados;
     } 
     catch (error) {
-        throw new AppError('Erro ao consultar garantias por nutriente', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao consultar garantias por nutriente',
+            reason: `Falha na execução do SELECT na tabela 'garantia' filtrando pelo ID do nutriente; verifique se o nutriente informado existe. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };
 
@@ -45,7 +49,11 @@ export const consultarPorMateria_prima = async (materia_primaId) => {
         return dados;
     } 
     catch (error) {
-        throw new AppError('Erro ao consultar garantias por matéria-prima', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao consultar garantias por matéria-prima',
+            reason: `Falha na execução do SELECT na tabela 'garantia' filtrando pelo ID da matéria-prima; verifique se a matéria-prima informada existe. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };
 
@@ -72,7 +80,11 @@ export const cadastrar = async (garantia={}) => {
         return dados;
     } 
     catch (error) {
-        throw new AppError('Erro ao cadastrar garantia', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao cadastrar garantia',
+            reason: `Falha na execução do INSERT na tabela 'garantia'; verifique se o nutriente e a matéria-prima informados existem e se os dados são válidos. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };
 
@@ -97,7 +109,11 @@ export const alterar = async (garantia={}) => {
 
     }
     catch (error) {
-        throw new AppError('Erro ao alterar garantia', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao alterar garantia',
+            reason: `Falha na execução do UPDATE na tabela 'garantia'; verifique se o registro existe e se os dados fornecidos são compatíveis com o esquema. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };
 
@@ -108,7 +124,11 @@ export const consultar = async () => {
         return dados;
     } 
     catch (error) {
-        throw new AppError('Erro ao consultar garantias', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao consultar garantias',
+            reason: `Falha na execução do SELECT na tabela 'garantia'; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };
 
@@ -119,7 +139,11 @@ export const consultarPorId = async (id) => {
         return dados;
     } 
     catch (error) {
-        throw new AppError('Erro ao consultar garantia por ID', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao consultar garantia por ID',
+            reason: `Falha na execução do SELECT na tabela 'garantia' filtrando por ID; verifique se o ID fornecido é válido. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };
 
@@ -130,7 +154,11 @@ export const consultarPorMP = async (mp_id) => {
         return dados;
     } 
     catch (error) {
-        throw new AppError('Erro ao consultar garantia por matéria-prima', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao consultar garantia por matéria-prima',
+            reason: `Falha na execução do SELECT na tabela 'garantia' filtrando pelo ID da matéria-prima (consulta MP); verifique se a matéria-prima informada existe. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };
 
@@ -141,6 +169,10 @@ export const deletar = async (id) => {
         return dados;
     } 
     catch (error) {
-        throw new AppError('Erro ao deletar garantia', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao deletar garantia',
+            reason: `Falha na execução do DELETE na tabela 'garantia'; o registro pode não existir ou possuir dependências que impedem a exclusão. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };

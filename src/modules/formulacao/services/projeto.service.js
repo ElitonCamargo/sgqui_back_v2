@@ -7,10 +7,18 @@ export const cadastrar = async ({ nome, descricao = null }) => {
 
 export const addResultado = async (projetoId, responsavelId, resultado={}) => {
     if(projetoId == null || projetoId.trim() === ''){
-        throw new AppError('ID do projeto é obrigatório', 400);
+        throw new AppError({
+            message: 'ID do projeto é obrigatório',
+            reason: "O parâmetro 'projetoId' não foi fornecido ou está vazio; é necessário identificar o projeto ao qual o resultado será vinculado",
+            code: 400
+        });
     }
     if(resultado == null || typeof resultado !== 'object'){
-        throw new AppError('Resultado deve ser um objeto', 400);
+        throw new AppError({
+            message: 'Resultado deve ser um objeto',
+            reason: "O campo 'resultado' deve ser um objeto com os dados do resultado a ser adicionado ao projeto",
+            code: 400
+        });
     }
     resultado.id_responsavel = responsavelId;        
     return await projetoModel.addResultado(projetoId, resultado);        

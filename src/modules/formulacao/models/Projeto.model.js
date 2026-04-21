@@ -36,7 +36,11 @@ export const cadastrar = async (projeto={},loginId=0) => {
         return dados;
     } 
     catch (error) {
-        throw new AppError('Erro ao cadastrar projeto', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao cadastrar projeto',
+            reason: `Falha na execução do INSERT na tabela 'projeto'; verifique se os campos obrigatórios foram fornecidos e se os valores de status e aplicação são válidos. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };
 
@@ -47,7 +51,11 @@ export const duplicar = async (id = 0) => {
         return dados[0];
     } 
     catch (error) {
-        throw new AppError('Erro ao duplicar projeto', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao duplicar projeto',
+            reason: `Falha na execução da stored procedure 'duplicar_projeto'; verifique se o ID do projeto origem existe e se a procedure está criada no banco de dados. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };
 
@@ -82,7 +90,11 @@ export const alterar = async (projeto={},loginId=0) => {
 
     }
     catch (error) {
-        throw new AppError('Erro ao alterar projeto', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao alterar projeto',
+            reason: `Falha na execução do UPDATE na tabela 'projeto'; verifique se o ID fornecido existe e se os campos de status e aplicação são válidos. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };
 
@@ -96,7 +108,11 @@ export const addResultado = async (projetoId, resultado={}) => {
         return dados[0].resultado;
     }
     catch (error) {
-        throw new AppError('Erro ao adicionar resultado do projeto', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao adicionar resultado do projeto',
+            reason: `Falha na execução do UPDATE no campo 'resultado' da tabela 'projeto'; verifique se o ID do projeto existe e se o objeto de resultado é serealizável em JSON. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };
 
@@ -108,7 +124,11 @@ export const consultar = async (filtro = '') => {
         return dados;
     } 
     catch (error) {
-        throw new AppError('Erro ao consultar projetos', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao consultar projetos',
+            reason: `Falha na execução do SELECT na tabela 'projeto' com filtro por nome e descrição; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };
 
@@ -213,7 +233,11 @@ export const consultarFiltroAvacado = async (filtro = []) => {
 
     } 
     catch (error) {
-        throw new AppError('Erro ao consultar projetos com filtro avançado', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao consultar projetos com filtro avançado',
+            reason: `Falha na execução da consulta de filtro avançado sobre a view 'projeto_detalhado'; verifique se o JSON de filtros é válido e se a view existe no banco. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };
 
@@ -334,7 +358,11 @@ export const consultarPorId = async (id) => {
         return dados;
     } 
     catch (error) {
-        throw new AppError('Erro ao consultar projeto por ID', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao consultar projeto por ID',
+            reason: `Falha na execução do SELECT na tabela 'projeto' filtrando por ID; verifique se o ID fornecido é válido e a conectividade com o banco. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };
 
@@ -345,7 +373,11 @@ export const consultarPorCodigo = async (codigo) => {
         return dados;
     } 
     catch (error) {
-        throw new AppError('Erro ao consultar projeto por código', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao consultar projeto por código',
+            reason: `Falha na execução do SELECT na tabela 'projeto' filtrando por código; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };
 
@@ -363,7 +395,11 @@ export const consultarPorData = async (data_inicio="", data_termino="") => {
         return dados;
     } 
     catch (error) {
-        throw new AppError('Erro ao consultar projetos por data', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao consultar projetos por data',
+            reason: `Falha na execução do SELECT na tabela 'projeto' filtrando por intervalo de datas; verifique se o formato de data informado é válido (YYYY-MM-DD). Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };
 
@@ -375,7 +411,11 @@ export const consultarPorStatus = async (status='') => {
         return dados;
     } 
     catch (error) {
-        throw new AppError('Erro ao consultar projetos por status', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao consultar projetos por status',
+            reason: `Falha na execução do SELECT na tabela 'projeto' usando JSON_EXTRACT sobre o campo 'status'; verifique se o valor de status fornecido é válido. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };
 
@@ -386,7 +426,11 @@ export const deletar = async (id) => {
         return dados;
     } 
     catch (error) {
-        throw new AppError('Erro ao deletar projeto', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao deletar projeto',
+            reason: `Falha na execução do DELETE na tabela 'projeto'; o registro pode não existir ou possuir etapas e resultados vinculados que impedem a exclusão. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };
 
@@ -400,6 +444,10 @@ export const consultaDetalhada = async (id) => {
         return estruturarProjeto(dados);
     } 
     catch (error) {
-        throw new AppError('Erro ao consultar detalhes do projeto', error.message, 500);
+        throw new AppError({
+            message: 'Erro ao consultar detalhes do projeto',
+            reason: `Falha na execução do SELECT na view 'projeto_detalhado' filtrando por ID; verifique se o projeto existe e se a view está criada no banco de dados. Detalhe: ${error.message}`,
+            code: 500
+        });
     }
 };
