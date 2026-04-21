@@ -1,27 +1,11 @@
 import pool from '../../../core/database/data.js';
 import { AppError } from '../../../core/utils/AppError.js';
 
-export const cadastrar = async (nutriente={}) => {    
+export const cadastrar = async ({ nome='', formula='', visivel=1 }) => {    
     try {
-        let valores = [];
-        let campos = '';
-        let placeholders = '';
-        
-        for(const key in nutriente){
-            campos += `${key},`;            
-            placeholders += '?,';
-            valores.push(nutriente[key]);            
-        }
-        campos = campos.slice(0, -1);
-        placeholders = placeholders.slice(0, -1);
-        const cmdSql = `INSERT INTO nutriente (${campos}) VALUES (${placeholders});`;        
-        await pool.execute(cmdSql, valores);
-
-        const [result] = await pool.execute('SELECT LAST_INSERT_ID() as lastId');
-        const lastId = result[0].lastId;
-
-        const [dados] = await pool.execute('SELECT * FROM nutriente WHERE id = ?;', [lastId]);
-        return dados;
+        const cmdSql = 'INSERT INTO nutriente (nome, formula, visivel) VALUES (?, ?, ?);';
+        const [result] = await pool.execute(cmdSql, [nome, formula, visivel]);
+        return await consultarPorId(result.insertId);   
     } 
     catch (error) {
         throw new AppError({
@@ -44,7 +28,11 @@ export const alterar = async (id, nutriente={}) => {
         SET ${setClause}, updatedAt = CURRENT_TIMESTAMP
         WHERE id = ? `;  
         
-        await pool.execute(sql, [...values, id]);
+        const [result] = await pool.execute(sql, [...values, id]);
+        if(result.affectedRows === 0){
+            return null;
+        }
+
         return await consultarPorId(id);
 
     } catch (error) {
