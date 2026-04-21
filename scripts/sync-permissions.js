@@ -1,5 +1,8 @@
-import pool from "../src/database/data.js";
-import permissions from "../src/routes/maps/index.js";
+import pool from "../src/core/database/data.js";
+import allRoutesMaps from "../src/routes/allRoutes.maps.js";
+
+
+const permissions = [...allRoutesMaps];
 
 async function syncPermissions() {
     const cx = await pool.getConnection();
@@ -28,17 +31,18 @@ async function syncPermissions() {
 
 
         // Depois, insere as permissões definidas no código
-        const values = permissions.map(perm => '(?, ?, ?, ?, ?, ?)').join(', ');
+        const values = permissions.map(perm => '(?, ?, ?, ?, ?, ?, ?)').join(', ');
         const params = permissions.flatMap(perm => [
             perm.codigo,
+            perm.modulo,
             perm.recurso,
             perm.metodo,
-            perm.rota,
+            `/${perm.modulo}/${perm.rota}`,
             perm.descricao,
             perm.ehPublica ? 1 : 0
         ]);
 
-        const sqlInsert = `INSERT INTO permissoes (codigo, recurso, metodo, rota_template, descricao, eh_publica) VALUES ${values}`;
+        const sqlInsert = `INSERT INTO permissoes (codigo, modulo, recurso, metodo, rota_template, descricao, eh_publica) VALUES ${values}`;
 
         const result = await cx.execute(sqlInsert, params);
         if(result[0].affectedRows !== permissions.length) {

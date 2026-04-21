@@ -1,10 +1,11 @@
 import { Router } from 'express';
-import { AppError } from '../utils/AppError.js';
-import autenticar from "../middlewares/autenticacao.js";
-import autorizar from '../middlewares/autorizar.js';
-import * as info from '../controllers/info.controllers.js';
-import * as usuario from '../controllers/usuario.controllers.js';
-import routesMaps from './maps/index.js';
+import { AppError } from '../core/utils/AppError.js';
+import autenticar from "../core/middlewares/autenticacao.js";
+import autorizar from '../core/middlewares/autorizar.js';
+import * as info from '../modules/rbac/controllers/info.controllers.js';
+import * as usuario from '../modules/rbac/controllers/usuario.controllers.js';
+
+import allRoutesMaps from './allRoutes.maps.js';
 
 const routes = Router();
 
@@ -17,11 +18,12 @@ const routes = Router();
 	routes.get('/rotas', info.endpoints);
 
 	// Ex: Rota para login de usuário
-	routes.post('/usuario/login', usuario.login);
+	routes.post('/rbac/usuario/login', usuario.login);
 
 	// Cria rotas dinâmicas com base nas permissões definidas
-	routesMaps.forEach((map) => {
-		routes[map.metodo.toLowerCase()](map.rota, autenticar, autorizar, map.functionExec);		
+	allRoutesMaps.forEach((map) => {
+		routes[map.metodo.toLowerCase()](`/${map.modulo}/${map.rota}`, autenticar, autorizar, map.functionExec);		
+		// routes[map.metodo.toLowerCase()](`/${map.modulo}/${map.rota}`, map.functionExec);		
 	});
 
 

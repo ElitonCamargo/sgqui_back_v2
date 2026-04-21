@@ -5,7 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import bodyParser from 'body-parser';
 import routes from './routes/index.js';
-import { errorMiddleware } from './middlewares/error.middleware.js';
+import { errorMiddleware } from './core/middlewares/error.middleware.js';
 
 const app = express();
 
