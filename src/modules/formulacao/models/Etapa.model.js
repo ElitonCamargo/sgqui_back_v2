@@ -1,4 +1,5 @@
 import pool from '../../../core/database/data.js';
+import { AppError } from '../../../core/utils/AppError.js';
 
 export const cadastrar = async (etapa={}) => {    
     try {
@@ -23,7 +24,7 @@ export const cadastrar = async (etapa={}) => {
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao cadastrar etapa', error.message, 500);
     }
 };
 
@@ -48,7 +49,7 @@ export const alterar = async (etapa={}) => {
 
     }
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao alterar etapa', error.message, 500);
     }
 };
 
@@ -59,7 +60,7 @@ export const consultar = async (filtro = '') => {
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao consultar etapas', error.message, 500);
     }
 };
 
@@ -70,7 +71,7 @@ export const consultarPorId = async (id) => {
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao consultar etapa por ID', error.message, 500);
     }
 };
 
@@ -81,7 +82,7 @@ export const consultarPorNome = async (nome) => {
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao consultar etapa por nome', error.message, 500);
     }
 };
 
@@ -92,7 +93,7 @@ export const consultarPorProjeto = async (projeto_id) => {
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao consultar etapas por projeto', error.message, 500);
     }
 };
 
@@ -103,6 +104,6 @@ export const deletar = async (id) => {
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao deletar etapa', error.message, 500);
     }
 };

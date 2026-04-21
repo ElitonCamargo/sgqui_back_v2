@@ -1,15 +1,16 @@
 import pool from '../../../core/database/data.js';
+import { AppError } from '../../../core/utils/AppError.js';
 
 export const consultar = async (filtro = '') => {
     
     try {
         
         const cmdSql = 'SELECT * FROM materia_prima WHERE nome LIKE ?;';
-        const [dados, meta_dados] = await pool.execute(cmdSql, [`%${filtro}%`]);
+        const [dados] = await pool.execute(cmdSql, [`%${filtro}%`]);
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao consultar matérias-primas', error.message, 500);
     } 
 
 };
@@ -20,11 +21,11 @@ export const consultarPorId = async (id) => {
     try {
         
         const cmdSql = 'SELECT * FROM materia_prima WHERE id = ?;';
-        const [dados, meta_dados] = await pool.execute(cmdSql, [id]);
+        const [dados] = await pool.execute(cmdSql, [id]);
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao consultar matéria-prima por ID', error.message, 500);
     } 
 
 };
@@ -34,11 +35,11 @@ export const consultarPorCodigo = async (codigo) => {
     try {
         
         const cmdSql = 'SELECT * FROM materia_prima WHERE codigo = ?;';
-        const [dados, meta_dados] = await pool.execute(cmdSql, [codigo]);
+        const [dados] = await pool.execute(cmdSql, [codigo]);
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao consultar matéria-prima por código', error.message, 500);
     } 
 
 };
@@ -48,11 +49,11 @@ export const consultarPorCas_number = async (cas_number) => {
     try {
         
         const cmdSql = 'SELECT * FROM materia_prima WHERE cas_number = ?;';
-        const [dados, meta_dados] = await pool.execute(cmdSql, [cas_number]);
+        const [dados] = await pool.execute(cmdSql, [cas_number]);
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao consultar matéria-prima por CAS number', error.message, 500);
     } 
 
 };
@@ -62,11 +63,11 @@ export const consultarPorFormula = async (formula) => {
     try {
         
         const cmdSql = 'SELECT * FROM materia_prima WHERE formula LIKE ?;';
-        const [dados, meta_dados] = await pool.execute(cmdSql, [`%${formula}%`]);
+        const [dados] = await pool.execute(cmdSql, [`%${formula}%`]);
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao consultar matéria-prima por fórmula', error.message, 500);
     } 
 
 };
@@ -93,11 +94,11 @@ export const consultarMP_precentual_nutriente = async (nutrienteID=0,percentual=
             nutriente.id = ${nutrienteID} AND ((${percentual} * 100) / garantia.percentual) < 100
             ORDER BY percentual ASC
         `;
-        const [dados, meta_dados] = await pool.execute(cmdSql);
+        const [dados] = await pool.execute(cmdSql);
         return dados[0];
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao consultar composição de matéria-prima por nutriente', error.message, 500);
     } 
 
 };
@@ -124,7 +125,7 @@ export const cadastrar = async (materia_prima) => {
         return await consultarPorId(result.insertId);
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao cadastrar matéria-prima', error.message, 500);
     } 
 
 };
@@ -147,7 +148,7 @@ export const alterar = async (materia_prima) => {
 
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao alterar matéria-prima', error.message, 500);
     } 
 
 };
@@ -155,11 +156,11 @@ export const alterar = async (materia_prima) => {
 export const deletar = async (id) => {    
     try {        
         const cmdSql = 'DELETE FROM materia_prima WHERE id = ?;';
-        const [dados, meta_dados] = await pool.execute(cmdSql, [id]);
+        const [dados] = await pool.execute(cmdSql, [id]);
         return dados.affectedRows > 0;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao deletar matéria-prima', error.message, 500);
     } 
 
 };

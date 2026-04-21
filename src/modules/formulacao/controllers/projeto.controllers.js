@@ -1,130 +1,90 @@
-import * as Projeto from '../models/Projeto.model.js';
-import * as responses from '../../../core/utils/responses.js';
 import * as projetoService from '../services/projeto.service.js';
+import * as responses from '../../../core/utils/responses.js';
+import { asyncHandler } from '../../../core/utils/asyncHandler.js';
 
-export const consultar = async (req, res)=>{
-    try {
-        let nome = req.query.nome;
-        let status = req.query.status;
-        let filtro_avancado = req.query.filtro_avancado;
-        let data = [];
-        if(!filtro_avancado){
-            if(nome){
-                data = await Projeto.consultar(nome);
-            }
-            else if(status){
-                data = await Projeto.consultarPorStatus(status);
-            }
-            else{
-                data = await Projeto.consultar('');
-            }
+export const cadastrar = asyncHandler(async (req, res, next) => {
+    let projeto = req.body;
+    const novoProjeto = await projetoService.cadastrar(projeto,req.loginId);
+    return responses.created(res, { data: novoProjeto });
+});
+
+export const consultar = asyncHandler(async (req, res, next) => {
+    let nome = req.query.nome;
+    let status = req.query.status;
+    let filtro_avancado = req.query.filtro_avancado;
+    let data;
+    if(!filtro_avancado){
+        if(nome){
+            data = await projetoService.consultar(nome);
+        }
+        else if(status){
+            data = await projetoService.consultarPorStatus(status);
         }
         else{
-            data = await Projeto.consultarFiltroAvacado(filtro_avancado);
+            data = await projetoService.consultar('');
         }
-        return responses.success(res, { data });
-    } catch (error) {
-        return responses.error(res, { message: error.message });
     }
-}
-
-export const consultarPorId = async (req, res)=>{    
-    try {
-        let id = req.params.id;
-        const data = await Projeto.consultarPorId(id);
-        return responses.success(res, { data });
-    } catch (error) {
-        return responses.error(res, { message: error.message });
+    else{
+        data = await projetoService.consultarFiltroAvacado(filtro_avancado);
     }
-}
+    return responses.success(res, { data });
+});
 
-export const consultarPorCodigo = async (req, res)=>{    
-    try {
-        let codigo = req.params.codigo;
-        const data = await Projeto.consultarPorCodigo(codigo);
-        return responses.success(res, { data });
-    } catch (error) {
-        return responses.error(res, { message: error.message });
-    }
-}
+export const consultarPorId = asyncHandler(async (req, res, next) => {    
+    let id = req.params.id;
+    const data = await projetoService.consultarPorId(id);
+    return responses.success(res, { data });
+});
 
-export const duplicar = async (req, res)=>{    
-    try {
-        let id = req.params.id;
-        const data = await Projeto.duplicar(id);
-        const message = Array.isArray(data) && data.length === 0
-            ? "Projeto base não encontrado"
-            : undefined;
-        return responses.success(res, { data, ...(message ? { message } : {}) });
-    } catch (error) {
-        return responses.error(res, { message: error.message });
-    }
-}
+export const consultarPorCodigo = asyncHandler(async (req, res, next) => {    
+    let codigo = req.params.codigo;
+    const data = await projetoService.consultarPorCodigo(codigo);
+    return responses.success(res, { data });
+});
 
-export const consultarPorData = async (req, res)=>{    
-    try {
-        let inicio = req.params.inicio;
-        let termino = req.params.termino;
-        const data = await Projeto.consultarPorData(inicio,termino);
-        return responses.success(res, { data });
-    } catch (error) {
-        return responses.error(res, { message: error.message });
-    }
-}
+export const duplicar = asyncHandler(async (req, res, next) => {    
+    let id = req.params.id;
+    const data = await projetoService.duplicar(id);
+    const message = Array.isArray(data) && data.length === 0
+        ? "Projeto base não encontrado"
+        : undefined;
+    return responses.success(res, { data, ...(message ? { message } : {}) });
+});
 
-export const deletar = async (req, res)=>{
-    try {
-        let id = req.params.id;
-        const data = await Projeto.deletar(id);
-        return responses.success(res, { data });
-    } catch (error) {
-        return responses.error(res, { message: error.message });
-    }
-}
+export const consultarPorData = asyncHandler(async (req, res, next) => {    
+    let inicio = req.params.inicio;
+    let termino = req.params.termino;
+    const data = await projetoService.consultarPorData(inicio,termino);
+    return responses.success(res, { data });
+});
 
-export const cadastrar = async (req, res)=>{
-    try {
-        let projeto = req.body;
-        const novoProjeto = await Projeto.cadastrar(projeto,req.loginId);
-        return responses.created(res, { data: novoProjeto });
-    } catch (error) {
-        return responses.error(res,{ message: error.message });
-    }
-}
+export const deletar = asyncHandler(async (req, res, next) => {
+    let id = req.params.id;
+    const data = await projetoService.deletar(id);
+    return responses.success(res, { data });
+});
 
-export const alterar = async (req, res)=>{
-    try {
-        let projeto = req.body;
-        projeto.id = req.params.id;
-        const projetoAlterado = await Projeto.alterar(projeto,req.loginId);
-        return responses.success(res, { data: projetoAlterado });
-    } catch (error) {
-        return responses.error(res,{ message: error.message });
-    }
-}
+export const alterar = asyncHandler(async (req, res, next) => {
+    let projeto = req.body;
+    projeto.id = req.params.id;
+    const projetoAlterado = await projetoService.alterar(projeto,req.loginId);
+    return responses.success(res, { data: projetoAlterado });
+});
 
-export const addResultado = async (req, res)=>{
-    try {
-        const resultado = req.body;
-        const projetoId = req.params.id;
-        const responsavelId = req.loginId;
+export const addResultado = asyncHandler(async (req, res, next) => {
+    const resultado = req.body;
+    const projetoId = req.params.id;
+    const responsavelId = req.loginId;
 
-        const data = await projetoService.addResultado(projetoId, responsavelId, resultado);
+    const data = await projetoService.addResultado(projetoId, responsavelId, resultado);
 
-        return responses.success(res, { data });
-    } catch (error) {
-        return responses.error(res,{ message: error.message });
-    }
-}
+    return responses.success(res, { data });
+});
 
 // *************** Consultas Entre vária entidades ***********************
-export const consultaDetalhada = async (req, res)=>{    
-    try {
-        let id = req.params.id;               
-        const data = await Projeto.consultaDetalhada(id);
-        return responses.success(res, { data });
-    } catch (error) {
-        return responses.error(res, { message: error.message });
-    }
-}
+export const consultaDetalhada = asyncHandler(async (req, res, next) => {    
+    let id = req.params.id;               
+    const data = await projetoService.consultaDetalhada(id);
+    return responses.success(res, { data });
+});
 

@@ -1,4 +1,5 @@
 import pool from '../../../core/database/data.js';
+import { AppError } from '../../../core/utils/AppError.js';
 
 
 export const cadastrar = async ({ nome, descricao = null }) => {
@@ -7,8 +8,7 @@ export const cadastrar = async ({ nome, descricao = null }) => {
     const [result] = await pool.execute(cmdSql, [nome, descricao]);
     return await listarPorId(result.insertId);
   } catch (error) {
-    console.error('Erro em cadastrar:', error);
-    throw error;
+    throw new AppError('Erro ao cadastrar perfil', error.message, 500);
   }
 };
 
@@ -18,8 +18,7 @@ export const listar = async () => {
     const [dados] = await pool.execute(cmdSql);
     return dados;
   } catch (error) {
-    console.error('Erro em listar:', error);
-    throw error;
+    throw new AppError('Erro ao listar perfis', error.message, 500);
   }
 };
 
@@ -30,8 +29,7 @@ export const listarPorId = async (perfilId) => {
     const [dados] = await pool.execute(cmdSql, [perfilId]);
     return dados[0];
   } catch (error) {
-    console.error('Erro em listar perfis por Id:', error);
-    throw error;
+    throw new AppError('Erro ao listar perfil por ID', error.message, 500);
   }
 };
 
@@ -41,8 +39,7 @@ export const listarPorNome = async (perfilNome) => {
     const [dados] = await pool.execute(cmdSql, [perfilNome]);
     return dados[0];
   } catch (error) {
-    console.error('Erro em listar perfis por nome:', error);
-    throw error;
+    throw new AppError('Erro ao listar perfil por nome', error.message, 500);
   }
 };
 
@@ -62,8 +59,7 @@ export const alterar = async (perfilId, dados = { nome:'', descricao:''}) => {
     return listarPorId(perfilId);
 
   } catch (error) {
-    console.error('Erro em alterar:', error);
-    throw error;
+    throw new AppError('Erro ao alterar perfil', error.message, 500);
   }
 };
 
@@ -73,8 +69,7 @@ export const remover = async (perfilId) => {
     const [result] = await pool.execute(cmdSql, [perfilId]);
     return result.affectedRows > 0;
   } catch (error) {
-    console.error('Erro em remover:', error);
-    throw error;
+    throw new AppError('Erro ao remover perfil', error.message, 500);
   }
 };
 

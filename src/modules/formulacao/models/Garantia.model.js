@@ -1,9 +1,8 @@
 import pool from '../../../core/database/data.js';
+import { AppError } from '../../../core/utils/AppError.js';
 
-export const consultarPorNutriente = async (nutrienteId) => {
-    let cx;
+export const consultarPorNutriente = async (nutrienteId) => {    
     try {
-        cx = await pool.getConnection();
         const cmdSql = `SELECT 
             materia_prima.id as materia_prima_Id,
             materia_prima.nome as materia_prima_Nome,
@@ -20,21 +19,16 @@ export const consultarPorNutriente = async (nutrienteId) => {
             garantia on materia_prima.id = garantia.materia_prima
         WHERE
             garantia.nutriente = ?;`;
-        const [dados, meta_dados] = await cx.query(cmdSql, [nutrienteId]);
+        const [dados] = await pool.execute(cmdSql, [nutrienteId]);
         return dados;
     } 
     catch (error) {
-        throw error;
-    } 
-    finally {
-        if (cx) cx.release(); // Libere a conexão após o uso
+        throw new AppError('Erro ao consultar garantias por nutriente', error.message, 500);
     }
 };
 
 export const consultarPorMateria_prima = async (materia_primaId) => {
-    let cx;
     try {
-        cx = await pool.getConnection();
         const cmdSql = `SELECT
             nutriente.id as nutriente_Id,
             nutriente.nome as nutriente_Nome,
@@ -47,14 +41,11 @@ export const consultarPorMateria_prima = async (materia_primaId) => {
             garantia ON nutriente.id = garantia.nutriente
         WHERE
             garantia.materia_prima = ?;`;
-        const [dados, meta_dados] = await cx.query(cmdSql, [materia_primaId]);
+        const [dados] = await pool.execute(cmdSql, [materia_primaId]);
         return dados;
     } 
     catch (error) {
-        throw error;
-    } 
-    finally {
-        if (cx) cx.release(); // Libere a conexão após o uso
+        throw new AppError('Erro ao consultar garantias por matéria-prima', error.message, 500);
     }
 };
 
@@ -81,7 +72,7 @@ export const cadastrar = async (garantia={}) => {
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao cadastrar garantia', error.message, 500);
     }
 };
 
@@ -106,18 +97,18 @@ export const alterar = async (garantia={}) => {
 
     }
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao alterar garantia', error.message, 500);
     }
 };
 
-export const consultar = async (filtro = '') => {
+export const consultar = async () => {
     try {  
         const cmdSql = 'SELECT * FROM garantia ORDER BY updatedAt DESC;';
         const [dados] = await pool.execute(cmdSql);
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao consultar garantias', error.message, 500);
     }
 };
 
@@ -128,7 +119,7 @@ export const consultarPorId = async (id) => {
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao consultar garantia por ID', error.message, 500);
     }
 };
 
@@ -139,7 +130,7 @@ export const consultarPorMP = async (mp_id) => {
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao consultar garantia por matéria-prima', error.message, 500);
     }
 };
 
@@ -150,6 +141,6 @@ export const deletar = async (id) => {
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao deletar garantia', error.message, 500);
     }
 };

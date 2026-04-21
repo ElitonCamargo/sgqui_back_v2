@@ -1,14 +1,11 @@
 import * as produtosService from '../services/produtos.service.js';
 import * as responses from '../../../core/utils/responses.js';
+import { asyncHandler } from '../../../core/utils/asyncHandler.js';
 
-export const listarFormulacoesLiberadas = async (req, res)=>{
-    try {
-        const data = await produtosService.listarFormulacoesLiberadas();
-        return responses.success(res, { data });
-    } catch (error) {
-        return responses.error(res, { message: error.message });
-    }
-}
+export const listarFormulacoesLiberadas = asyncHandler(async (req, res, next) => {
+    const data = await produtosService.listarFormulacoesLiberadas();
+    return responses.success(res, { data });
+});
 
 
 // export const consultarPorId = async (req, res)=>{    

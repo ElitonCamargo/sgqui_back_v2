@@ -1,4 +1,5 @@
 import pool from '../../../core/database/data.js';
+import { AppError } from '../../../core/utils/AppError.js';
 
 
 export const consultarPorId = async (id) => {
@@ -7,8 +8,7 @@ export const consultarPorId = async (id) => {
     const [rows] = await pool.execute(cmdSql, [id]);
     return rows[0];
   } catch (error) {
-    console.error('Erro ao consultar vínculo por ID:', error);
-    throw error;
+    throw new AppError('Erro ao consultar vínculo de usuário e perfil por ID', error.message, 500);
   }
 };
 
@@ -19,8 +19,7 @@ export const vincular = async (usuarioId, perfilId) => {
     const [result] = await pool.execute(cmdSql, [usuarioId, perfilId]);
     return await consultarPorId(result.insertId);
   } catch (error) {
-    console.error('Erro ao vincular perfil ao usuário:', error);
-    throw error;
+    throw new AppError('Erro ao vincular perfil ao usuário', error.message, 500);
   }
 };
 
@@ -31,8 +30,7 @@ export const desvincular = async (vinculoID) => {
     const [result] = await pool.execute(cmdSql, [vinculoID]);
     return result.affectedRows > 0;
   } catch (error) {
-    console.error('Erro em removerPerfilDoUsuario:', error);
-    throw error;
+    throw new AppError('Erro ao desvincular perfil de usuário', error.message, 500);
   }
 };
 
@@ -62,8 +60,7 @@ export const listar = async () => {
     return dados;
   }
   catch (error) {
-    console.error('Erro em listar os perfis por usuário:', error);
-    throw error;
+    throw new AppError('Erro ao listar vínculos de usuários por perfis', error.message, 500);
   }
 };
 
@@ -80,8 +77,7 @@ export const listarPerfisPorUsuario = async (usuarioId) => {
     const [dados] = await pool.execute(cmdSql, [usuarioId]);
     return dados;
   } catch (error) {
-    console.error('Erro em listar os perfis por usuário:', error);
-    throw error;
+    throw new AppError('Erro ao listar perfis por usuário', error.message, 500);
   }
 };
 
@@ -98,7 +94,6 @@ export const listarUsuariosPorPerfil = async (perfilId) => {
     const [dados] = await pool.execute(cmdSql, [perfilId]);
     return dados;
   } catch (error) {
-    console.error('Erro em listarUsuariosPorPerfil:', error);
-    throw error;
+    throw new AppError('Erro ao listar usuários por perfil', error.message, 500);
   }
 };

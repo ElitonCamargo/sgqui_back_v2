@@ -1,4 +1,5 @@
 import pool from '../../../core/database/data.js';
+import { AppError } from '../../../core/utils/AppError.js';
 
 export const cadastrar = async (configuracao={key:'', value:{}}) => {    
     try {
@@ -14,7 +15,7 @@ export const cadastrar = async (configuracao={key:'', value:{}}) => {
         return await consultarPorKey(key);
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao cadastrar configuração', error.message, 500);
     }
 };
 
@@ -35,7 +36,7 @@ export const alterar = async (configuracao={}, responsavel) => {
         return await consultarPorKey(key);
     }
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao alterar configuração', error.message, 500);
     }
 };
 
@@ -46,7 +47,7 @@ export const consultar = async () => {
         return rows;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao consultar configurações', error.message, 500);
     }
 };
 
@@ -57,7 +58,7 @@ export const consultarPorKey = async (key) => {
         return rows[0];
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao consultar configuração por chave', error.message, 500);
     }
 };
 
@@ -68,6 +69,6 @@ export const deletar = async (key) => {
         return rows.affectedRows > 0;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao deletar configuração', error.message, 500);
     }
 };

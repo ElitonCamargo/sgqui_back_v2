@@ -1,4 +1,5 @@
 import pool from '../../../core/database/data.js';
+import { AppError } from '../../../core/utils/AppError.js';
 
 export const cadastrar = async (nutriente={}) => {    
     try {
@@ -23,7 +24,7 @@ export const cadastrar = async (nutriente={}) => {
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao cadastrar nutriente', error.message, 500);
     }
 };
 
@@ -43,8 +44,7 @@ export const alterar = async (id, nutriente={}) => {
         return await consultarPorId(id);
 
     } catch (error) {
-        console.error('Erro em alterar:', error);
-        throw error;
+        throw new AppError('Erro ao alterar nutriente', error.message, 500);
     }
 };
 
@@ -55,7 +55,7 @@ export const consultar = async (filtro = '') => {
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao consultar nutrientes', error.message, 500);
     }
 };
 
@@ -66,7 +66,7 @@ export const consultarPorId = async (id) => {
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao consultar nutriente por ID', error.message, 500);
     }
 };
 
@@ -77,7 +77,7 @@ export const consultarPorNome = async (nome) => {
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao consultar nutriente por nome', error.message, 500);
     }
 };
 
@@ -88,7 +88,7 @@ export const consultarPorFormula = async (formula) => {
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao consultar nutriente por fórmula', error.message, 500);
     }
 };
 
@@ -99,7 +99,7 @@ export const deletar = async (id) => {
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao deletar nutriente', error.message, 500);
     }
 };
 

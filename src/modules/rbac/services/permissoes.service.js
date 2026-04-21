@@ -1,4 +1,4 @@
-import e from 'express';
+import { AppError } from "../../../core/utils/AppError.js";
 import * as PermissoesModel from '../models/Permissoes.model.js';
 
 export const listarTodas = async (acesso=undefined) => {    

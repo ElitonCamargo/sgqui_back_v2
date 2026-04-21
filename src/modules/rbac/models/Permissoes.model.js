@@ -1,4 +1,5 @@
 import pool from '../../../core/database/data.js';
+import { AppError } from '../../../core/utils/AppError.js';
 
 export const listar = async (acesso=undefined) => {
   try {
@@ -7,8 +8,7 @@ export const listar = async (acesso=undefined) => {
     const [dados] = await pool.execute(cmdSql, acesso ? [acesso] : []);
     return dados;
   } catch (error) {
-    console.error('Erro em listar permissoes:', error);
-    throw error;
+    throw new AppError('Erro ao listar permissões', error.message, 500);
   }
 };
 
@@ -43,7 +43,6 @@ export const listarPermissoesPorUsuario = async (usuarioId) => {
     const [dados] = await pool.execute(sql, [usuarioId]);
     return dados;
   } catch (error) {
-    console.error('Erro ao listar permissões do usuário:', error);
-    throw error;
+    throw new AppError('Erro ao listar permissões por usuário', error.message, 500);
   }
 };

@@ -1,4 +1,5 @@
 import pool from '../../../core/database/data.js';
+import { AppError } from '../../../core/utils/AppError.js';
 
 export const consultar = async (query={}) => {
     try {
@@ -17,7 +18,7 @@ export const consultar = async (query={}) => {
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao consultar elementos', error.message, 500);
     }
 };
 
@@ -28,7 +29,7 @@ export const consultarPorId = async (id) => {
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao consultar elemento por ID', error.message, 500);
     }
 };
 
@@ -39,7 +40,7 @@ export const consultarPorSimbolo = async (simbolo) => {
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao consultar elemento por símbolo', error.message, 500);
     }
 };
 

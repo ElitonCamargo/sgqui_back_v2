@@ -1,4 +1,5 @@
 import pool from '../../../core/database/data.js';
+import { AppError } from '../../../core/utils/AppError.js';
 
 export const cadastrar = async (projeto={},loginId=0) => {    
     try {
@@ -35,7 +36,7 @@ export const cadastrar = async (projeto={},loginId=0) => {
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao cadastrar projeto', error.message, 500);
     }
 };
 
@@ -46,7 +47,7 @@ export const duplicar = async (id = 0) => {
         return dados[0];
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao duplicar projeto', error.message, 500);
     }
 };
 
@@ -81,7 +82,7 @@ export const alterar = async (projeto={},loginId=0) => {
 
     }
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao alterar projeto', error.message, 500);
     }
 };
 
@@ -95,7 +96,7 @@ export const addResultado = async (projetoId, resultado={}) => {
         return dados[0].resultado;
     }
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao adicionar resultado do projeto', error.message, 500);
     }
 };
 
@@ -107,7 +108,7 @@ export const consultar = async (filtro = '') => {
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao consultar projetos', error.message, 500);
     }
 };
 
@@ -212,7 +213,7 @@ export const consultarFiltroAvacado = async (filtro = []) => {
 
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao consultar projetos com filtro avançado', error.message, 500);
     }
 };
 
@@ -321,7 +322,6 @@ export const estruturarProjeto = (dados) => {
                 total + etapa.etapa_mp.reduce((subtotal, mp) => subtotal + mp.percentual, 0), 0);
         }
     }
-    //console.log(projetos[0].etapas);
     return projetos;
 };
 
@@ -334,7 +334,7 @@ export const consultarPorId = async (id) => {
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao consultar projeto por ID', error.message, 500);
     }
 };
 
@@ -345,7 +345,7 @@ export const consultarPorCodigo = async (codigo) => {
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao consultar projeto por código', error.message, 500);
     }
 };
 
@@ -363,7 +363,7 @@ export const consultarPorData = async (data_inicio="", data_termino="") => {
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao consultar projetos por data', error.message, 500);
     }
 };
 
@@ -375,7 +375,7 @@ export const consultarPorStatus = async (status='') => {
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao consultar projetos por status', error.message, 500);
     }
 };
 
@@ -386,7 +386,7 @@ export const deletar = async (id) => {
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao deletar projeto', error.message, 500);
     }
 };
 
@@ -400,6 +400,6 @@ export const consultaDetalhada = async (id) => {
         return estruturarProjeto(dados);
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao consultar detalhes do projeto', error.message, 500);
     }
 };

@@ -101,7 +101,11 @@ export const consultarPorId = async (id) => {
 export const deletar = async (id) => {
     const result = await usuarioModel.deletar(id);
     if (!result) {
-        throw new AppError("Usuário não encontrado", 404);
+        throw new AppError({
+            message: "Usuário não encontrado",
+            reason: "O usuário que você está tentando deletar não existe ou já foi deletado ou alguma dependência impediu a deleção",
+            code: 404
+        });
     }    
     return result;
 

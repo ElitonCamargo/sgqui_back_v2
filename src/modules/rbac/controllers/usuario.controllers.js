@@ -1,6 +1,5 @@
 import * as usuarioService from '../services/usuario.service.js';
 import * as responses from '../../../core/utils/responses.js';
-import * as helpers from '../../../core/utils/helpers.js';
 import { asyncHandler } from '../../../core/utils/asyncHandler.js';
 
 
@@ -33,7 +32,7 @@ export const deletar = asyncHandler(async (req, res, next)=>{
 export const deletarPerfil = asyncHandler(async (req, res, next)=>{
     const id = req.loginId;
     await usuarioService.deletar(id);
-    return responses.noContent(res, {message: "Usuário deletado com sucesso", data });
+    return responses.noContent(res, {message: "Usuário deletado com sucesso" });
 });
 
 export const consultarLogado = asyncHandler(async (req, res, next)=>{
@@ -45,7 +44,6 @@ export const consultarLogado = asyncHandler(async (req, res, next)=>{
 export const consultar = asyncHandler(async (req, res, next)=>{
     const data = await usuarioService.consultar(req.query);
     return responses.success(res, {message: "Usuários consultados com sucesso", data });
-
 });
 
 export const cadastrar = asyncHandler(async (req, res, next)=>{

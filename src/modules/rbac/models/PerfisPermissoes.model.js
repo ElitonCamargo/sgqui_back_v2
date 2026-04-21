@@ -1,4 +1,5 @@
 import pool from '../../../core/database/data.js';
+import { AppError } from '../../../core/utils/AppError.js';
 
 // Vincular uma lista de permissões a um perfil
 export const vincular = async (perfilId, permissoesIds = []) => {
@@ -17,8 +18,7 @@ export const vincular = async (perfilId, permissoesIds = []) => {
     const [result] = await pool.execute(cmdSql, params);
     return result.affectedRows;
   } catch (error) {
-    console.error('Erro a vincular permissões ao perfil:', error);
-    throw error;
+    throw new AppError('Erro ao vincular permissões ao perfil', error.message, 500);
   }
 };
 
@@ -39,8 +39,7 @@ export const listarVinculos = async (perfilId) => {
     const [dados] = await pool.execute(cmdSql, [perfilId]);
     return dados;
   } catch (error) {
-    console.error('Erro ao listar permissões por perfil:', error);
-    throw error;
+    throw new AppError('Erro ao listar permissões de perfil', error.message, 500);
   }
 };
 
@@ -73,7 +72,6 @@ export const permissoesPerfilAcessos = async (perfilId) => {
     const [dados] = await pool.execute(sql, [perfilId]);
     return dados;
   } catch (error) {
-    console.error('Erro ao listar permissões do perfil:', error);
-    throw error;
+    throw new AppError('Erro ao listar acessos de permissões do perfil', error.message, 500);
   }
 };

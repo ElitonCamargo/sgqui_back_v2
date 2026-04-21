@@ -1,4 +1,5 @@
 import pool from '../../../core/database/data.js';
+import { AppError } from '../../../core/utils/AppError.js';
 
 export const cadastrar = async (etapa_mp={}) => {    
     try {
@@ -23,7 +24,7 @@ export const cadastrar = async (etapa_mp={}) => {
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao cadastrar etapa de matéria-prima', error.message, 500);
     }
 };
 
@@ -48,7 +49,7 @@ export const alterar = async (etapa_mp={}) => {
 
     }
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao alterar etapa de matéria-prima', error.message, 500);
     }
 };
 
@@ -59,7 +60,7 @@ export const consultar = async (filtro = '') => {
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao consultar etapas de matéria-prima', error.message, 500);
     }
 };
 
@@ -70,7 +71,7 @@ export const consultarPorId = async (id) => {
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao consultar etapa de matéria-prima por ID', error.message, 500);
     }
 };
 
@@ -81,7 +82,7 @@ export const consultarPorEtapa = async (etapa_id) => {
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao consultar etapas de matéria-prima por etapa', error.message, 500);
     }
 };
 
@@ -92,6 +93,6 @@ export const deletar = async (id) => {
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao deletar etapa de matéria-prima', error.message, 500);
     }
 };

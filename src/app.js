@@ -1,8 +1,8 @@
 // src/app.js
 import express from 'express';
 import cors from 'cors';
-import path from 'path';
-import { fileURLToPath } from 'url';
+//import path from 'path';
+//import { fileURLToPath } from 'url';
 import bodyParser from 'body-parser';
 import routes from './routes/index.js';
 import { errorMiddleware } from './core/middlewares/error.middleware.js';

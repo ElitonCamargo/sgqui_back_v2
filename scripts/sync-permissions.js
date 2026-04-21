@@ -8,7 +8,7 @@ async function syncPermissions() {
     const cx = await pool.getConnection();
     await cx.beginTransaction();
     try {
-       
+
         // Verificar se já existem permissões na tabela
         const [rows] = await cx.execute('SELECT COUNT(*) AS count FROM permissoes;');
         const count = rows[0].count;

@@ -1,4 +1,5 @@
 import pool from '../../../core/database/data.js';
+import { AppError } from '../../../core/utils/AppError.js';
 
 export const listarFormulacoesLiberadas = async (filtro = '') => {
     try {  
@@ -22,6 +23,6 @@ export const listarFormulacoesLiberadas = async (filtro = '') => {
         return dados;
     } 
     catch (error) {
-        throw error;
+        throw new AppError('Erro ao listar formulações liberadas', error.message, 500);
     }
 };
