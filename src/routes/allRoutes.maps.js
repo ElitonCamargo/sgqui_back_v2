@@ -1,5 +1,5 @@
-import formulacaoMaps from '../modules/formulacao/routes/index.js';
-import rbacMaps from '../modules/rbac/routes/index.js';
+import formulacaoMaps from '../modules/formulacao/index.js';
+import rbacMaps from '../modules/rbac/index.js';
 
 export default [
   ...formulacaoMaps,

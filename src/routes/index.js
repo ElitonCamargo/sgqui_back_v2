@@ -2,8 +2,8 @@ import { Router } from 'express';
 import { AppError } from '../core/utils/AppError.js';
 import autenticar from "../core/middlewares/autenticacao.js";
 import autorizar from '../core/middlewares/autorizar.js';
-import * as info from '../modules/rbac/controllers/info.controllers.js';
-import * as usuario from '../modules/rbac/controllers/usuario.controllers.js';
+import * as info from '../modules/rbac/info/info.controller.js';
+import * as usuario from '../modules/rbac/usuario/usuario.controller.js';
 
 import allRoutesMaps from './allRoutes.maps.js';
 
@@ -18,13 +18,20 @@ const routes = Router();
 	routes.get('/rotas', info.endpoints);
 
 	// Ex: Rota para login de usuário
-	routes.post('/rbac/usuario/login', usuario.login);
+	// routes.post('/rbac/usuario/login', usuario.login);
 
 	// Cria rotas dinâmicas com base nas permissões definidas
-	allRoutesMaps.forEach((map) => {
-		routes[map.metodo.toLowerCase()](`/${map.modulo}/${map.rota}`, autenticar, autorizar, map.functionExec);		
-		// routes[map.metodo.toLowerCase()](`/${map.modulo}/${map.rota}`, map.functionExec);		
-	});
+allRoutesMaps.forEach((map) => {
+	const middlewares = map.middlewares || [];
+
+	routes[map.metodo.toLowerCase()](
+		`/${map.modulo}/${map.rota}`,
+		// autenticar,
+		// autorizar,
+		...middlewares, 
+		map.functionExec
+	);
+});
 
 
 // Middleware para tratar rotas inválidas (deve ser o último middleware de rota)

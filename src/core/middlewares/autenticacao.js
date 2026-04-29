@@ -1,9 +1,9 @@
-import * as sessoesService from '../../modules/rbac/services/sessoes.service.js';
+import * as sessoesService from '../../modules/rbac/sessoes/sessoes.service.js';
 import * as sessoesCache from '../utils/sessoesCache.js';
 import * as responses from '../utils/responses.js'
 import * as helpers from '../utils/helpers.js';
-import * as upService from '../../modules/rbac/services/usuarioPerfis.service.js';
-import * as pService from '../../modules/rbac/services/permissoes.service.js';
+import * as upService from '../../modules/rbac/usuarioPerfis/usuarioPerfis.service.js';
+import * as pService from '../../modules/rbac/permissoes/permissoes.service.js';
 
 export default async function autenticar(req, res, next) {
     try {        
