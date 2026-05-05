@@ -13,7 +13,7 @@ export const vincular = asyncHandler(async (req, res, next) => {
 export const desvincular = asyncHandler(async (req, res, next) => { 
   const vinculoID = req.params.vinculoID;
   const resultado = await usuarioService.desvincular(vinculoID);
-  return responses.success(res, { message: 'Perfil desvinculado do usuário com sucesso', data: resultado });
+  return responses.success(res, { message: 'Usuário desvinculado do perfil com sucesso', data: resultado });
 });
 
 // Listar todos os perfis e quais usuários estão vinculados a eles

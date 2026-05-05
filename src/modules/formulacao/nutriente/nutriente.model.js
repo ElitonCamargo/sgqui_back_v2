@@ -1,7 +1,7 @@
 import pool from '../../../core/database/data.js';
 import { AppError } from '../../../core/utils/AppError.js';
 
-export const cadastrar = async ({ nome='', formula='', visivel=1 }) => {    
+export const cadastrar = async ({ nome='', formula='', visivel=true }) => {    
     try {
         const cmdSql = 'INSERT INTO nutriente (nome, formula, visivel) VALUES (?, ?, ?);';
         const [result] = await pool.execute(cmdSql, [nome, formula, visivel]);
@@ -63,7 +63,7 @@ export const consultarPorId = async (id) => {
     try {
         const cmdSql = 'SELECT * FROM nutriente WHERE id = ?;';
         const [dados] = await pool.execute(cmdSql, [id]);
-        return dados;
+        return dados[0];
     } 
     catch (error) {
         throw new AppError({

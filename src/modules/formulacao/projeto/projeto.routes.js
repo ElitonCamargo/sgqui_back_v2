@@ -1,4 +1,8 @@
 import * as projeto from './projeto.controller.js';
+import { validate } from '../../../core/middlewares/validate.js';
+import { createProjetoSchema, updateProjetoSchema } from './projeto.schema.js';
+import autenticar from '../../../core/middlewares/autenticacao.js';
+import autorizar from '../../../core/middlewares/autorizar.js';
 
 export default [
   {
@@ -6,6 +10,7 @@ export default [
     metodo: 'GET',
     modulo: 'formulacao',
 		rota: 'projeto',
+    middlewares: [autenticar, autorizar],
     functionExec: projeto.consultar,
     recurso: 'Projetos',
     descricao: 'Visualizar todos os projetos',
@@ -16,6 +21,7 @@ export default [
     metodo: 'GET',
     modulo: 'formulacao',
 		rota: 'projeto/:id',
+    middlewares: [autenticar, autorizar],
     functionExec: projeto.consultarPorId,
     recurso: 'Projetos',
     descricao: 'Consultar um projeto pelo seu ID',
@@ -26,6 +32,7 @@ export default [
     metodo: 'GET',
     modulo: 'formulacao',
 		rota: 'projeto/codigo/:codigo',
+    middlewares: [autenticar, autorizar],
     functionExec: projeto.consultarPorCodigo,
     recurso: 'Projetos',
     descricao: 'Consultar um projeto pelo seu código',
@@ -36,6 +43,7 @@ export default [
     metodo: 'GET',
     modulo: 'formulacao',
 		rota: 'projeto/detalhado/:id',
+    middlewares: [autenticar, autorizar],
     functionExec: projeto.consultaDetalhada,
     recurso: 'Projetos',
     descricao: 'Visualizar a formulação detalhada de um projeto',
@@ -46,6 +54,7 @@ export default [
     metodo: 'GET',
     modulo: 'formulacao',
 		rota: 'projeto/data/:inicio/:termino',
+    middlewares: [autenticar, autorizar],
     functionExec: projeto.consultarPorData,
     recurso: 'Projetos',
     descricao: 'Listar projetos por período',
@@ -56,6 +65,7 @@ export default [
     metodo: 'POST',
     modulo: 'formulacao',
 		rota: 'projeto',
+    middlewares: [autenticar, autorizar, validate(createProjetoSchema)],
     functionExec: projeto.cadastrar,
     recurso: 'Projetos',
     descricao: 'Cadastrar projeto',
@@ -66,6 +76,7 @@ export default [
     metodo: 'POST',
     modulo: 'formulacao',
 		rota: 'projeto/:id',
+    middlewares: [autenticar, autorizar],
     functionExec: projeto.duplicar,
     recurso: 'Projetos',
     descricao: 'Duplicar projeto',
@@ -76,6 +87,7 @@ export default [
     metodo: 'PUT',
     modulo: 'formulacao',
 		rota: 'projeto/:id',
+    middlewares: [autenticar, autorizar, validate(updateProjetoSchema)],
     functionExec: projeto.alterar,
     recurso: 'Projetos',
     descricao: 'Alterar projeto',
@@ -86,6 +98,7 @@ export default [
     metodo: 'PUT',
     modulo: 'formulacao',
 		rota: 'projeto/:id/resultado',
+    middlewares: [autenticar, autorizar],
     functionExec: projeto.addResultado,
     recurso: 'Projetos',
     descricao: 'Cadastrar resultados (Acompanhamento)',
@@ -96,6 +109,7 @@ export default [
     metodo: 'DELETE',
     modulo: 'formulacao',
 		rota: 'projeto/:id',
+    middlewares: [autenticar, autorizar],
     functionExec: projeto.deletar,
     recurso: 'Projetos',
     descricao: 'Deletar projeto',

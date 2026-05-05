@@ -1,21 +1,23 @@
 import { z } from 'zod';
 
-// Tabela: projeto
-// id: AUTO_INCREMENT — excluído do createSchema
 export const createProjetoSchema = z.object({
-  codigo:          z.string().max(20).optional(),
-  nome:            z.string().max(255).optional(),
-  cliente:         z.string().max(255).optional(),
-  descricao:       z.string().optional(),            // text nullable
-  data_inicio:     z.string().optional(),            // date (ISO)
-  data_termino:    z.string().optional(),            // date (ISO)
-  densidade:       z.number().optional(),            // double UNSIGNED nullable
-  ph:              z.string().max(255).optional(),
-  tipo:            z.string().max(255).optional(),
-  aplicacao:       z.any().optional(),               // json nullable
-  natureza_fisica: z.string().max(255).optional(),
-  status:          z.any().optional(),               // json nullable
-  resultado:       z.any().optional(),               // json nullable
+  codigo:          z.string().trim().min(1).max(20),        // NOT NULL UNIQUE
+  nome:            z.string().trim().min(1).max(255),       // NOT NULL
+  cliente:         z.string().trim().max(255).optional(),   // NULL
+  descricao:       z.string().trim().max(255).optional(),   // NULL
+  data_inicio:     z.string().trim().min(1),                // NOT NULL date ISO
+  data_termino:    z.string().trim().min(1).optional(),                // NULL date ISO
+  densidade:       z.number().min(0).optional(),                       // NULL double UNSIGNED
+  ph:              z.string().trim().min(0).max(255).optional(),       // NULL
+  tipo:            z.string().trim().min(0).max(255).optional(),       // NULL
+  aplicacao:       z.any().optional(),                      // json NULL
+  natureza_fisica: z.string().trim().max(255).optional(),   // NULL
+  status:          z.any().optional(),                      // json NULL
+  resultado:       z.any().optional(),                      // json NULL
 });
 
-export const updateProjetoSchema = createProjetoSchema.partial();
+export const updateProjetoSchema = createProjetoSchema
+  .partial()
+  .refine(data => Object.keys(data).length > 0, {
+    message: 'Pelo menos um campo deve ser enviado para atualização'
+  });

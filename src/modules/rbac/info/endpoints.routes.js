@@ -1,13 +1,13 @@
-import * as info from '../../rbac/info/info.controller.js';
+import * as info from './info.controller.js';
 
 export default [
 	{
 		codigo: 'endpoints:listar',
 		metodo: 'GET',
-		modulo: 'formulacao',
+		modulo: 'rbac',
 		rota: 'endpoints',
 		functionExec: info.endpoints,
-		recurso: 'Rotas',
+		recurso: 'Info',
 		descricao: 'Obtém a lista de endpoints da API.',
 		ehPublica: true
 	}

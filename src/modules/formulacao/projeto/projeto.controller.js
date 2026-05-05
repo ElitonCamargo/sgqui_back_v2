@@ -5,7 +5,7 @@ import { asyncHandler } from '../../../core/utils/asyncHandler.js';
 export const cadastrar = asyncHandler(async (req, res, next) => {
     let projeto = req.body;
     const novoProjeto = await projetoService.cadastrar(projeto,req.loginId);
-    return responses.created(res, { data: novoProjeto });
+    return responses.created(res, { message: 'Projeto cadastrado com sucesso', data: novoProjeto });
 });
 
 export const consultar = asyncHandler(async (req, res, next) => {

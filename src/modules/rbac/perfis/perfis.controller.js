@@ -20,7 +20,7 @@ export const listar = asyncHandler(async (req, res, next) => {
 });
 
 export const listarPorId = asyncHandler(async (req, res, next) => {
-    const result = await perfisService.listarPorId(req.params.id);
+    const result = await perfisService.listarPorId(req.params.id);    
     responses.success(res, { 
         message: 'Perfil consultado com sucesso', 
         data: result 
@@ -29,7 +29,7 @@ export const listarPorId = asyncHandler(async (req, res, next) => {
 });
 
 export const listarPorNome = asyncHandler(async (req, res, next) => {
-    const result = await perfisService.listarPorNome(req.params.nome);
+    const result = await perfisService.listarPorNome(req.params.value);
     responses.success(res, { 
         message: 'Perfil consultado com sucesso', 
         data: result 

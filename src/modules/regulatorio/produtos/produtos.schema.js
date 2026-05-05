@@ -1,32 +1,33 @@
 import { z } from 'zod';
 
-// Tabela: produtos
-// id: AUTO_INCREMENT — excluído do createSchema
-// Campos com NOT NULL (sem DEFAULT) são obrigatórios no createSchema
 export const createProdutosSchema = z.object({
-  projeto:         z.number().int(),
-  n_desenvolvimento: z.string().max(255),
-  descricao:       z.string().max(255),
-  data_emissao:    z.string(),              // date (ISO)
-  unid_medida:     z.string().max(50),
-  capacidade:      z.number(),              // decimal(10,4)
-  grupo:           z.string().max(100),
-  subgrupo:        z.string().max(100),
-  classif_fiscal:  z.string().max(50),
-  classe:          z.number().int(),
-  modelo:          z.string().max(100),
-  peso_liquido:    z.number(),              // decimal(10,4)
-  peso_bruto:      z.number(),              // decimal(10,4)
-  validade:        z.string().max(50),
-  n_registro:      z.string().max(100),
-  densidade:       z.number(),              // decimal(10,6) UNSIGNED
-  garantias:       z.any(),                 // json NOT NULL
-  tipo:            z.string().max(100),
-  natureza_fisica: z.string().max(100),
-  aplicacao:       z.string().max(255),
-  formulacao:      z.any(),                 // json NOT NULL
-  embalagens:      z.any(),                 // json NOT NULL
-  status:          z.enum(['Rascunho', 'Aguardando', 'Liberado']).optional(),
+  projeto:           z.number().int().positive(),          // NOT NULL FK
+  n_desenvolvimento: z.string().trim().min(1).max(255),   // NOT NULL
+  descricao:         z.string().trim().max(255).optional(),// NULL
+  data_emissao:      z.string().trim().optional(),         // date NULL
+  unid_medida:       z.string().trim().max(50).optional(), // NULL
+  capacidade:        z.number().min(0).optional(),         // NULL decimal(10,4)
+  grupo:             z.string().trim().max(100).optional(),// NULL
+  subgrupo:          z.string().trim().max(100).optional(),// NULL
+  classif_fiscal:    z.string().trim().max(50).optional(), // NULL
+  classe:            z.number().int().optional(),           // NULL
+  modelo:            z.string().trim().max(100).optional(),// NULL
+  peso_liquido:      z.number().min(0).optional(),         // NULL decimal(10,4)
+  peso_bruto:        z.number().min(0).optional(),         // NULL decimal(10,4)
+  validade:          z.string().trim().max(50).optional(), // NULL
+  n_registro:        z.string().trim().max(100).optional(),// NULL
+  densidade:         z.number().min(0).optional(),         // NULL decimal(10,6) UNSIGNED
+  garantias:         z.any().optional(),                   // json NULL
+  tipo:              z.string().trim().max(100).optional(),// NULL
+  natureza_fisica:   z.string().trim().max(100).optional(),// NULL
+  aplicacao:         z.string().trim().max(255).optional(),// NULL
+  formulacao:        z.any().optional(),                   // json NULL
+  embalagens:        z.any().optional(),                   // json NULL
+  status:            z.enum(['Rascunho', 'Aguardando', 'Liberado']).optional(),
 });
 
-export const updateProdutosSchema = createProdutosSchema.partial();
+export const updateProdutosSchema = createProdutosSchema
+  .partial()
+  .refine(data => Object.keys(data).length > 0, {
+    message: 'Pelo menos um campo deve ser enviado para atualização'
+  });

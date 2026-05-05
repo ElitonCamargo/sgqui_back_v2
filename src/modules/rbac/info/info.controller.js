@@ -7,20 +7,9 @@ export const obterInfoSistema = asyncHandler(async (req, res, next) => {
     const data ={
         status_server: '(DEV - v2) ok - API SGQUI v2.5',
         dominio_raiz : rootDomain,
-        atualização: '03/02/2026 - 13:18',
-        rotas:[
-            `${rootDomain}/usuario/login`,
-            `${rootDomain}/usuario`,
-            `${rootDomain}/elemento`,
-            `${rootDomain}/materia_prima`,
-            `${rootDomain}/nutriente`,
-            `${rootDomain}/garantia`,
-            `${rootDomain}/projeto`,
-            `${rootDomain}/etapa`,
-            `${rootDomain}/etapa_mp`,
-            `${rootDomain}/configuracao`,
-            `${rootDomain}/upload`
-        ]
+        atualização: '01/05/2026',
+        endpoints_disponiveis: `${rootDomain}/rbac/endpoints`,
+        
     };
     return responses.success(res, { data });
 });

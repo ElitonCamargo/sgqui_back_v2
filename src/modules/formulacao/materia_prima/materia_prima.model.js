@@ -26,7 +26,7 @@ export const consultarPorId = async (id) => {
         
         const cmdSql = 'SELECT * FROM materia_prima WHERE id = ?;';
         const [dados] = await pool.execute(cmdSql, [id]);
-        return dados;
+        return dados[0];
     } 
     catch (error) {
         throw new AppError({
@@ -114,8 +114,8 @@ export const consultarMP_precentual_nutriente = async (nutrienteID=0,percentual=
             nutriente.id = ${nutrienteID} AND ((${percentual} * 100) / garantia.percentual) < 100
             ORDER BY percentual ASC
         `;
-        const [dados] = await pool.execute(cmdSql);
-        return dados[0];
+        const [data] = await pool.execute(cmdSql);
+        return data;
     } 
     catch (error) {
         throw new AppError({
@@ -130,18 +130,13 @@ export const consultarMP_precentual_nutriente = async (nutrienteID=0,percentual=
 export const cadastrar = async (materia_prima) => {
     
     try {        
-        let params_cmdSql = '';
-        let values_cmdSql = '';
-        let values = [];
-        for(const key in materia_prima){
-            values.push(materia_prima[key]);
-            params_cmdSql += key+','
-            values_cmdSql += '?,'
-        }
-        params_cmdSql = params_cmdSql.slice(0, -1);
-        values_cmdSql = values_cmdSql.slice(0, -1);
+        const campos = Object.keys(materia_prima);
+        const values = Object.values(materia_prima);
 
-        const cmdSql = 'INSERT INTO materia_prima ('+params_cmdSql+') VALUES ('+values_cmdSql+')';
+        const params_cmdSql = campos.join(', ');
+        const values_cmdSql = campos.map(() => '?').join(', ');
+
+        const cmdSql = `INSERT INTO materia_prima (${params_cmdSql}) VALUES (${values_cmdSql})`;
         
         const [result] = await pool.execute(cmdSql, values);
 
@@ -161,21 +156,32 @@ export const cadastrar = async (materia_prima) => {
 export const alterar = async (materia_prima) => {
     
     try {
-        let valores = [];
-        let cmdSql = 'UPDATE materia_prima SET ';
-        for(const key in materia_prima){
-            valores.push(materia_prima[key]);
-            cmdSql += `${key} = ?, `;
-        }
-        cmdSql = cmdSql.replace(', id = ?,', '');
-        cmdSql += 'WHERE id = ?;';
-             
-        await pool.execute(cmdSql, valores);
+        const { id, ...dadosAtualizacao } = materia_prima;
+        const campos = Object.keys(dadosAtualizacao);
+        const valores = campos.map((campo) => dadosAtualizacao[campo]);
 
-        return await consultarPorId(materia_prima.id);
+        const cmdSql = `UPDATE materia_prima SET ${campos.map((campo) => `${campo} = ?`).join(', ')} WHERE id = ?;`;
+
+        valores.push(id);
+
+        const [result] = await pool.execute(cmdSql, valores);
+        if (result.affectedRows === 0) {
+            return null;
+            // throw new AppError({
+            //     message: 'Matéria-prima não encontrada para atualização',
+            //     reason: `Nenhuma matéria-prima foi encontrada com o ID ${id} informado para atualização na base de dados.`,
+            //     code: 404
+            // });
+        }
+
+        return await consultarPorId(id);
 
     } 
     catch (error) {
+        // if (error instanceof AppError) {
+        //     throw error;
+        // }
+
         throw new AppError({
             message: 'Erro ao alterar matéria-prima',
             reason: `Falha na execução do UPDATE na tabela 'materia_prima'; verifique se o ID fornecido existe e se os dados são compatíveis com o esquema. Detalhe: ${error.message}`,

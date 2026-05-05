@@ -4,7 +4,7 @@ import { AppError } from '../../../core/utils/AppError.js';
 export const listar = async (acesso=undefined) => {
   try {
     const where = acesso ? `WHERE eh_publica = ?` : '';
-    let cmdSql = `SELECT * FROM permissoes ${where} ORDER BY recurso, metodo, rota_template;`;
+    let cmdSql = `SELECT * FROM permissoes ${where} ORDER BY modulo, recurso, metodo, rota_template;`;
     const [dados] = await pool.execute(cmdSql, acesso ? [acesso] : []);
     return dados;
   } catch (error) {
@@ -41,7 +41,7 @@ export const listarPermissoesPorUsuario = async (usuarioId) => {
           FROM permissoes
           WHERE eh_publica = 1
       ) p
-      ORDER BY p.metodo, p.rota_template;
+      ORDER BY p.modulo, p.recurso, p.metodo, p.rota_template;
     `;
 
     const [dados] = await pool.execute(sql, [usuarioId]);

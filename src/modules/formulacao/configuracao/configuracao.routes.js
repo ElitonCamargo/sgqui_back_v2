@@ -1,4 +1,8 @@
 import * as configuracao from './configuracao.controller.js';
+import { validate } from '../../../core/middlewares/validate.js';
+import { createConfiguracaoSchema, updateConfiguracaoSchema } from './configuracao.schema.js';
+import autenticar from '../../../core/middlewares/autenticacao.js';
+import autorizar from '../../../core/middlewares/autorizar.js';
 
 export default [
 	{
@@ -6,6 +10,7 @@ export default [
 		metodo: 'POST',
 		modulo: 'formulacao',
 		rota: 'configuracao',
+		middlewares: [autenticar, autorizar, validate(createConfiguracaoSchema)],
 		functionExec: configuracao.cadastrar,
 		recurso: 'Configurações',
 		descricao: 'Cadastrar configuração',
@@ -16,6 +21,7 @@ export default [
 		metodo: 'GET',
 		modulo: 'formulacao',
 		rota: 'configuracao',
+		middlewares: [autenticar, autorizar],
 		functionExec: configuracao.consultar,
 		recurso: 'Configurações',
 		descricao: 'Listar configurações',
@@ -26,6 +32,7 @@ export default [
 		metodo: 'GET',
 		modulo: 'formulacao',
 		rota: 'configuracao/:key',
+		middlewares: [autenticar, autorizar],
 		functionExec: configuracao.consultarPorKey,
 		recurso: 'Configurações',
 		descricao: 'Obter configuração por KEY',
@@ -36,6 +43,7 @@ export default [
 		metodo: 'PUT',
 		modulo: 'formulacao',
 		rota: 'configuracao/:key',
+		middlewares: [autenticar, autorizar, validate(updateConfiguracaoSchema)],
 		functionExec: configuracao.alterar,
 		recurso: 'Configurações',
 		descricao: 'Alterar configuração por KEY',
@@ -46,6 +54,7 @@ export default [
 		metodo: 'DELETE',
 		modulo: 'formulacao',
 		rota: 'configuracao/:key',
+		middlewares: [autenticar, autorizar],
 		functionExec: configuracao.deletar,
 		recurso: 'Configurações',
 		descricao: 'Deletar configuração por KEY',

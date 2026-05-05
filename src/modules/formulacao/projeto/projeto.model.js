@@ -1,7 +1,7 @@
 import pool from '../../../core/database/data.js';
 import { AppError } from '../../../core/utils/AppError.js';
 
-export const cadastrar = async (projeto={},loginId=0) => {    
+export const cadastrar_v0 = async (projeto={},loginId=0) => {    
     try {
         let valores = [];
         let campos = '';
@@ -36,6 +36,99 @@ export const cadastrar = async (projeto={},loginId=0) => {
         return dados;
     } 
     catch (error) {
+        throw new AppError({
+            message: 'Erro ao cadastrar projeto',
+            reason: `Falha na execução do INSERT na tabela 'projeto'; verifique se os campos obrigatórios foram fornecidos e se os valores de status e aplicação são válidos. Detalhe: ${error.message}`,
+            code: 500
+        });
+    }
+};
+
+export const cadastrar = async (projeto = {}, loginId = 0) => {
+    try {
+        const camposPermitidos = [
+            'codigo',
+            'nome',
+            'cliente',
+            'descricao',
+            'data_inicio',
+            'data_termino',
+            'densidade',
+            'ph',
+            'tipo',
+            'natureza_fisica'
+        ];
+
+        const campos = [];
+        const placeholders = [];
+        const valores = [];
+
+        const possuiCampo = (obj, campo) =>
+            Object.prototype.hasOwnProperty.call(obj, campo);
+
+        if (possuiCampo(projeto, 'status')) {
+            campos.push('status');
+
+            placeholders.push(`
+                JSON_ARRAY(
+                    JSON_OBJECT(
+                        'status', ?,
+                        'data_alteracao', CURRENT_TIMESTAMP,
+                        'id_responsavel', ?
+                    )
+                )
+            `);
+
+            valores.push(projeto.status, loginId);
+        }
+
+        if (possuiCampo(projeto, 'aplicacao')) {
+            campos.push('aplicacao');
+            placeholders.push('?');
+            valores.push(JSON.stringify(projeto.aplicacao));
+        }
+
+        for (const campo of camposPermitidos) {
+            if (possuiCampo(projeto, campo)) {
+                campos.push(campo);
+                placeholders.push('?');
+                valores.push(projeto[campo]);
+            }
+        }
+
+        if (campos.length === 0) {
+            throw new AppError({
+                message: 'Nenhum dado informado para cadastro',
+                reason: 'Informe ao menos um campo válido para cadastrar o projeto.',
+                code: 400
+            });
+        }
+
+        const params_cmdSql = campos.join(', ');
+        const values_cmdSql = placeholders.join(', ');
+
+        const cmdSql = `
+            INSERT INTO projeto (${params_cmdSql})
+            VALUES (${values_cmdSql});
+        `;
+
+        const [result] = await pool.execute(cmdSql, valores);
+
+        return await consultarPorId(result.insertId);
+
+    } catch (error) {
+        if (error instanceof AppError) {
+            throw error;
+        }
+
+        if (error.code === 'ER_DUP_ENTRY') {
+            throw new AppError({
+                message: 'Projeto já cadastrado',
+                reason: 'Já existe um projeto cadastrado com os dados únicos informados, como código ou outro campo com restrição de unicidade.',
+                code: 409
+            });
+        }
+
         throw new AppError({
             message: 'Erro ao cadastrar projeto',
             reason: `Falha na execução do INSERT na tabela 'projeto'; verifique se os campos obrigatórios foram fornecidos e se os valores de status e aplicação são válidos. Detalhe: ${error.message}`,

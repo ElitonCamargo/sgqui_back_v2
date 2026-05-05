@@ -1,5 +1,8 @@
 import * as perfisController from './perfis.controller.js';
-
+import { validate } from '../../../core/middlewares/validate.js';
+import { createPerfisSchema, updatePerfisSchema } from './perfis.schema.js';
+import autenticar from '../../../core/middlewares/autenticacao.js';
+import autorizar from '../../../core/middlewares/autorizar.js';
 
 export default [
 	{
@@ -7,8 +10,9 @@ export default [
 		metodo: 'GET',
 		modulo: 'rbac',
 		rota: 'perfis',
+		middlewares: [autenticar, autorizar],
 		functionExec: perfisController.listar,
-		recurso: 'Controle de Acesso',
+		recurso: 'Perfis',
 		descricao: 'Listar perfis cadastrados',
 		ehPublica: false
 	},
@@ -17,8 +21,9 @@ export default [
 		metodo: 'GET',
 		modulo: 'rbac',
 		rota: 'perfis/:id',
+		middlewares: [autenticar, autorizar],
 		functionExec: perfisController.listarPorId,
-		recurso: 'Controle de Acesso',
+		recurso: 'Perfis',
 		descricao: 'Visualizar detalhes dos perfis',
 		ehPublica: false
 	},
@@ -26,9 +31,10 @@ export default [
 		codigo: 'perfis:consultarPorNome',
 		metodo: 'GET',
 		modulo: 'rbac',
-		rota: 'perfis/nome/:nome',
+		rota: 'perfis/nome/:value',
+		middlewares: [autenticar, autorizar],
 		functionExec: perfisController.listarPorNome,
-		recurso: 'Controle de Acesso',
+		recurso: 'Perfis',
 		descricao: 'Consultar/Filtrar perfis por nome',
 		ehPublica: false
 	},
@@ -37,8 +43,9 @@ export default [
 		metodo: 'POST',
 		modulo: 'rbac',
 		rota: 'perfis',
+		middlewares: [autenticar, autorizar, validate(createPerfisSchema)],
 		functionExec: perfisController.cadastrar,
-		recurso: 'Controle de Acesso',
+		recurso: 'Perfis',
 		descricao: 'Cadastrar novo perfil',
 		ehPublica: false
 	},
@@ -47,8 +54,9 @@ export default [
 		metodo: 'PUT',
 		modulo: 'rbac',
 		rota: 'perfis/:id',
+		middlewares: [autenticar, autorizar, validate(updatePerfisSchema)],
 		functionExec: perfisController.alterar,
-		recurso: 'Controle de Acesso',
+		recurso: 'Perfis',
 		descricao: 'Alterar informações dos perfis',
 		ehPublica: false
 	},
@@ -57,9 +65,10 @@ export default [
 		metodo: 'DELETE',
 		modulo: 'rbac',
 		rota: 'perfis/:id',
+		middlewares: [autenticar, autorizar],
 		functionExec: perfisController.remover,
-		recurso: 'Controle de Acesso',
+		recurso: 'Perfis',
 		descricao: 'Remover perfis',
 		ehPublica: false
-	}	
+	}
 ];

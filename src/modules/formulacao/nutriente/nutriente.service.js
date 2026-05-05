@@ -1,8 +1,17 @@
 import * as NutrienteModel from './nutriente.model.js';
 import { AppError } from '../../../core/utils/AppError.js';
 
-export const cadastrar = async ({ nome='', formula='', visivel=1 }) => {
-    return await NutrienteModel.cadastrar({ nome, formula, visivel });
+export const cadastrar = async ({ nome='', formula='', visivel=true }) => {
+    const novoNutriente = await NutrienteModel.cadastrar({ nome, formula, visivel });
+    if (!novoNutriente) {
+        throw new AppError({
+            message: 'Erro ao cadastrar nutriente',
+            reason: 'Ocorreu um erro ao tentar cadastrar o nutriente no banco de dados.',
+            code: 500
+        });
+    }
+    novoNutriente.visivel = novoNutriente.visivel == 1; // Converter para booleano
+    return novoNutriente;
 };
 
 export const alterar = async (id, nutriente={}) => {    
@@ -14,6 +23,7 @@ export const alterar = async (id, nutriente={}) => {
             code: 404
         });
     }
+    result.visivel = result.visivel == 1; // Converter para booleano
     return result;
 };
 
@@ -29,7 +39,15 @@ export const consultarPorId = async (id) => {
             code: 400
         });
     }
-    return await NutrienteModel.consultarPorId(id);
+    const data = await NutrienteModel.consultarPorId(id);
+    if (!data) {
+        throw new AppError({
+            message: 'Nutriente não encontrado',
+            reason: 'O nutriente com o ID especificado não foi encontrado.',
+            code: 404
+        });
+    }
+    return data;
 };
 
 export const consultarPorNome = async (nome) => {

@@ -56,7 +56,7 @@ export default async function autenticar(req, res, next) {
             if(t_ex) console.log("Token Extendico por mais 24 para o ID"+sessaoUsuario);
         }
 
-        const perfis = await upService.listarPerfisPorUsuario(sessaoUsuario).then((perfis) => perfis.map((p) => p.nome));
+        const perfis = await upService.listarPerfisDoUsuarioAutenticado(sessaoUsuario).then((perfis) => perfis.map((p) => p.nome));
         const permissoes = await pService.listarPermissoesChavePorUsuario(sessaoUsuario);
 
 

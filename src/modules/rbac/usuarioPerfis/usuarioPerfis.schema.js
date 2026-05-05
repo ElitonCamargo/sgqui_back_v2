@@ -1,11 +1,12 @@
 import { z } from 'zod';
 
-// Tabela: usuario_perfis
-// id: AUTO_INCREMENT — excluído do createSchema
-// usuario_id e perfil_id: NOT NULL
 export const createUsuarioPerfisSchema = z.object({
-  usuario_id: z.number().int(),
-  perfil_id:  z.number().int(),
+  usuarioId: z.number().int().positive(),
+  perfilId:  z.number().int().positive(),
 });
 
-export const updateUsuarioPerfisSchema = createUsuarioPerfisSchema.partial();
+export const updateUsuarioPerfisSchema = createUsuarioPerfisSchema
+  .partial()
+  .refine(data => Object.keys(data).length > 0, {
+    message: 'Pelo menos um campo deve ser enviado para atualização'
+});

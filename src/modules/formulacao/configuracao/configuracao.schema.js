@@ -1,11 +1,13 @@
 import { z } from 'zod';
 
-// Tabela: configuracao
-// PK: key (varchar, não auto-gerada — incluída no createSchema)
 export const createConfiguracaoSchema = z.object({
-  key:    z.string().max(100),
-  value:  z.any().optional(),    // json nullable
-  status: z.any().optional(),    // json nullable
+  key:    z.string().trim().min(1).max(100),
+  value:  z.any(),              // json NOT NULL
+  status: z.any().optional(),  // json DEFAULT NULL
 });
 
-export const updateConfiguracaoSchema = createConfiguracaoSchema.partial();
+export const updateConfiguracaoSchema = createConfiguracaoSchema
+  .partial()
+  .refine(data => Object.keys(data).length > 0, {
+    message: 'Pelo menos um campo deve ser enviado para atualização'
+  });

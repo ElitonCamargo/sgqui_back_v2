@@ -1,8 +1,16 @@
 import * as projetoModel from './projeto.model.js';
 import { AppError } from '../../../core/utils/AppError.js';
 
-export const cadastrar = async ({ nome, descricao = null }) => {
-    return await projetoModel.cadastrar({ nome, descricao });
+export const cadastrar = async (projetoData={}, loginId=0) => {
+    const data = await projetoModel.cadastrar(projetoData, loginId);
+    if (!data) {
+        throw new AppError({
+            message: 'Erro ao cadastrar projeto',
+            reason: 'Ocorreu um erro ao tentar cadastrar o projeto no banco de dados. Verifique os dados fornecidos e tente novamente.',
+            code: 500
+        });
+    }
+    return data;
 };
 
 export const addResultado = async (projetoId, responsavelId, resultado={}) => {

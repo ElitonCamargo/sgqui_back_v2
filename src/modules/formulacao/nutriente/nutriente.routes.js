@@ -1,6 +1,8 @@
 import * as nutriente from './nutriente.controller.js';
 import { validate } from '../../../core/middlewares/validate.js';
 import { createNutrienteSchema, updateNutrienteSchema } from './nutriente.schema.js';
+import autenticar from '../../../core/middlewares/autenticacao.js';
+import autorizar from '../../../core/middlewares/autorizar.js';
 
 export default [
 	{
@@ -8,6 +10,7 @@ export default [
 		metodo: 'GET',
 		modulo: 'formulacao',
 		rota: 'nutriente',
+		middlewares: [autenticar, autorizar],
 		functionExec: nutriente.consultar,
 		recurso: 'Nutrientes',
 		descricao: 'Listar nutrientes cadastrados',
@@ -18,6 +21,7 @@ export default [
 		metodo: 'GET',
 		modulo: 'formulacao',
 		rota: 'nutriente/:id',
+		middlewares: [autenticar, autorizar],
 		functionExec: nutriente.consultarPorId,
 		recurso: 'Nutrientes',
 		descricao: 'Visualizar dados detalhados de um nutriente',
@@ -28,6 +32,7 @@ export default [
 		metodo: 'DELETE',
 		modulo: 'formulacao',
 		rota: 'nutriente/:id',
+		middlewares: [autenticar, autorizar],
 		functionExec: nutriente.deletar,
 		recurso: 'Nutrientes',
 		descricao: 'Remover nutriente',
@@ -38,8 +43,8 @@ export default [
 		metodo: 'POST',
 		modulo: 'formulacao',
 		rota: 'nutriente',
+		middlewares: [autenticar, autorizar, validate(createNutrienteSchema)],
 		functionExec: nutriente.cadastrada,
-        middlewares: [validate(createNutrienteSchema)],
 		recurso: 'Nutrientes',
 		descricao: 'Cadastrar nutriente',
 		ehPublica: false
@@ -49,8 +54,8 @@ export default [
 		metodo: 'PUT',
 		modulo: 'formulacao',
 		rota: 'nutriente/:id',
+		middlewares: [autenticar, autorizar, validate(updateNutrienteSchema)],
 		functionExec: nutriente.alterar,
-        middlewares: [validate(updateNutrienteSchema)],
 		recurso: 'Nutrientes',
 		descricao: 'Alterar dados de um nutriente',
 		ehPublica: false

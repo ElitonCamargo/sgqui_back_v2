@@ -59,27 +59,28 @@ export const consultarPorMateria_prima = async (materia_primaId) => {
 
 export const cadastrar = async (garantia={}) => {    
     try {
-        let valores = [];
-        let campos = '';
-        let placeholders = '';
-        
-        for(const key in garantia){
-            campos += `${key},`;            
-            placeholders += '?,';
-            valores.push(garantia[key]);            
-        }
-        campos = campos.slice(0, -1);
-        placeholders = placeholders.slice(0, -1);
-        const cmdSql = `INSERT INTO garantia (${campos}) VALUES (${placeholders});`;        
-        await pool.execute(cmdSql, valores);
+        const campos = Object.keys(garantia);
+        const values = Object.values(garantia);
 
-        const [result] = await pool.execute('SELECT LAST_INSERT_ID() as lastId');
-        const lastId = result[0].lastId;
+        const params_cmdSql = campos.join(', ');
+        const values_cmdSql = campos.map(() => '?').join(', ');
 
-        const [dados] = await pool.execute('SELECT * FROM garantia WHERE id = ?;', [lastId]);
-        return dados;
+        const cmdSql = `INSERT INTO garantia (${params_cmdSql}) VALUES (${values_cmdSql});`;
+        const [execucao] = await pool.execute(cmdSql, values);
+        const lastId = execucao.insertId;
+
+        return await consultarPorId(lastId);
     } 
     catch (error) {
+        
+        if (error.code === 'ER_DUP_ENTRY') {
+            throw new AppError({
+                message: 'Registro duplicado',
+                reason: 'Já existe um registro cadastrado com os dados únicos informados.',
+                code: 409
+            });
+        }
+
         throw new AppError({
             message: 'Erro ao cadastrar garantia',
             reason: `Falha na execução do INSERT na tabela 'garantia'; verifique se o nutriente e a matéria-prima informados existem e se os dados são válidos. Detalhe: ${error.message}`,
@@ -90,23 +91,19 @@ export const cadastrar = async (garantia={}) => {
 
 export const alterar = async (garantia={}) => {
     try {
-        let valores = [];
-        let cmdSql = 'UPDATE garantia SET ';
 
-        for(const key in garantia){
-            valores.push(garantia[key]);
-            cmdSql += `${key} = ?, `;
+        const keys = Object.keys(garantia);
+        const values = Object.values(garantia);
+        const setClause = keys.map(k=> `${k} = ?`).join(', ');
+
+        const sql = `UPDATE garantia SET ${setClause}, updatedAt = CURRENT_TIMESTAMP WHERE id = ?;`;
+
+        const [result] = await pool.execute(sql, [...values, garantia.id]);
+        if(result.affectedRows === 0){
+            return null;
         }
 
-        cmdSql = cmdSql.replace(', id = ?,', '');
-        cmdSql += 'WHERE id = ?;';
-        const [execucao] = await pool.execute(cmdSql, valores);
-        if(execucao.affectedRows > 0){
-            const [dados] = await pool.execute('SELECT * FROM garantia WHERE id = ?;', garantia.id);
-            return dados;
-        }
-        return [];
-
+        return await consultarPorId(garantia.id);
     }
     catch (error) {
         throw new AppError({
@@ -136,7 +133,7 @@ export const consultarPorId = async (id) => {
     try {
         const cmdSql = 'SELECT * FROM garantia WHERE id = ?;';
         const [dados] = await pool.execute(cmdSql, [id]);
-        return dados;
+        return dados[0] || null;
     } 
     catch (error) {
         throw new AppError({
@@ -166,7 +163,7 @@ export const deletar = async (id) => {
     try {
         const cmdSql = 'DELETE FROM garantia WHERE id = ?;';
         const [dados] = await pool.execute(cmdSql, [id]);
-        return dados;
+        return dados.affectedRows > 0;
     } 
     catch (error) {
         throw new AppError({

@@ -37,7 +37,7 @@ async function syncPermissions() {
             perm.modulo,
             perm.recurso,
             perm.metodo,
-            `/${perm.modulo}/${perm.rota}`,
+            perm.modulo.length > 0 ? `/${perm.modulo}/${perm.rota}` : `/${perm.rota}`,
             perm.descricao,
             perm.ehPublica ? 1 : 0
         ]);

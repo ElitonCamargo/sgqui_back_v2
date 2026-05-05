@@ -1,14 +1,16 @@
 import { z } from 'zod';
 
-// Tabela: materia_prima
-// id: AUTO_INCREMENT — excluído do createSchema
 export const createMateriaPrimaSchema = z.object({
-  codigo:    z.string().max(50).optional(),
-  nome:      z.string().max(100).optional(),
-  formula:   z.string().max(50).optional(),
-  cas_number: z.string().max(50).optional(),
-  densidade:  z.number().optional(),               // double UNSIGNED nullable
-  descricao:  z.string().max(1000).optional(),
+  codigo:     z.string().trim().min(1).max(50),         // NOT NULL UNIQUE
+  nome:       z.string().trim().min(1).max(100),        // NOT NULL UNIQUE
+  formula:    z.string().trim().min(1).max(50),         // NOT NULL
+  cas_number: z.string().trim().min(1).max(50),         // NOT NULL
+  densidade:  z.number().min(0),                       // NOT NULL double UNSIGNED
+  descricao:  z.string().trim().max(1000).optional(),  // NULL
 });
 
-export const updateMateriaPrimaSchema = createMateriaPrimaSchema.partial();
+export const updateMateriaPrimaSchema = createMateriaPrimaSchema
+  .partial()
+  .refine(data => Object.keys(data).length > 0, {
+    message: 'Pelo menos um campo deve ser enviado para atualização'
+  });
