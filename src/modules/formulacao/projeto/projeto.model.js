@@ -1,49 +1,6 @@
 import pool from '../../../core/database/data.js';
 import { AppError } from '../../../core/utils/AppError.js';
 
-export const cadastrar_v0 = async (projeto={},loginId=0) => {    
-    try {
-        let valores = [];
-        let campos = '';
-        let placeholders = '';
-        
-        if('status' in projeto){
-            campos += 'status,'
-            placeholders += `JSON_ARRAY(JSON_OBJECT('status',  '${projeto['status']}', 'data_alteracao', (SELECT CURRENT_TIMESTAMP), 'id_responsavel', '${loginId}')),`;
-            delete projeto['status'];
-        }
-        if('aplicacao' in projeto){
-            campos += 'aplicacao,'
-            let aplic = JSON.stringify(projeto['aplicacao'].splice(','));
-            placeholders += `'${aplic}', `;
-            delete projeto['aplicacao'];
-        }   
-
-        for(const key in projeto){
-            campos += `${key},`;            
-            placeholders += '?,';
-            valores.push(projeto[key]);            
-        }
-        campos = campos.slice(0, -1);
-        placeholders = placeholders.slice(0, -1);
-        const cmdSql = `INSERT INTO projeto (${campos}) VALUES (${placeholders});`;        
-        await pool.execute(cmdSql, valores);
-
-        const [result] = await pool.execute('SELECT LAST_INSERT_ID() as lastId');
-        const lastId = result[0].lastId;
-
-        const [dados] = await pool.execute('SELECT * FROM projeto WHERE id = ?;', [lastId]);
-        return dados;
-    } 
-    catch (error) {
-        throw new AppError({
-            message: 'Erro ao cadastrar projeto',
-            reason: `Falha na execução do INSERT na tabela 'projeto'; verifique se os campos obrigatórios foram fornecidos e se os valores de status e aplicação são válidos. Detalhe: ${error.message}`,
-            code: 500
-        });
-    }
-};
-
 export const cadastrar = async (projeto = {}, loginId = 0) => {
     try {
         const camposPermitidos = [
