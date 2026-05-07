@@ -61,6 +61,17 @@ export default [
     ehPublica: false
   },
   {
+    codigo: 'projeto:consultarDeletados',
+    metodo: 'GET',
+    modulo: 'formulacao',
+		rota: 'projeto/list/deletados',
+    middlewares: [autenticar, autorizar],
+    functionExec: projeto.consultarDeletados,
+    recurso: 'Projetos',
+    descricao: 'Listar projetos deletados',
+    ehPublica: false
+  },
+  {
     codigo: 'projeto:cadastrar',
     metodo: 'POST',
     modulo: 'formulacao',

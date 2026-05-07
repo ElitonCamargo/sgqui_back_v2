@@ -3,18 +3,7 @@ import { AppError } from '../../../core/utils/AppError.js';
 
 export const cadastrar = async (projeto = {}, loginId = 0) => {
     try {
-        const camposPermitidos = [
-            'codigo',
-            'nome',
-            'cliente',
-            'descricao',
-            'data_inicio',
-            'data_termino',
-            'densidade',
-            'ph',
-            'tipo',
-            'natureza_fisica'
-        ];
+        const camposPermitidos = ['codigo','nome','cliente','descricao','data_inicio','data_termino','densidade','ph','tipo','natureza_fisica'];
 
         const campos = [];
         const placeholders = [];
@@ -64,10 +53,7 @@ export const cadastrar = async (projeto = {}, loginId = 0) => {
         const params_cmdSql = campos.join(', ');
         const values_cmdSql = placeholders.join(', ');
 
-        const cmdSql = `
-            INSERT INTO projeto (${params_cmdSql})
-            VALUES (${values_cmdSql});
-        `;
+        const cmdSql = `INSERT INTO projeto (${params_cmdSql}) VALUES (${values_cmdSql});`;
 
         const [result] = await pool.execute(cmdSql, valores);
 
@@ -94,11 +80,12 @@ export const cadastrar = async (projeto = {}, loginId = 0) => {
     }
 };
 
-export const duplicar = async (id = 0) => {
+export const duplicar = async (id = 0, loginId = 0) => {
     try {
-        const cmdSql = 'CALL duplicar_projeto(?)';
-        const [dados] = await pool.execute(cmdSql, [id]);
-        return dados[0];
+        const cmdSql = 'CALL duplicar_projeto(?,?)';
+        const [dados] = await pool.execute(cmdSql, [id, loginId]);
+        console.log(dados[0][0]);
+        return dados[0].length > 0 ? dados[0][0] : null;
     } 
     catch (error) {
         throw new AppError({
@@ -291,121 +278,13 @@ export const consultarFiltroAvacado = async (filtro = []) => {
     }
 };
 
-export const estruturarProjeto = (dados) => {
-    let projetos = [];
-    const addProjeto = (projeto = {}) => {
-        let projetoExistente = projetos.find(p => p.id === projeto.projeto_id);
-        if (!projetoExistente) {
-            projetoExistente = {
-                "id": projeto.projeto_id,
-                "codigo": projeto.projeto_codigo,
-                "nome": projeto.projeto_nome,
-                "cliente": projeto.projeto_cliente,
-                "descricao": projeto.projeto_descricao,
-                "data_inicio": projeto.projeto_data_inicio,
-                "data_termino": projeto.projeto_data_termino,
-                "densidade": projeto.projeto_densidade,
-                "ph": projeto.projeto_ph,
-                "tipo": projeto.projeto_tipo,
-                "aplicacao": projeto.projeto_aplicacao,
-                "natureza_fisica": projeto.projeto_natureza_fisica,
-                "status": projeto.projeto_status,
-                "etapas": [],
-                "nutrientes": [],
-                "percentual_concluido": 0,
-                "dencidade_estimada": 0,
-                "createdAt": projeto.projeto_createdAt,
-                "updatedAt": projeto.projeto_updatedAt
-
-            };
-            projetos.push(projetoExistente);
-        }
-        return projetoExistente;
-    }
-
-    const addEtapasProjeto = (etapa, projeto) => {       
-        let etapaExistente = projeto.etapas.find(e => e.id === etapa.etapa_id);
-        if (!etapaExistente) {
-            etapaExistente = {
-                "id": etapa.etapa_id,
-                "nome": etapa.etapa_nome,
-                "descricao": etapa.etapa_descricao,
-                "ordem": etapa.etapa_ordem,
-                "etapa_mp": []
-            };
-            if(etapaExistente.id){
-                projeto.etapas.push(etapaExistente);    
-            }
-        }
-        return etapaExistente;        
-    }
-
-    const addEtapa_MpEtapas = (etapa_mp, etapa, projeto) => {
-        if (etapa_mp.etapa_mp_id) {
-            let etapa_MpExistente = etapa.etapa_mp.find(e_mp => e_mp.id === etapa_mp.etapa_mp_id);
-            if (!etapa_MpExistente) {
-                etapa.etapa_mp.push({
-                    "id": etapa_mp.etapa_mp_id,
-                    "mp_id": etapa_mp.materia_prima_id,
-                    "mp_codigo": etapa_mp.materia_prima_codigo,
-                    "materia_prima": etapa_mp.materia_prima_nome,
-                    "percentual": etapa_mp.etapa_mp_percentual,
-                    "tempo_agitacao": etapa_mp.etapa_mp_tempo_agitacao,
-                    "observacao": etapa_mp.etapa_mp_observacao,
-                    "lote": etapa_mp.etapa_mp_lote,
-                    "ordem": etapa_mp.etapa_mp_ordem
-                });
-                projeto.dencidade_estimada += etapa_mp.parcial_densidade || 0;
-            }
-        }
-    }
-
-    const addNutrientes = (nutriente, projeto) => {
-        if (nutriente.nutriente_id) {
-            let index_nutriente = projeto.nutrientes.findIndex(n => n.id === nutriente.nutriente_id);
-            if (index_nutriente === -1) {
-                projeto.nutrientes.push({
-                    "id": nutriente.nutriente_id,
-                    "nome": nutriente.nutriente_nome,
-                    "formula": nutriente.nutriente_formula,
-                    "visivel": nutriente.nutriente_visivel,
-                    "percentual": nutriente.percentual_origem,
-                    "origem": [{
-                        "mp": nutriente.materia_prima_nome,
-                        "percentual": nutriente.percentual_origem
-                    }]
-                });
-            } else {
-                projeto.nutrientes[index_nutriente].percentual += nutriente.percentual_origem;
-                projeto.nutrientes[index_nutriente].origem.push({
-                    "mp": nutriente.materia_prima_nome,
-                    "percentual": nutriente.percentual_origem
-                });
-            }
-        }
-    };
-
-    if (dados) {
-        for (const elemento of dados) {
-            let projeto_referenciado = addProjeto(elemento);
-            let etapa_referenciada = addEtapasProjeto(elemento, projeto_referenciado);
-            addEtapa_MpEtapas(elemento, etapa_referenciada, projeto_referenciado);
-            addNutrientes(elemento, projeto_referenciado);
-            // Atualizar percentual_concluido e densidade_estimada
-            projeto_referenciado.percentual_concluido = projeto_referenciado.etapas.reduce((total, etapa) => 
-                total + etapa.etapa_mp.reduce((subtotal, mp) => subtotal + mp.percentual, 0), 0);
-        }
-    }
-    return projetos;
-};
-
 
 export const consultarPorId = async (id) => {
     try {
         await pool.execute("UPDATE projeto SET updatedAt = CURRENT_TIMESTAMP WHERE projeto.id = ?;", [id]);
         const cmdSql = 'SELECT * FROM projeto WHERE id = ?;';
         const [dados] = await pool.execute(cmdSql, [id]);
-        return dados;
+        return dados.length > 0 ? dados[0] : null;
     } 
     catch (error) {
         throw new AppError({
@@ -473,12 +352,46 @@ export const deletar = async (id) => {
     try {
         const cmdSql = 'DELETE FROM projeto WHERE id = ?;';
         const [dados] = await pool.execute(cmdSql, [id]);
-        return dados;
+        return dados.affectedRows > 0;
     } 
     catch (error) {
         throw new AppError({
             message: 'Erro ao deletar projeto',
             reason: `Falha na execução do DELETE na tabela 'projeto'; o registro pode não existir ou possuir etapas e resultados vinculados que impedem a exclusão. Detalhe: ${error.message}`,
+            code: 500
+        });
+    }
+};
+
+export const auditarProjetoDelete = async (projeto = {}, loginId = 0) => {
+
+    delete projeto.dencidade_estimada;
+    console.log('Auditando deleção do projeto:', projeto);
+    try {
+        const keys = Object.keys(projeto);
+        const values = Object.values(projeto);
+        const cmdSql = `INSERT INTO projetos_deletados (${keys.join(', ')}, responsavel_delecao) VALUES (${keys.map(() => '?').join(', ')}, ?);`;
+        await pool.execute(cmdSql, [ ...values, loginId]);
+
+    } catch (error) {
+        throw new AppError({
+            message: 'Erro ao auditar deleção de projeto',
+            reason: `Falha na execução do INSERT na tabela 'projetos_deletados' para registrar a auditoria de deleção; verifique se a tabela de auditoria existe e se os campos correspondem aos do projeto. Detalhe: ${error.message}`,
+            code: 500
+        });
+    }
+};
+
+export const consultarDeletados = async () => {
+    try {
+        const cmdSql = 'SELECT * FROM projetos_deletados ORDER BY createdAt DESC;';
+        const [dados] = await pool.execute(cmdSql);
+        return dados;
+    }
+    catch (error) {
+        throw new AppError({
+            message: 'Erro ao consultar projetos deletados',
+            reason: `Falha na execução do SELECT na tabela 'projetos_deletados'; Detalhe: ${error.message}`,
             code: 500
         });
     }
@@ -491,7 +404,7 @@ export const consultaDetalhada = async (id) => {
         await pool.execute("UPDATE projeto SET updatedAt = CURRENT_TIMESTAMP WHERE projeto.id = ?;", [id]);
         const cmdSql = 'SELECT * FROM projeto_detalhado WHERE projeto_id = ?;';
         const [dados] = await pool.execute(cmdSql, [id]);
-        return estruturarProjeto(dados);
+        return dados;
     } 
     catch (error) {
         throw new AppError({

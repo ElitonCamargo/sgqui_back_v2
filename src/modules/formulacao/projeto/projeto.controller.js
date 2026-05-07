@@ -30,6 +30,11 @@ export const consultar = asyncHandler(async (req, res, next) => {
     return responses.success(res, { data });
 });
 
+export const consultarDeletados = asyncHandler(async (req, res, next) => {
+    const data = await projetoService.consultarDeletados();
+    return responses.success(res, { data });
+});
+
 export const consultarPorId = asyncHandler(async (req, res, next) => {    
     let id = req.params.id;
     const data = await projetoService.consultarPorId(id);
@@ -44,11 +49,8 @@ export const consultarPorCodigo = asyncHandler(async (req, res, next) => {
 
 export const duplicar = asyncHandler(async (req, res, next) => {    
     let id = req.params.id;
-    const data = await projetoService.duplicar(id);
-    const message = Array.isArray(data) && data.length === 0
-        ? "Projeto base não encontrado"
-        : undefined;
-    return responses.success(res, { data, ...(message ? { message } : {}) });
+    const data = await projetoService.duplicar(id, req.loginId);
+    return responses.success(res, { message: 'Projeto duplicado com sucesso', data });
 });
 
 export const consultarPorData = asyncHandler(async (req, res, next) => {    
@@ -60,8 +62,8 @@ export const consultarPorData = asyncHandler(async (req, res, next) => {
 
 export const deletar = asyncHandler(async (req, res, next) => {
     let id = req.params.id;
-    const data = await projetoService.deletar(id);
-    return responses.success(res, { data });
+    const data = await projetoService.deletar(id, req.loginId);
+    return responses.success(res, { message: 'Projeto deletado com sucesso', data });
 });
 
 export const alterar = asyncHandler(async (req, res, next) => {
@@ -85,5 +87,5 @@ export const addResultado = asyncHandler(async (req, res, next) => {
 export const consultaDetalhada = asyncHandler(async (req, res, next) => {    
     let id = req.params.id;               
     const data = await projetoService.consultaDetalhada(id);
-    return responses.success(res, { data });
+    return responses.success(res, { message: 'Detalhes do projeto consultados com sucesso', data });
 });

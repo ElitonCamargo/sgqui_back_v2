@@ -1,7 +1,6 @@
 import { AppError } from "../../../core/utils/AppError.js";
 import * as perfisPermissoes from "./perfisPermissoes.model.js";
 import * as PermissoesModel from "../permissoes/permissoes.model.js";
-import { vi } from "zod/locales";
 
 // Vincular uma lista de permissões a um perfil
 export const vincular = async (perfilId, permissoesIds = []) => {
