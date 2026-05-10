@@ -13,7 +13,6 @@ export const createProjetoSchema = z.object({
   aplicacao:       z.any().optional(),                      // json NULL
   natureza_fisica: z.string().trim().max(255).optional(),   // NULL
   status:          z.any().optional(),                      // json NULL
-  resultado:       z.any().optional(),                      // json NULL
 });
 
 export const updateProjetoSchema = createProjetoSchema

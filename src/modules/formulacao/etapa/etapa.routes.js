@@ -31,7 +31,7 @@ export default [
 		codigo: 'etapa:consultarPorProjeto',
 		metodo: 'GET',
 		modulo: 'formulacao',
-		rota: 'etapa/projeto_id/:id',
+		rota: 'etapa/projeto/:projeto_id',
 		middlewares: [autenticar, autorizar],
 		functionExec: etapa.consultarPorProjeto,
 		recurso: 'Projetos',

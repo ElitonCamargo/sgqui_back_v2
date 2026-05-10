@@ -108,7 +108,7 @@ export const consultarPorNome = async (nome) => {
 
 export const consultarPorProjeto = async (projeto_id) => {
     try {
-        const cmdSql = 'SELECT * FROM etapa WHERE projeto_id = ?;';
+        const cmdSql = 'SELECT * FROM etapa WHERE projeto = ?;';
         const [dados] = await pool.execute(cmdSql, [projeto_id]);
         return dados;
     } 

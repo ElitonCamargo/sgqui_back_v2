@@ -84,7 +84,6 @@ export const duplicar = async (id = 0, loginId = 0) => {
     try {
         const cmdSql = 'CALL duplicar_projeto(?,?)';
         const [dados] = await pool.execute(cmdSql, [id, loginId]);
-        console.log(dados[0][0]);
         return dados[0].length > 0 ? dados[0][0] : null;
     } 
     catch (error) {
@@ -96,34 +95,34 @@ export const duplicar = async (id = 0, loginId = 0) => {
     }
 };
 
-export const alterar = async (projeto={},loginId=0) => {
+export const alterar = async (id=0,projeto={},loginId=0) => {
     try {
-        let valores = [];
-        let cmdSql = 'UPDATE projeto SET ';
+        const campos = [];
+        const values = [];
 
+        
         if('status' in projeto){
-            cmdSql += `status = JSON_MERGE_PRESERVE(JSON_ARRAY(JSON_OBJECT('status', '${projeto['status']}', 'data_alteracao', (SELECT CURRENT_TIMESTAMP), 'id_responsavel', '${loginId}')),status), `;
-            delete projeto['status'];
+            campos.push(`status = JSON_MERGE_PRESERVE(JSON_ARRAY(JSON_OBJECT('status', ?, 'data_alteracao', (SELECT CURRENT_TIMESTAMP), 'id_responsavel', ?)),status)`);
+            values.push(projeto['status'], loginId);
+            delete projeto.status;
         }
         if('aplicacao' in projeto){
             let aplic = JSON.stringify(projeto['aplicacao'].splice(','));
-            cmdSql += `aplicacao = '${aplic}', `;
-            delete projeto['aplicacao'];
+            campos.push(`aplicacao = ?, `);
+            values.push(aplic);
+            delete projeto.aplicacao;
         }
 
-        for(const key in projeto){
-            valores.push(projeto[key]);
-            cmdSql += `${key} = ?, `;
-        }
+        campos.push(...Object.keys(projeto).map(campo => `${campo} = ?`));
+        values.push(...Object.values(projeto));
 
-        cmdSql = cmdSql.replace(', id = ?,', '');
-        cmdSql += 'WHERE id = ?;';
-        const [execucao] = await pool.execute(cmdSql, valores);
-        if(execucao.affectedRows > 0){
-            const [dados] = await pool.execute('SELECT * FROM projeto WHERE id = ?;', [projeto.id]);
-            return dados;
+        const cmdSql = 'UPDATE projeto SET ' + campos.join(', ') + ' WHERE id = ?;';
+        const [execucao] = await pool.execute(cmdSql, [...values, id]);
+        const projetoAtualizado = await consultarPorId(id);
+        if(execucao.affectedRows < 0 || projetoAtualizado == null){
+            return null;           
         }
-        return [];
+        return projetoAtualizado;
 
     }
     catch (error) {
@@ -169,66 +168,11 @@ export const consultar = async (filtro = '') => {
     }
 };
 
-const filtroAvancado = (projetos=[], filtroConsulta)=>{
-    let dados_essenciais = projetos.map((projeto)=>{
-        let result = {
-            projeto_id: projeto.id,
-            materias_primas:[],
-            nutrientes:[]
-        }
-        projeto.etapas.forEach(etapa =>{
-            etapa.etapa_mp.forEach(mp=>{
-                result.materias_primas.push({
-                    id: mp.mp_id,
-                    percentual: mp.percentual
-                })
-            })
-        })
-        projeto.nutrientes.forEach(nutr => {
-            result.nutrientes.push({
-                id: nutr.id,
-                percentual: nutr.percentual
-            })
-        });
-        return result;
-    });
-    
-    const filtrar = (dados_essenciais=[] , filtroConsulta = {}) => {
-        return dados_essenciais.filter(projeto => {
-               const todasMateriasPrimas = filtroConsulta.materia_prima.every(filtroMateriaPrima => {
-                return projeto.materias_primas.some(materiaPrima => {
-                    return materiaPrima.id == filtroMateriaPrima.id && (materiaPrima.percentual >= filtroMateriaPrima.percentual[0] && materiaPrima.percentual <= filtroMateriaPrima.percentual[1]);
-                });
-            });    
 
-            const todosNutrientes = filtroConsulta.nutriente.every(filtroNutriente => {
-                return projeto.nutrientes.some(nutriente => {
-                    return nutriente.id == filtroNutriente.id && (nutriente.percentual >= filtroNutriente.percentual[0] && nutriente.percentual <= filtroNutriente.percentual[1]);
-                });
-            });
-            return todasMateriasPrimas && todosNutrientes;
-        });
-    };
-    return (filtrar(dados_essenciais, filtroConsulta)).map(projeto=>projeto.projeto_id); //Retorna apenas os IDs
-    // return filtrar(dados_essenciais, filtroConsulta);
-}
 
-export const consultarFiltroAvacado = async (filtro = []) => {
+export const consultarFiltroAvancado = async (filtroConsulta) => {
     try {
-        let filtroConsulta = {
-            materia_prima:[], 
-            nutriente:[] 
-        }
-        filtro = JSON.parse(filtro);
-        // Separar os filtros em materia_prima e nutriente
-        filtro.forEach(elemento => {
-            if (elemento.tipo === "nutriente") {
-                filtroConsulta.nutriente.push({id: elemento.id, percentual: [elemento.percentual[0],elemento.percentual[1]]});
-            } else{
-                filtroConsulta.materia_prima.push({id: elemento.id, percentual: [elemento.percentual[0],elemento.percentual[1]]});
-            }
-        });
-
+        
         let cmdSelectMp = '';
         let cmdSelectNut = '';
 
@@ -260,14 +204,10 @@ export const consultarFiltroAvacado = async (filtro = []) => {
             ON projeto_detalhado.projeto_id = pnp.projeto_id;
         `;
 
+        
         // Executar a consulta no banco de dados
         const [dados] = await pool.execute(cmdSql.trim());
-        let projetos = estruturarProjeto(dados);        
-        let IDs_projeto_compativeis = filtroAvancado(projetos, filtroConsulta);
-        return projetos.filter(projeto=>{
-            return IDs_projeto_compativeis.some(id => id == projeto.id);
-        })
-
+        return dados.length > 0 ? dados : [];
     } 
     catch (error) {
         throw new AppError({
@@ -366,7 +306,7 @@ export const deletar = async (id) => {
 export const auditarProjetoDelete = async (projeto = {}, loginId = 0) => {
 
     delete projeto.dencidade_estimada;
-    console.log('Auditando deleção do projeto:', projeto);
+    delete projeto.updatedAt;
     try {
         const keys = Object.keys(projeto);
         const values = Object.values(projeto);

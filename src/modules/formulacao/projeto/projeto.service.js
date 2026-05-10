@@ -13,6 +13,18 @@ export const cadastrar = async (projetoData={}, loginId=0) => {
     return data;
 };
 
+export const alterar = async (id=0, projetoData={}, loginId=0) => {
+    const data = await projetoModel.alterar(id, projetoData, loginId);
+    if (!data) {
+        throw new AppError({
+            message: 'Erro ao alterar projeto',
+            reason: 'Ocorreu um erro ao tentar alterar o projeto. Verifique se o projeto existe e se algum dado foi realmente modificado.',
+            code: 404
+        });
+    }
+    return data;
+};
+
 
 export const duplicar = async (id, loginId) => {
     const data = await projetoModel.duplicar(id, loginId);
@@ -35,27 +47,114 @@ export const addResultado = async (projetoId, responsavelId, resultado={}) => {
             code: 400
         });
     }
-    if(resultado == null || typeof resultado !== 'object'){
+
+    if(resultado == null || Object.keys(resultado).length === 0){
         throw new AppError({
-            message: 'Resultado deve ser um objeto',
-            reason: "O campo 'resultado' deve ser um objeto com os dados do resultado a ser adicionado ao projeto",
+            message: 'Dados do resultado são obrigatórios',
+            reason: "O parâmetro 'resultado' não foi fornecido ou está vazio; é necessário fornecer os dados do resultado a ser adicionado",
             code: 400
         });
     }
+
     resultado.id_responsavel = responsavelId;        
     return await projetoModel.addResultado(projetoId, resultado);        
 };
 
 export const consultar = async (filtro = '') => {
-    return await projetoModel.consultar(filtro);
+    const data = await projetoModel.consultar(filtro);
+    if (data.length === 0) {
+        throw new AppError({
+            message: 'Nenhum projeto encontrado',
+            reason: 'Nenhum projeto corresponde aos critérios de filtro fornecidos.',
+            code: 404
+        });
+    }
+    return data;
 };
 
 export const consultarDeletados = async () => {
     return await projetoModel.consultarDeletados();
 };
 
-export const consultarFiltroAvacado = async (filtro = []) => {
-    return await projetoModel.consultarFiltroAvacado(filtro);
+
+const filtroAvancado = (projetos=[], filtroConsulta)=>{
+    let dados_essenciais = projetos.map((projeto)=>{
+        let result = {
+            projeto_id: projeto.id,
+            materias_primas:[],
+            nutrientes:[]
+        }
+        projeto.etapas.forEach(etapa =>{
+            etapa.etapa_mp.forEach(mp=>{
+                result.materias_primas.push({
+                    id: mp.mp_id,
+                    percentual: mp.percentual
+                })
+            })
+        })
+        projeto.nutrientes.forEach(nutr => {
+            result.nutrientes.push({
+                id: nutr.id,
+                percentual: nutr.percentual
+            })
+        });
+        return result;
+    });
+    
+    const filtrar = (dados_essenciais=[] , filtroConsulta = {}) => {
+        return dados_essenciais.filter(projeto => {
+            const todasMateriasPrimas = filtroConsulta.materia_prima.every(filtroMateriaPrima => {
+                return projeto.materias_primas.some(materiaPrima => {
+                    return materiaPrima.id == filtroMateriaPrima.id && (materiaPrima.percentual >= filtroMateriaPrima.percentual[0] && materiaPrima.percentual <= filtroMateriaPrima.percentual[1]);
+                });
+            });    
+
+            const todosNutrientes = filtroConsulta.nutriente.every(filtroNutriente => {
+                return projeto.nutrientes.some(nutriente => {
+                    return nutriente.id == filtroNutriente.id && (nutriente.percentual >= filtroNutriente.percentual[0] && nutriente.percentual <= filtroNutriente.percentual[1]);
+                });
+            });
+            return todasMateriasPrimas && todosNutrientes;
+        });
+    };   
+    return (filtrar(dados_essenciais, filtroConsulta)).map(projeto=>projeto.projeto_id); //Retorna apenas os IDs
+    // return filtrar(dados_essenciais, filtroConsulta);
+}
+
+export const consultarFiltroAvancado = async (filtro = []) => {
+
+    let filtroConsulta = {
+        materia_prima:[], 
+        nutriente:[] 
+    }
+    filtro = JSON.parse(filtro);
+    
+    // Separar os filtros em materia_prima e nutriente
+    filtro.forEach(elemento => {
+        if (elemento.tipo === "nutriente") {
+            filtroConsulta.nutriente.push({id: elemento.id, percentual: [elemento.percentual[0],elemento.percentual[1]]});
+        } else{
+            filtroConsulta.materia_prima.push({id: elemento.id, percentual: [elemento.percentual[0],elemento.percentual[1]]});
+        }
+    });
+
+
+    const result = await projetoModel.consultarFiltroAvancado(filtroConsulta);   
+    
+    
+    if (result.length === 0) {
+        throw new AppError({
+            message: 'Nenhum projeto encontrado',
+            reason: 'Nenhum projeto corresponde aos critérios de filtro fornecidos.',
+            code: 404
+        });
+    }
+    let projetos = estruturarProjeto(result);   
+    let IDs_projeto_compativeis = filtroAvancado(projetos, filtroConsulta);
+    console.log('IDs de projetos compatíveis com o filtro avançado:', IDs_projeto_compativeis);
+    return projetos.filter(projeto=>{
+        return IDs_projeto_compativeis.some(id => id == projeto.id);
+    })
 };
 
 
@@ -64,15 +163,39 @@ export const consultarPorId = async (id) => {
 };
 
 export const consultarPorCodigo = async (codigo) => {
-    return await projetoModel.consultarPorCodigo(codigo);
+    const data = await projetoModel.consultarPorCodigo(codigo);
+    if(data.length === 0){
+        throw new AppError({
+            message: 'Projeto não encontrado',
+            reason: 'Não existe um projeto com o código fornecido. Verifique o código e tente novamente.',
+            code: 404
+        });
+    }
+    return data;
 };
 
 export const consultarPorData = async (data_inicio="", data_termino="") => {
-    return await projetoModel.consultarPorData(data_inicio, data_termino);
+    const data = await projetoModel.consultarPorData(data_inicio, data_termino);
+    if(data.length === 0){
+        throw new AppError({
+            message: 'Nenhum projeto encontrado',
+            reason: 'Nenhum projeto foi encontrado dentro do período especificado. Verifique as datas fornecidas e tente novamente.',
+            code: 404
+        });
+    }
+    return data;
 };
 
 export const consultarPorStatus = async (status='') => {
-    return await projetoModel.consultarPorStatus(status);
+    const data = await projetoModel.consultarPorStatus(status);
+    if(data.length === 0){
+        throw new AppError({
+            message: 'Nenhum projeto encontrado',
+            reason: 'Nenhum projeto foi encontrado com o status especificado. Aparentemente, não há projetos que correspondam ao status fornecido.',
+            code: 404
+        });
+    }
+    return data;
 };
 
 export const deletar = async (id, loginId) => {
@@ -209,5 +332,12 @@ const estruturarProjeto = (dados) => {
                 total + etapa.etapa_mp.reduce((subtotal, mp) => subtotal + mp.percentual, 0), 0);
         }
     }
-    return projetos[0] || {};
+    
+    if(projetos.length === 0){
+        return {};
+    }
+    if(projetos.length === 1){
+        return projetos[0];
+    }
+    return projetos;
 };

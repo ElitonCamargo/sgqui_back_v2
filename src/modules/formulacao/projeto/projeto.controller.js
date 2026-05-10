@@ -9,42 +9,43 @@ export const cadastrar = asyncHandler(async (req, res, next) => {
 });
 
 export const consultar = asyncHandler(async (req, res, next) => {
-    let nome = req.query.nome;
-    let status = req.query.status;
-    let filtro_avancado = req.query.filtro_avancado;
-    let data;
-    if(!filtro_avancado){
-        if(nome){
-            data = await projetoService.consultar(nome);
-        }
-        else if(status){
-            data = await projetoService.consultarPorStatus(status);
-        }
-        else{
-            data = await projetoService.consultar('');
-        }
+    const { nome, status, filtro_avancado } = req.query;
+    
+    if (filtro_avancado) {
+        const data = await projetoService.consultarFiltroAvancado(filtro_avancado);
+        return responses.success(res, { message: 'Projetos encontrados', data });
     }
-    else{
-        data = await projetoService.consultarFiltroAvacado(filtro_avancado);
+
+    if (nome) {
+        const data = await projetoService.consultar(nome);
+        return responses.success(res, { message: 'Projetos encontrados', data });
     }
-    return responses.success(res, { data });
+
+    if (status) {
+        const data = await projetoService.consultarPorStatus(status);
+        return responses.success(res, { message: 'Projetos encontrados', data });
+    }
+
+    const data = await projetoService.consultar('');
+    return responses.success(res, { message: 'Projetos encontrados', data });
 });
+
 
 export const consultarDeletados = asyncHandler(async (req, res, next) => {
     const data = await projetoService.consultarDeletados();
-    return responses.success(res, { data });
+    return responses.success(res, { message: 'Projetos encontrados', data });
 });
 
 export const consultarPorId = asyncHandler(async (req, res, next) => {    
     let id = req.params.id;
     const data = await projetoService.consultarPorId(id);
-    return responses.success(res, { data });
+    return responses.success(res, { message: 'Projeto encontrado', data });
 });
 
 export const consultarPorCodigo = asyncHandler(async (req, res, next) => {    
     let codigo = req.params.codigo;
     const data = await projetoService.consultarPorCodigo(codigo);
-    return responses.success(res, { data });
+    return responses.success(res, { message: 'Projeto encontrado', data });
 });
 
 export const duplicar = asyncHandler(async (req, res, next) => {    
@@ -57,7 +58,7 @@ export const consultarPorData = asyncHandler(async (req, res, next) => {
     let inicio = req.params.inicio;
     let termino = req.params.termino;
     const data = await projetoService.consultarPorData(inicio,termino);
-    return responses.success(res, { data });
+    return responses.success(res, { message: 'Projetos encontrados', data });
 });
 
 export const deletar = asyncHandler(async (req, res, next) => {
@@ -67,10 +68,10 @@ export const deletar = asyncHandler(async (req, res, next) => {
 });
 
 export const alterar = asyncHandler(async (req, res, next) => {
-    let projeto = req.body;
-    projeto.id = req.params.id;
-    const projetoAlterado = await projetoService.alterar(projeto,req.loginId);
-    return responses.success(res, { data: projetoAlterado });
+    const projeto = req.body;
+    const {id} = req.params;
+    const projetoAlterado = await projetoService.alterar(id, projeto, req.loginId);
+    return responses.success(res, { message: 'Projeto alterado com sucesso', data: projetoAlterado });
 });
 
 export const addResultado = asyncHandler(async (req, res, next) => {
@@ -80,7 +81,7 @@ export const addResultado = asyncHandler(async (req, res, next) => {
 
     const data = await projetoService.addResultado(projetoId, responsavelId, resultado);
 
-    return responses.success(res, { data });
+    return responses.success(res, { message: 'Resultado adicionado com sucesso', data });
 });
 
 // *************** Consultas Entre vária entidades ***********************

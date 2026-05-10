@@ -17,17 +17,6 @@ export default [
     ehPublica: false
   },
   {
-    codigo: 'projeto:consultarPorId',
-    metodo: 'GET',
-    modulo: 'formulacao',
-		rota: 'projeto/:id',
-    middlewares: [autenticar, autorizar],
-    functionExec: projeto.consultarPorId,
-    recurso: 'Projetos',
-    descricao: 'Consultar um projeto pelo seu ID',
-    ehPublica: false
-  },
-  {
     codigo: 'projeto:consultarPorCodigo',
     metodo: 'GET',
     modulo: 'formulacao',
@@ -39,14 +28,14 @@ export default [
     ehPublica: false
   },
   {
-    codigo: 'projeto:consultarDetalhado',
+    codigo: 'projeto:consultarPorId',
     metodo: 'GET',
     modulo: 'formulacao',
-		rota: 'projeto/detalhado/:id',
+		rota: 'projeto/:id',
     middlewares: [autenticar, autorizar],
     functionExec: projeto.consultaDetalhada,
     recurso: 'Projetos',
-    descricao: 'Visualizar a formulação detalhada de um projeto',
+    descricao: 'Visualização detalhada de um projeto',
     ehPublica: false
   },
   {
