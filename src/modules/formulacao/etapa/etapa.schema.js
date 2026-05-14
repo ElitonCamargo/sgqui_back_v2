@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const createEtapaSchema = z.object({
   projeto:   z.number().int().positive(),           // NOT NULL FK
   nome:      z.string().trim().min(1).max(255),     // NOT NULL
-  descricao: z.string().trim().max(255),            // NOT NULL
+  descricao: z.string().trim().max(255).optional(), // NULL
   ordem:     z.number().int(),                     // NOT NULL tinyint
 });
 

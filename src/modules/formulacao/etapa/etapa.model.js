@@ -3,25 +3,18 @@ import { AppError } from '../../../core/utils/AppError.js';
 
 export const cadastrar = async (etapa={}) => {    
     try {
-        let valores = [];
-        let campos = '';
-        let placeholders = '';
-        
-        for(const key in etapa){
-            campos += `${key},`;            
-            placeholders += '?,';
-            valores.push(etapa[key]);            
-        }
-        campos = campos.slice(0, -1);
-        placeholders = placeholders.slice(0, -1);
-        const cmdSql = `INSERT INTO etapa (${campos}) VALUES (${placeholders});`;        
-        await pool.execute(cmdSql, valores);
 
-        const [result] = await pool.execute('SELECT LAST_INSERT_ID() as lastId');
-        const lastId = result[0].lastId;
+        const campos = Object.keys(etapa).join(', ');
+        const valores = Object.values(etapa);
 
-        const [dados] = await pool.execute('SELECT * FROM etapa WHERE id = ?;', [lastId]);
-        return dados;
+        const placeholders = valores.map(() => '?').join(', ');
+
+        const cmdSql = `INSERT INTO etapa (${campos}) VALUES (${placeholders});`; 
+
+        const [result] = await pool.execute(cmdSql, valores);
+        const lastId = result.insertId;
+
+        return await consultarPorId(lastId);
     } 
     catch (error) {
         throw new AppError({
@@ -32,25 +25,16 @@ export const cadastrar = async (etapa={}) => {
     }
 };
 
-export const alterar = async (etapa={}) => {
+export const alterar = async (id=0, etapa={}) => {
     try {
-        let valores = [];
-        let cmdSql = 'UPDATE etapa SET ';
+        const keys = Object.keys(etapa);
+        const values = Object.values(etapa);
+        const placeholders = keys.map(key => `${key} = ?`).join(', ');
 
-        for(const key in etapa){
-            valores.push(etapa[key]);
-            cmdSql += `${key} = ?, `;
-        }
+        const cmdSql = `UPDATE etapa SET ${placeholders} WHERE id = ?;`;
 
-        cmdSql = cmdSql.replace(', id = ?,', '');
-        cmdSql += 'WHERE id = ?;';
-        const [execucao] = await pool.execute(cmdSql, valores);
-        if(execucao.affectedRows > 0){
-            const [dados] = await pool.execute('SELECT * FROM etapa WHERE id = ?;', etapa.id);
-            return dados;
-        }
-        return [];
-
+        const [result] = await pool.execute(cmdSql, [...values, id]);
+        return result.affectedRows > 0 ? await consultarPorId(id) : null;
     }
     catch (error) {
         throw new AppError({
@@ -60,6 +44,62 @@ export const alterar = async (etapa={}) => {
         });
     }
 };
+
+
+export const alterarOrdem = async (ordemEtapa = []) => {
+
+    const connection = await pool.getConnection();
+
+    try {
+        await connection.beginTransaction();
+
+        const results = [];
+
+        for (const { id, ordem } of ordemEtapa) {
+            const cmdSql = `
+                UPDATE etapa 
+                SET ordem = ? 
+                WHERE id = ?;
+            `;
+
+            const [result] = await connection.execute(cmdSql, [ordem, id]);
+
+            if (result.affectedRows === 0) {
+                throw new AppError({
+                    message: 'Etapa não encontrada para reordenação',
+                    reason: `Nenhuma etapa foi encontrada com o ID ${id} informado para alteração de ordem.`,
+                    code: 404
+                });
+            }
+
+            results.push({
+                id,
+                ordem
+            });
+        }
+
+        await connection.commit();
+
+        return results;
+
+    } catch (error) {
+        await connection.rollback();
+
+        if (error instanceof AppError) {
+            throw error;
+        }
+
+        throw new AppError({
+            message: 'Erro ao alterar ordem das etapas',
+            reason: `Falha na execução do UPDATE para reordenar as etapas; verifique se os IDs fornecidos são válidos e se a estrutura do array está correta. Detalhe: ${error.message}`,
+            code: 500
+        });
+
+    } finally {
+        connection.release();
+    }
+};
+
 
 export const consultar = async (filtro = '') => {
     try {  
@@ -80,7 +120,7 @@ export const consultarPorId = async (id) => {
     try {
         const cmdSql = 'SELECT * FROM etapa WHERE id = ?;';
         const [dados] = await pool.execute(cmdSql, [id]);
-        return dados;
+        return dados[0] || null;
     } 
     catch (error) {
         throw new AppError({
@@ -125,7 +165,7 @@ export const deletar = async (id) => {
     try {
         const cmdSql = 'DELETE FROM etapa WHERE id = ?;';
         const [dados] = await pool.execute(cmdSql, [id]);
-        return dados;
+        return dados.affectedRows > 0;
     } 
     catch (error) {
         throw new AppError({

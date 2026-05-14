@@ -7,7 +7,7 @@ export const cadastrar = async (usuario) => {
         const keys = Object.keys(usuario);
         const values = Object.values(usuario);
         const setCollumns = keys.join(', ');
-        const setClause = keys.map(k => `?`).join(', ');
+        const setClause = keys.map(() => '?').join(', ');
 
         const cmdSql = `INSERT INTO usuario (${setCollumns}) VALUES (${setClause});`;
         const [result] = await pool.execute(cmdSql, values);

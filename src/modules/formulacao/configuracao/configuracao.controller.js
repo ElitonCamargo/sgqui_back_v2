@@ -37,9 +37,6 @@ export const consultar = asyncHandler(async (req, res, next) => {
 
 export const deletar = asyncHandler(async (req, res, next) => {
     let key = req.params.key;
-    const result = await Configuracao.deletar(key);
-    if(!result){
-        return responses.notFound(res, { message: 'Configuração não encontrada' });
-    }
-    return responses.success(res, { message: 'Configuração deletada com sucesso', data: [] });
+    const data = await Configuracao.deletar(key);    
+    return responses.success(res, { message: 'Configuração deletada com sucesso', data });
 });

@@ -11,7 +11,7 @@ export const consultar = async (query={}) => {
         });
 
         if(placeholders.length > 0){
-            cmdSql = `SELECT * FROM elemento WHERE ${placeholders.join(' OR ')};`;
+            cmdSql = `SELECT * FROM elemento WHERE ${placeholders.join(' AND ')};`;
         }
         console.log(cmdSql, values.map(value => `%${value}%`));  
         const [dados] = await pool.execute(cmdSql, values.map(value => `%${value}%`));
@@ -30,7 +30,7 @@ export const consultarPorId = async (id) => {
     try {
         const cmdSql = 'SELECT * FROM elemento WHERE id = ?;';
         const [dados] = await pool.execute(cmdSql, [id]);
-        return dados;
+        return dados[0] || null;
     } 
     catch (error) {
         throw new AppError({
@@ -45,7 +45,7 @@ export const consultarPorSimbolo = async (simbolo) => {
     try {
         const cmdSql = 'SELECT * FROM elemento WHERE simbolo = ?;';
         const [dados] = await pool.execute(cmdSql, [simbolo]);
-        return dados;
+        return dados[0] || null;
     } 
     catch (error) {
         throw new AppError({

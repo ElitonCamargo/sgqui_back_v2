@@ -31,7 +31,7 @@ async function syncPermissions() {
 
 
         // Depois, insere as permissões definidas no código
-        const values = permissions.map(perm => '(?, ?, ?, ?, ?, ?, ?)').join(', ');
+        const values = permissions.map(() => '(?, ?, ?, ?, ?, ?, ?)').join(', ');
         const params = permissions.flatMap(perm => [
             perm.codigo,
             perm.modulo,
