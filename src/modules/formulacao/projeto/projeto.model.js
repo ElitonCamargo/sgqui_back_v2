@@ -117,13 +117,8 @@ export const alterar = async (id=0,projeto={},loginId=0) => {
         values.push(...Object.values(projeto));
 
         const cmdSql = 'UPDATE projeto SET ' + campos.join(', ') + ' WHERE id = ?;';
-        const [execucao] = await pool.execute(cmdSql, [...values, id]);
-        const projetoAtualizado = await consultarPorId(id);
-        if(execucao.affectedRows < 0 || projetoAtualizado == null){
-            return null;           
-        }
-        return projetoAtualizado;
-
+        await pool.execute(cmdSql, [...values, id]);
+        return await consultarPorId(id);
     }
     catch (error) {
         throw new AppError({
@@ -152,7 +147,6 @@ export const addResultado = async (projetoId, resultado={}) => {
     }
 };
 
-
 export const consultar = async (filtro = '') => {
     try {  
         const cmdSql = 'SELECT * FROM projeto WHERE nome LIKE ? or descricao LIKE ? ORDER BY updatedAt DESC;';
@@ -167,8 +161,6 @@ export const consultar = async (filtro = '') => {
         });
     }
 };
-
-
 
 export const consultarFiltroAvancado = async (filtroConsulta) => {
     try {

@@ -16,3 +16,26 @@ export const deconstructToken = (buildToken)=>{
     const values = buildToken.split('.');
     return { id: values[0], usuario: values[1], token: values[2] };
 };
+
+
+
+export const getCurrentDateMySQL = () => {
+  const hoje = new Date();
+
+  const ano = hoje.getFullYear();
+  const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+  const dia = String(hoje.getDate()).padStart(2, '0');
+
+  return `${ano}-${mes}-${dia}`;
+}
+
+
+/** Verifica se o objeto possui uma chave própria.
+ * @param {object} obj
+ * @param {string|symbol} key
+ * @returns {boolean}
+ */
+export const hasOwnKey = (obj, key) => {
+    return Object.prototype.hasOwnProperty.call(obj, key);
+};
+

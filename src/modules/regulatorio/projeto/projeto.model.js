@@ -24,11 +24,11 @@ export const listarLiberados = async (filtro = {}) => {
         const cmdSql = `
         SELECT DISTINCT
             projeto.*,
-            IF(produtos.projeto IS NULL, 'true', 'false') AS pendente
+            IF(produtos.projeto_id IS NULL, 'true', 'false') AS pendente
         FROM
             produtos
             RIGHT JOIN
-            projeto ON produtos.projeto = projeto.id
+            projeto ON produtos.projeto_id = projeto.id
         WHERE 
         	JSON_EXTRACT(JSON_EXTRACT(projeto.status, '$[0]'),'$.status') = 'Liberado' 
             ${conditions ? `AND (${conditions})` : ''}

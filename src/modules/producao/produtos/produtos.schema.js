@@ -9,7 +9,10 @@ export const createProdutosSchema = z.object({
   n_desenvolvimento: z.string().trim().min(1).max(255),   // NOT NULL
   descricao:         z.string().trim().max(255).optional(),// NULL
   data_emissao:      z.string().trim().optional(),         // date NULL
-  unid_medida:       z.string().trim().max(50).optional(), // NULL
+  unid_medida: z.enum(['L', 'Kg'], {
+    required_error: 'A unidade de medida é obrigatória',
+    invalid_type_error: 'A unidade de medida deve ser um texto'
+  }),
   capacidade:        z.number().min(0).optional(),         // NULL decimal(10,4)
   grupo:             z.string().trim().max(100).optional(),// NULL
   subgrupo:          z.string().trim().max(100).optional(),// NULL

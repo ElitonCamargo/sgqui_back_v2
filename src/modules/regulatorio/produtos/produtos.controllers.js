@@ -2,97 +2,39 @@ import * as produtosService from './produtos.service.js';
 import * as responses from '../../../core/utils/responses.js';
 import { asyncHandler } from '../../../core/utils/asyncHandler.js';
 
-export const listarFormulacoesLiberadas = asyncHandler(async (req, res, next) => {
-    const data = await produtosService.listarFormulacoesLiberadas();
-    return responses.success(res, { data });
+export const cadastrar = asyncHandler(async (req, res, next) => {
+    const { projeto_id } = req.params;
+    const data = await produtosService.cadastrar(projeto_id);
+    return responses.created(res, { message: 'Produto cadastrado com sucesso', data });
 });
 
+export const listar = asyncHandler(async (req, res, next) => {
+    const query = req.query;
+    const data = await produtosService.listar(query);
+    return responses.success(res, { message: 'Produtos encontrados com sucesso', data });
+});
 
-// export const consultarPorId = async (req, res)=>{    
-//     try {
-//         let id = req.params.id;
-//         const data = await Projeto.consultarPorId(id);
-//         return responses.success(res, { data });
-//     } catch (error) {
-//         return responses.error(res, { message: error.message });
-//     }
-// }
+export const deletar = asyncHandler(async (req, res, next) => {
+    const { id } = req.params;
+    const loginId = req.loginId;
+    const data = await produtosService.deletar(id, loginId);
+    return responses.success(res, { message: 'Produto deletado com sucesso', data });
+});
 
-// export const consultarPorCodigo = async (req, res)=>{    
-//     try {
-//         let codigo = req.params.codigo;
-//         const data = await Projeto.consultarPorCodigo(codigo);
-//         return responses.success(res, { data });
-//     } catch (error) {
-//         return responses.error(res, { message: error.message });
-//     }
-// }
+export const listarDeletados = asyncHandler(async (req, res, next) => {
+    const data = await produtosService.listarDeletados();
+    return responses.success(res, { message: 'Produtos deletados encontrados com sucesso', data });
+});
 
-// export const duplicar = async (req, res)=>{    
-//     try {
-//         let id = req.params.id;
-//         const data = await Projeto.duplicar(id);
-//         const message = Array.isArray(data) && data.length === 0
-//             ? "Projeto base não encontrado"
-//             : undefined;
-//         return responses.success(res, { data, ...(message ? { message } : {}) });
-//     } catch (error) {
-//         return responses.error(res, { message: error.message });
-//     }
-// }
+export const atualizar = asyncHandler(async (req, res, next) => {
+    const { id } = req.params;
+    const produtoData = req.body;
+    const data = await produtosService.atualizar(id, produtoData);
+    return responses.success(res, { message: 'Produto atualizado com sucesso', data });
+});
 
-// export const consultarPorData = async (req, res)=>{    
-//     try {
-//         let inicio = req.params.inicio;
-//         let termino = req.params.termino;
-//         const data = await Projeto.consultarPorData(inicio,termino);
-//         return responses.success(res, { data });
-//     } catch (error) {
-//         return responses.error(res, { message: error.message });
-//     }
-// }
-
-// export const deletar = async (req, res)=>{
-//     try {
-//         let id = req.params.id;
-//         const data = await Projeto.deletar(id);
-//         return responses.success(res, { data });
-//     } catch (error) {
-//         return responses.error(res, { message: error.message });
-//     }
-// }
-
-// export const cadastrar = async (req, res)=>{
-//     try {
-//         let projeto = req.body;
-//         const novoProjeto = await Projeto.cadastrar(projeto,req.loginId);
-//         return responses.created(res, { data: novoProjeto });
-//     } catch (error) {
-//         return responses.error(res,{ message: error.message });
-//     }
-// }
-
-// export const alterar = async (req, res)=>{
-//     try {
-//         let projeto = req.body;
-//         projeto.id = req.params.id;
-//         const projetoAlterado = await Projeto.alterar(projeto,req.loginId);
-//         return responses.success(res, { data: projetoAlterado });
-//     } catch (error) {
-//         return responses.error(res,{ message: error.message });
-//     }
-// }
-
-
-
-// // *************** Consultas Entre vária entidades ***********************
-// export const consultaDetalhada = async (req, res)=>{    
-//     try {
-//         let id = req.params.id;               
-//         const data = await Projeto.consultaDetalhada(id);
-//         return responses.success(res, { data });
-//     } catch (error) {
-//         return responses.error(res, { message: error.message });
-//     }
-// }
-
+export const consultarPorId = asyncHandler(async (req, res, next) => {
+    const { id } = req.params;
+    const data = await produtosService.consultarPorId(id);
+    return responses.success(res, { message: 'Produto encontrado com sucesso', data });
+});

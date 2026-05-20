@@ -4,6 +4,8 @@ import * as responses from '../utils/responses.js'
 import * as helpers from '../utils/helpers.js';
 import * as upService from '../../modules/rbac/usuarioPerfis/usuarioPerfis.service.js';
 import * as pService from '../../modules/rbac/permissoes/permissoes.service.js';
+import { AppError } from '../utils/AppError.js';
+import { th } from 'zod/locales';
 
 export default async function autenticar(req, res, next) {
     try {        
@@ -39,7 +41,6 @@ export default async function autenticar(req, res, next) {
         // Buscar a sessão no banco de dados ************************************************************
 
         sessao_usuario = await sessoesService.buscarSessao({ sessoes_id: sessaoId, sessoes_usuario: sessaoUsuario, token: sessaoToken });
-        console.log("Sessão encontrada no banco de dados:", sessao_usuario);
         
         if(!sessao_usuario){
             return responses.invalidToken(res,{message:'Token de autenticação inválido'});
@@ -69,7 +70,10 @@ export default async function autenticar(req, res, next) {
         return;
                
     } catch (error) {
-        console.error("Erro no middleware de autenticação:", error);
-        return responses.error(res,{statusCode:500,message:`Erro interno do servidor: ${error}`})        
+        throw new AppError({
+            message: 'Erro ao autenticar usuário',
+            reason: `Ocorreu um erro inesperado durante o processo de autenticação. Detalhes: ${error.message}`,
+            code: 500
+        });    
     }
 };

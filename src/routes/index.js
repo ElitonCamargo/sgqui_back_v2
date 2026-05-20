@@ -7,13 +7,13 @@ const routes = Router();
 
 routes.get('/', info.obterInfoSistema);
 
-allRoutesMaps.forEach((map) => {
-	const middlewares = map.middlewares || [];
-	const path = `/${map.modulo}/${map.rota}`.replace(/\/+/g, '/');
-	routes[map.metodo.toLowerCase()](
+allRoutesMaps.forEach((route) => {
+	const middlewares = route.middlewares || [];
+	const path = `/${route.modulo}/${route.rota}`.replace(/\/+/g, '/');
+	routes[route.metodo.toLowerCase()](
 		path,
 		...middlewares, 
-		map.functionExec
+		route.functionExec
 	);
 });
 

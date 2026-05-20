@@ -5,11 +5,11 @@ export const validate = (schema) => (req, res, next) => {
 
     if (!result.success) {
         console.error('Validation error:', result.error);
-        throw new AppError({
+        return next(new AppError({
             message: 'Dados inválidos',
             reason: result.error.issues.map(e => `${e.path.join('.')}: ${e.message}`).join(', '),
             code: 400
-        });
+        }));
     }
 
     req.body = result.data;
@@ -36,6 +36,7 @@ export const validateQuery = (schema) => (req, res, next) => {
 
 export const validateParams = (schema) => (req, res, next) => {
     const result = schema.safeParse(req.params);
+    console.log('Validation result for params:', result);
     if (!result.success) {
         return next(new AppError({
             message: 'Dados inválidos',
