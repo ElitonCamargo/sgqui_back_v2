@@ -1,6 +1,7 @@
 import pool from '../../../core/database/data.js';
 import { AppError } from '../../../core/utils/AppError.js';
 
+
 export const cadastrar = async (produto={}) => {
     try {  
        const [result] = await pool.query('INSERT INTO produtos SET ?', [produto]);
