@@ -7,6 +7,11 @@ const routes = Router();
 
 routes.get('/', info.obterInfoSistema);
 
+routes.get('/favicon.ico', (req, res) => {
+    return res.status(204).end();
+});
+
+
 allRoutesMaps.forEach((route) => {
 	const middlewares = route.middlewares || [];
 	const path = `/${route.modulo}/${route.rota}`.replace(/\/+/g, '/');
