@@ -151,7 +151,6 @@ export const consultarFiltroAvancado = async (filtro = []) => {
     }
     let projetos = estruturarProjeto(result);   
     let IDs_projeto_compativeis = filtroAvancado(projetos, filtroConsulta);
-    console.log('IDs de projetos compatíveis com o filtro avançado:', IDs_projeto_compativeis);
     return projetos.filter(projeto=>{
         return IDs_projeto_compativeis.some(id => id == projeto.id);
     })
@@ -223,7 +222,7 @@ export const consultaDetalhada = async (id) => {
             code: 404
         });
     }
-    return estruturarProjeto(data);
+    return estruturarProjeto(data)[0];
 };
 
 const estruturarProjeto = (dados) => {
@@ -331,13 +330,6 @@ const estruturarProjeto = (dados) => {
             projeto_referenciado.percentual_concluido = projeto_referenciado.etapas.reduce((total, etapa) => 
                 total + etapa.etapa_mp.reduce((subtotal, mp) => subtotal + mp.percentual, 0), 0);
         }
-    }
-    
-    if(projetos.length === 0){
-        return {};
-    }
-    if(projetos.length === 1){
-        return projetos[0];
     }
     return projetos;
 };

@@ -1,11 +1,15 @@
 import { listarTodas } from '../permissoes/permissoes.service.js';
 import * as responses from '../../../core/utils/responses.js';
 import { asyncHandler } from '../../../core/utils/asyncHandler.js';
+import { connectDatabaseStatus } from '../../../core/utils/helpers.js';
 
 export const obterInfoSistema = asyncHandler(async (req, res, next) => {
     const rootDomain = req.protocol + '://' + req.get('host');
+    const dbConnection = await connectDatabaseStatus();
+
     const data ={
         status_server: '(DEV - v2) ok - API SGQUI v2.5',
+        connection_state: dbConnection.state,
         dominio_raiz : rootDomain,
         atualização: '01/05/2026',
         endpoints_disponiveis: `${rootDomain}/rbac/endpoints`,

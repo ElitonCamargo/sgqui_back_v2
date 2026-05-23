@@ -1,3 +1,5 @@
+import pool from '../database/data.js';
+
 /** Monta token composto para sessão.
  * Formato: id.user_id.token
  * @param {{id:number,usuario:number,token:string}} session
@@ -39,3 +41,24 @@ export const hasOwnKey = (obj, key) => {
     return Object.prototype.hasOwnProperty.call(obj, key);
 };
 
+
+
+export const connectDatabaseStatus = async () => {
+    try {
+        await pool.query('SELECT 1');
+
+        return {
+            connected: true,
+            state: 'connected',
+            message: 'Conectado ao banco de dados',
+            checkedAt: new Date().toISOString()
+        };
+    } catch {
+        return {
+            connected: false,
+            state: 'disconnected',
+            message: 'Desconectado do banco de dados',
+            checkedAt: new Date().toISOString()
+        };
+    }
+};
