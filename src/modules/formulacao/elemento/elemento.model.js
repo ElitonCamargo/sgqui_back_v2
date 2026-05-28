@@ -19,8 +19,9 @@ export const consultar = async (query={}) => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao consultar elementos',
-            reason: `Falha na execução do SELECT na tabela 'elementos'; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            title: 'Erro ao consultar elementos',
+            message: 'Não foi possível consultar a lista de elementos. Verifique a conectividade com o banco de dados.',
+            details: error.message,
             code: 500
         });
     }
@@ -34,8 +35,9 @@ export const consultarPorId = async (id) => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao consultar elemento por ID',
-            reason: `Falha na execução do SELECT na tabela 'elementos' filtrando por ID; verifique se o ID fornecido é válido e a conectividade com o banco. Detalhe: ${error.message}`,
+            title: 'Erro ao consultar elemento',
+            message: 'Não foi possível consultar o elemento pelo ID informado. Verifique se o ID é válido.',
+            details: error.message,
             code: 500
         });
     }
@@ -49,8 +51,9 @@ export const consultarPorSimbolo = async (simbolo) => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao consultar elemento por símbolo',
-            reason: `Falha na execução do SELECT na tabela 'elementos' filtrando pelo símbolo químico; verifique se o símbolo fornecido é válido. Detalhe: ${error.message}`,
+            title: 'Erro ao consultar elemento',
+            message: 'Não foi possível consultar o elemento pelo símbolo químico informado. Verifique a conectividade com o banco de dados.',
+            details: error.message,
             code: 500
         });
     }

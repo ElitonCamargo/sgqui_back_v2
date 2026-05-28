@@ -7,8 +7,8 @@ export const cadastrar = async (projeto_id) => {
     const projeto = await visualizarFormulacao(projeto_id);
     if (!projeto) {
         throw new AppError({
-            message: 'Projeto não encontrado',
-            reason: `Não existe um projeto com o ID ${projeto_id}. Verifique o ID e tente novamente.`,
+            title: 'Projeto não encontrado',
+            message: `Não existe um projeto com o ID ${projeto_id}. Verifique o ID e tente novamente.`,
             code: 404
         });
     }
@@ -57,8 +57,8 @@ export const listar = async (query) => {
     const data = await produtosModel.listar(filteredQuery);
     if (!data || data.length === 0) {
         throw new AppError({
-            message: 'Nenhum produto encontrado',
-            reason: 'Não existem produtos que correspondam aos critérios de busca fornecidos. Verifique os parâmetros e tente novamente.',
+            title: 'Nenhum produto encontrado',
+            message: 'Nenhum produto foi encontrado para os critérios de busca fornecidos.',
             code: 404
         });
     }
@@ -69,8 +69,8 @@ export const deletar = async (id, loginId) => {
     const result = await produtosModel.deletar(id, loginId);
     if (!result) {
         throw new AppError({
-            message: 'Produto não encontrado',
-            reason: `Não existe um produto com o ID ${id}. Verifique o ID e tente novamente.`,
+            title: 'Produto não encontrado',
+            message: `Não existe um produto com o ID ${id}. Verifique o ID e tente novamente.`,
             code: 404
         });
     }
@@ -81,8 +81,8 @@ export const listarDeletados = async () => {
     const data = await produtosModel.listarDeletados();
     if (!data || data.length === 0) {
         throw new AppError({
-            message: 'Nenhum produto deletado encontrado',
-            reason: 'Não existem produtos deletados que correspondam aos critérios de busca fornecidos. Verifique os parâmetros e tente novamente.',
+            title: 'Nenhum produto excluído encontrado',
+            message: 'Nenhum produto excluído foi encontrado.',
             code: 404
         });
     }
@@ -93,8 +93,8 @@ export const consultarPorId = async (id) => {
     const produto = await produtosModel.consultarPorId(id);
     if (!produto) {
         throw new AppError({
-            message: 'Produto não encontrado',
-            reason: `Não existe um produto com o ID ${id}. Verifique o ID e tente novamente.`,
+            title: 'Produto não encontrado',
+            message: `Não existe um produto com o ID ${id}. Verifique o ID e tente novamente.`,
             code: 404
         });
     }
@@ -121,8 +121,8 @@ export const atualizar = async (id, produto) => {
     const data = await produtosModel.atualizar(id, produto);
     if (!data) {
         throw new AppError({
-            message: 'Produto não encontrado para atualização',
-            reason: `Não existe um produto com o ID ${id} para atualizar. Verifique o ID e os dados fornecidos, e tente novamente.`,
+            title: 'Produto não encontrado',
+            message: `Não existe um produto com o ID ${id} para atualizar. Verifique o ID e os dados fornecidos.`,
             code: 404
         });
     }

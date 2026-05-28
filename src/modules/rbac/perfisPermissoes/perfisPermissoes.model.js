@@ -19,8 +19,9 @@ export const vincular = async (perfilId, permissoesIds = []) => {
     return result.affectedRows;
   } catch (error) {
     throw new AppError({
-      message: 'Erro ao vincular permissões ao perfil',
-      reason: `Falha ao sincronizar permissões do perfil; o DELETE das vinculações antigas ou o INSERT das novas falhou no banco de dados — verifique se o perfil e as permissões informadas existem. Detalhe: ${error.message}`,
+      title: 'Erro ao vincular permissões ao perfil',
+      message: 'Não foi possível sincronizar as permissões do perfil. Verifique se o perfil e as permissões informadas existem.',
+      details: error.message,
       code: 500
     });
   }
@@ -44,8 +45,9 @@ export const listarVinculos = async (perfilId) => {
     return dados;
   } catch (error) {
     throw new AppError({
-      message: 'Erro ao listar permissões de perfil',
-      reason: `Falha na execução do SELECT com JOIN entre 'perfis_permissoes' e 'permissoes' para o perfil informado; verifique a conectividade com o banco. Detalhe: ${error.message}`,
+      title: 'Erro ao listar permissões do perfil',
+      message: 'Não foi possível consultar as permissões vinculadas ao perfil informado. Verifique a conectividade com o banco de dados.',
+      details: error.message,
       code: 500
     });
   }
@@ -81,8 +83,9 @@ export const permissoesPerfilAcessos = async (perfilId) => {
     return dados;
   } catch (error) {
     throw new AppError({
-      message: 'Erro ao listar acessos de permissões do perfil',
-      reason: `Falha na execução da consulta UNION entre permissões vinculadas ao perfil e permissões públicas; verifique a conectividade com o banco. Detalhe: ${error.message}`,
+      title: 'Erro ao consultar acessos do perfil',
+      message: 'Não foi possível consultar as permissões de acesso do perfil informado. Verifique a conectividade com o banco de dados.',
+      details: error.message,
       code: 500
     });
   }

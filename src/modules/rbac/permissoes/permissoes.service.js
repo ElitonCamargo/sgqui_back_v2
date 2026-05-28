@@ -59,7 +59,8 @@ export const listarPermissoesPorUsuario = async (usuarioId) => {
     const usuarioIdNumber = Number(usuarioId);
     if (!usuarioIdNumber) {
         throw new AppError({
-            message: 'ID do usuário inválido',
+            title: 'ID do usuário inválido',
+            message: 'O ID do usuário informado é inválido. Informe um número inteiro positivo.',
             code: 400
         });
     }
@@ -89,7 +90,8 @@ export const listarPermissoesPorUsuarioDetalhada = async (usuarioId) => {
   const usuarioIdNumber = Number(usuarioId);
   if (!usuarioIdNumber) {
       throw new AppError({
-          message: 'ID do usuário inválido',
+          title: 'ID do usuário inválido',
+          message: 'O ID do usuário informado é inválido. Informe um número inteiro positivo.',
           code: 400
       });
   }
@@ -159,7 +161,8 @@ export const listarPermissoesChavePorUsuario = async (usuarioId) => {
     const usuarioIdNumber = Number(usuarioId);
     if (!usuarioIdNumber) {
         throw new AppError({
-            message: 'ID do usuário inválido',
+            title: 'ID do usuário inválido',
+            message: 'O ID do usuário informado é inválido. Informe um número inteiro positivo.',
             code: 400
         });
     }

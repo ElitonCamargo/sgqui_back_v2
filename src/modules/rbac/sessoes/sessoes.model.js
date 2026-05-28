@@ -9,8 +9,9 @@ export const criar = async ({ usuario = 0, validade = 0, token = '' }) => {
   }
   catch (error) {
     throw new AppError({
-      message: 'Erro ao criar sessão',
-      reason: `Falha na execução do INSERT na tabela 'sessoes'; verifique se o usuário informado existe e se os dados de validade são válidos. Detalhe: ${error.message}`,
+      title: 'Erro ao criar sessão',
+      message: 'Não foi possível criar a sessão. Verifique se o usuário informado existe e se os dados de validade são válidos.',
+      details: error.message,
       code: 500
     });
   }
@@ -26,8 +27,9 @@ const consultarPorId = async (sessoes_id) => {
   }
   catch (error) {
     throw new AppError({
-      message: 'Erro ao consultar sessão por ID',
-      reason: `Falha na execução do SELECT na tabela 'sessoes' filtrando por ID; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+      title: 'Erro ao consultar sessão',
+      message: 'Não foi possível consultar a sessão pelo ID informado. Verifique a conectividade com o banco de dados.',
+      details: error.message,
       code: 500
     });
   }
@@ -41,8 +43,9 @@ const consultarPorSessaoEUsuario = async (sessoes_id, sessoes_usuario) => {
   }
   catch (error) {
     throw new AppError({
-      message: 'Erro ao consultar sessão por sessão e usuário',
-      reason: `Falha na execução do SELECT na tabela 'sessoes' filtrando por ID de sessão e ID de usuário; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+      title: 'Erro ao consultar sessão',
+      message: 'Não foi possível consultar a sessão pelo ID e usuário informados. Verifique a conectividade com o banco de dados.',
+      details: error.message,
       code: 500
     });
   }
@@ -55,8 +58,9 @@ export const buscarSessao = async (sessoes_id, sessoes_usuario) => {
   }
   catch (error) {
     throw new AppError({
-      message: 'Erro ao buscar sessão',
-      reason: `Falha ao buscar a sessão ativa; a consulta combinada de ID de sessão e usuário retornou um erro inesperado no banco de dados. Detalhe: ${error.message}`,
+      title: 'Erro ao buscar sessão',
+      message: 'Não foi possível buscar a sessão ativa. Verifique se o ID da sessão e o usuário são válidos.',
+      details: error.message,
       code: 500
     });
   }
@@ -72,8 +76,9 @@ export const extender = async (sessoes_id, tempo_em_horas) => {
   }
   catch (error) {
     throw new AppError({
-      message: 'Erro ao extender sessão',
-      reason: `Falha na execução do UPDATE na tabela 'sessoes' para extensão do prazo de validade; verifique se o ID de sessão é válido. Detalhe: ${error.message}`,
+      title: 'Erro ao estender sessão',
+      message: 'Não foi possível estender o prazo da sessão. Verifique se o ID de sessão é válido.',
+      details: error.message,
       code: 500
     });
   }

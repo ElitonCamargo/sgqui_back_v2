@@ -11,8 +11,8 @@ export const listar = async (query) => {
     const data = await produtosModel.listar(filteredQuery);
     if (!data || data.length === 0) {
         throw new AppError({
-            message: 'Nenhum produto encontrado',
-            reason: 'Não existem produtos liberados para produção que correspondam aos critérios de busca fornecidos.',
+            title: 'Nenhum produto encontrado',
+            message: 'Nenhum produto liberado para produção foi encontrado para os critérios de busca fornecidos.',
             code: 404
         });
     }
@@ -24,8 +24,8 @@ export const consultarPorId = async (id=0, quant_producao=1) => {
     const produto = await produtosModel.consultarPorId(id);
     if (!produto) {
         throw new AppError({
-            message: 'Produto não encontrado',
-            reason: `Não existe um produto com o ID ${id}. Verifique o ID e tente novamente.`,
+            title: 'Produto não encontrado',
+            message: `Não existe um produto com o ID ${id}. Verifique o ID e tente novamente.`,
             code: 404
         });
     }

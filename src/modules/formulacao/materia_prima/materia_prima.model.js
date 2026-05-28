@@ -11,8 +11,9 @@ export const consultar = async (filtro = '') => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao consultar matérias-primas',
-            reason: `Falha na execução do SELECT na tabela 'materia_prima'; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            title: 'Erro ao consultar matérias-primas',
+            message: 'Não foi possível consultar a lista de matérias-primas. Verifique a conectividade com o banco de dados.',
+            details: error.message,
             code: 500
         });
     } 
@@ -30,8 +31,9 @@ export const consultarPorId = async (id) => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao consultar matéria-prima por ID',
-            reason: `Falha na execução do SELECT na tabela 'materia_prima' filtrando por ID; verifique se o ID fornecido é válido. Detalhe: ${error.message}`,
+            title: 'Erro ao consultar matéria-prima',
+            message: 'Não foi possível consultar a matéria-prima pelo ID informado. Verifique se o ID é válido.',
+            details: error.message,
             code: 500
         });
     } 
@@ -48,8 +50,9 @@ export const consultarPorCodigo = async (codigo) => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao consultar matéria-prima por código',
-            reason: `Falha na execução do SELECT na tabela 'materia_prima' filtrando pelo código; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            title: 'Erro ao consultar matéria-prima',
+            message: 'Não foi possível consultar a matéria-prima pelo código informado. Verifique a conectividade com o banco de dados.',
+            details: error.message,
             code: 500
         });
     } 
@@ -66,8 +69,9 @@ export const consultarPorCas_number = async (cas_number) => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao consultar matéria-prima por CAS number',
-            reason: `Falha na execução do SELECT na tabela 'materia_prima' filtrando pelo CAS number; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            title: 'Erro ao consultar matéria-prima',
+            message: 'Não foi possível consultar a matéria-prima pelo CAS Number informado. Verifique a conectividade com o banco de dados.',
+            details: error.message,
             code: 500
         });
     } 
@@ -84,8 +88,9 @@ export const consultarPorFormula = async (formula) => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao consultar matéria-prima por fórmula',
-            reason: `Falha na execução do SELECT na tabela 'materia_prima' filtrando pela fórmula química; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            title: 'Erro ao consultar matéria-prima',
+            message: 'Não foi possível consultar a matéria-prima pela fórmula química informada. Verifique a conectividade com o banco de dados.',
+            details: error.message,
             code: 500
         });
     } 
@@ -119,8 +124,9 @@ export const consultarMP_precentual_nutriente = async (nutrienteID=0,percentual=
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao consultar composição de matéria-prima por nutriente',
-            reason: `Falha na execução da consulta de matérias-primas por nutriente e percentual; verifique se os parâmetros fornecidos são válidos e a conectividade com o banco. Detalhe: ${error.message}`,
+            title: 'Erro ao consultar composição por nutriente',
+            message: 'Não foi possível consultar as matérias-primas por nutriente e percentual. Verifique se os parâmetros informados são válidos.',
+            details: error.message,
             code: 500
         });
     } 
@@ -145,8 +151,9 @@ export const cadastrar = async (materia_prima) => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao cadastrar matéria-prima',
-            reason: `Falha na execução do INSERT na tabela 'materia_prima'; verifique se há duplicidade de código ou CAS number, ou se os dados fornecidos são inválidos. Detalhe: ${error.message}`,
+            title: 'Erro ao cadastrar matéria-prima',
+            message: 'Não foi possível cadastrar a matéria-prima. Verifique se há duplicidade de código ou CAS Number, ou se os dados são inválidos.',
+            details: error.message,
             code: 500
         });
     } 
@@ -183,8 +190,9 @@ export const alterar = async (materia_prima) => {
         // }
 
         throw new AppError({
-            message: 'Erro ao alterar matéria-prima',
-            reason: `Falha na execução do UPDATE na tabela 'materia_prima'; verifique se o ID fornecido existe e se os dados são compatíveis com o esquema. Detalhe: ${error.message}`,
+            title: 'Erro ao alterar matéria-prima',
+            message: 'Não foi possível alterar a matéria-prima. Verifique se o ID existe e se os dados fornecidos são válidos.',
+            details: error.message,
             code: 500
         });
     } 
@@ -199,8 +207,9 @@ export const deletar = async (id) => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao deletar matéria-prima',
-            reason: `Falha na execução do DELETE na tabela 'materia_prima'; o registro pode não existir ou possuir garantias e etapas vinculadas que impedem a exclusão. Detalhe: ${error.message}`,
+            title: 'Erro ao deletar matéria-prima',
+            message: 'Não foi possível excluir a matéria-prima. O registro pode não existir ou possuir garantias e etapas vinculadas que impedem a exclusão.',
+            details: error.message,
             code: 500
         });
     } 

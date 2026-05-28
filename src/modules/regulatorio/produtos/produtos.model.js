@@ -9,8 +9,9 @@ export const cadastrar = async (produto={}) => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao cadastrar produto',
-            reason: `Falha na execução do INSERT na tabela 'produtos'; verifique os dados fornecidos. Detalhe: ${error.message}`,
+            title: 'Erro ao cadastrar produto',
+            message: 'Não foi possível cadastrar o produto. Verifique os dados fornecidos e tente novamente.',
+            details: error.message,
             code: 500
         });
     }
@@ -39,8 +40,9 @@ export const listar = async (query={projeto_id: 0, n_desenvolvimento: '', descri
         return rows;
     } catch (error) {
         throw new AppError({
-            message: 'Erro ao listar produtos',
-            reason: `Falha na execução do SELECT na tabela 'produtos'; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            title: 'Erro ao listar produtos',
+            message: 'Não foi possível consultar a lista de produtos. Verifique a conectividade com o banco de dados.',
+            details: error.message,
             code: 500
         });
     }
@@ -65,8 +67,9 @@ export const listarDeletados = async () => {
         return rows;
     } catch (error) {
         throw new AppError({
-            message: 'Erro ao listar produtos deletados',
-            reason: `Falha na execução do SELECT na tabela 'produtos'; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            title: 'Erro ao listar produtos excluídos',
+            message: 'Não foi possível consultar os produtos excluídos. Verifique a conectividade com o banco de dados.',
+            details: error.message,
             code: 500
         });
     }
@@ -90,8 +93,9 @@ export const consultarPorId = async (id) => {
         return rows.length > 0 ? rows[0] : null;
     } catch (error) {
         throw new AppError({
-            message: 'Erro ao obter produto',
-            reason: `Falha na execução do SELECT na tabela 'produtos'; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            title: 'Erro ao consultar produto',
+            message: 'Não foi possível consultar o produto pelo ID informado. Verifique a conectividade com o banco de dados.',
+            details: error.message,
             code: 500
         });
     }
@@ -104,8 +108,9 @@ export const atualizar = async (id, produto={}) => {
         
     } catch (error) {
         throw new AppError({
-            message: 'Erro ao atualizar produto',
-            reason: `Falha na execução do UPDATE na tabela 'produtos'; verifique os dados fornecidos e a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            title: 'Erro ao atualizar produto',
+            message: 'Não foi possível atualizar o produto. Verifique os dados fornecidos e tente novamente.',
+            details: error.message,
             code: 500
         });
     }
@@ -117,8 +122,9 @@ export const deletar = async (id, loginId) => {
         return result.affectedRows > 0;
     } catch (error) {
         throw new AppError({
-            message: 'Erro ao deletar produto',
-            reason: `Falha na execução do SOFT DELETE na tabela 'produtos'; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            title: 'Erro ao deletar produto',
+            message: 'Não foi possível excluir o produto. Verifique a conectividade com o banco de dados.',
+            details: error.message,
             code: 500
         });
     }

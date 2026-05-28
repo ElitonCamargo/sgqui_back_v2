@@ -9,8 +9,9 @@ export const listar = async (acesso=undefined) => {
     return dados;
   } catch (error) {
     throw new AppError({
-      message: 'Erro ao listar permissões',
-      reason: `Falha na execução do SELECT na tabela 'permissoes'; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+      title: 'Erro ao listar permissões',
+      message: 'Não foi possível consultar a lista de permissões. Verifique a conectividade com o banco de dados.',
+      details: error.message,
       code: 500
     });
   }
@@ -48,8 +49,9 @@ export const listarPermissoesPorUsuario = async (usuarioId) => {
     return dados;
   } catch (error) {
     throw new AppError({
-      message: 'Erro ao listar permissões por usuário',
-      reason: `Falha na execução da consulta JOIN entre 'usuario_perfis', 'perfis_permissoes' e 'permissoes' para o usuário informado; verifique a conectividade com o banco. Detalhe: ${error.message}`,
+      title: 'Erro ao listar permissões do usuário',
+      message: 'Não foi possível consultar as permissões do usuário informado. Verifique a conectividade com o banco de dados.',
+      details: error.message,
       code: 500
     });
   }

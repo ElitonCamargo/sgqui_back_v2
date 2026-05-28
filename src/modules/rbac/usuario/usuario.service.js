@@ -5,23 +5,27 @@ import * as helpers from '../../../core/utils/helpers.js'
 import bcrypt from 'bcryptjs';
 
 export const cadastrar = async ({nome="",email="",senha="",avatar=""})=>{
-    if(!nome || !email || !senha){
+    const senhaHash = await bcrypt.hash(senha, 10);
+    const usuario = await usuarioModel.cadastrar({nome,email,senha:senhaHash,avatar});
+    if(!usuario){
         throw new AppError({
-            message: "Nome, email e senha são obrigatórios para cadastrar um usuário",
-            reason: "O payload da requisição deve obrigatoriamente conter os campos 'nome', 'email' e 'senha' preenchidos",
-            code: 400
+            title: 'Erro ao cadastrar usuário',
+            message: 'Falha ao tentar cadastrar um novo usuário.',
+            details: 'O cadastro do usuário não retornou um resultado válido; verifique os dados fornecidos e a conectividade com o banco de dados.',
+            code: 500
         });
     }
-    const senhaHash = await bcrypt.hash(senha, 10);
-    return await usuarioModel.cadastrar({nome,email,senha:senhaHash,avatar});
+    usuario.senha = undefined; // Remover a senha do resultado
+    return usuario;
 
 };
 
 export const alterar = async (id=0, usuario={}) => {
     if(Object.keys(usuario).length === 0){
         throw new AppError({
-            message: "Nenhum dado para alterar",
-            reason: "O corpo da requisição está vazio; é necessário enviar ao menos um campo para que a alteração seja realizada",
+            title: "Nenhum dado para alterar",
+            message: "O corpo da requisição está vazio; é necessário enviar ao menos um campo para que a alteração seja realizada",
+            details: "O payload da requisição está vazio; é necessário enviar ao menos um campo para que a alteração seja realizada",
             code: 400
         });
     }
@@ -31,8 +35,9 @@ export const alterar = async (id=0, usuario={}) => {
     const result = await usuarioModel.alterar(id, usuario);
     if (!result) {
         throw new AppError({
-            message: "Usuário não encontrado",
-            reason: "Não foi localizado nenhum usuário com o ID informado para realizar a alteração",
+            title: "Usuário não encontrado",
+            message: "O usuário não foi encontrado",
+            details: "Não foi localizado nenhum usuário com o ID informado para realizar a alteração",
             code: 404
         });
     }
@@ -46,8 +51,9 @@ export const login = async ({ email="", senha="" }) => {
 
     if (!email || !senha) {
         throw new AppError({
+            title: "Campos obrigatórios",
             message: "Email e senha são obrigatórios",
-            reason: "O corpo da requisição de login deve conter os campos 'email' e 'senha' preenchidos",
+            details: "O corpo da requisição de login deve conter os campos 'email' e 'senha' preenchidos",
             code: 400
         });
     }
@@ -55,8 +61,9 @@ export const login = async ({ email="", senha="" }) => {
     const usuario = await usuarioModel.consultarPorEmail(email);
     if (!usuario) {
         throw new AppError({
-            message: "Credenciais inválidas",
-            reason: "Nenhum usuário foi encontrado com o e-mail informado",
+            title: "Credenciais inválidas",
+            message: "O e-mail ou senha informados são inválidos",
+            details: "Nenhum usuário foi encontrado com o e-mail informado",
             code: 401
         });
     }
@@ -64,8 +71,9 @@ export const login = async ({ email="", senha="" }) => {
     const senhaValida = await bcrypt.compare(senha, usuario.senha);
     if (!senhaValida) {
         throw new AppError({
-            message: "Credenciais inválidas",
-            reason: "A senha informada não corresponde à senha registrada para este usuário",
+            title: "Credenciais inválidas",
+            message: "O e-mail ou senha informados são inválidos",
+            details: "A senha informada não corresponde à senha registrada para este usuário",
             code: 401
         });
     }
@@ -82,8 +90,9 @@ export const consultarPorEmail = async (email) => {
     const data = await usuarioModel.consultarPorEmail(email);
     if (!data) {
         throw new AppError({
-            message: "Usuário não encontrado",
-            reason: "Nenhum usuário foi encontrado com o e-mail informado na base de dados",
+            title: "Usuário não encontrado",
+            message: "Nenhum usuário foi encontrado com o e-mail informado na base de dados",
+            details: "Nenhum usuário foi encontrado com o e-mail informado na base de dados",
             code: 404
         });
     }
@@ -111,8 +120,9 @@ export const consultar = async (query={}) => {
 
     if(data.length === 0){
         throw new AppError({
+            title: "Nenhum usuário encontrado",
             message: "Nenhum usuário encontrado com os critérios informados",
-            reason: "A consulta não retornou resultados; verifique se os filtros de nome ou e-mail informados estão corretos",
+            details: "A consulta não retornou resultados; verifique se os filtros de nome ou e-mail informados estão corretos",
             code: 404
         });
     }
@@ -125,8 +135,9 @@ export const consultarPorId = async (id) => {
     const data = await usuarioModel.consultarPorId(id);
     if (!data) {
         throw new AppError({
-            message: "Usuário não encontrado",
-            reason: "Nenhum usuário foi encontrado com o ID informado na base de dados",
+            title: "Usuário não encontrado",
+            message: "O usuário não foi encontrado",
+            details: "Nenhum usuário foi encontrado com o ID informado na base de dados",
             code: 404
         });
     }
@@ -138,8 +149,9 @@ export const deletar = async (id) => {
     const result = await usuarioModel.deletar(id);
     if (!result) {
         throw new AppError({
-            message: "Usuário não encontrado",
-            reason: "O usuário que você está tentando deletar não existe ou já foi deletado ou alguma dependência impediu a deleção",
+            title: "Usuário não encontrado",
+            message: "O usuário que você está tentando deletar não existe ou já foi deletado ou alguma dependência impediu a deleção",
+            details: "O usuário que você está tentando deletar não existe ou já foi deletado ou alguma dependência impediu a deleção",
             code: 404
         });
     }    

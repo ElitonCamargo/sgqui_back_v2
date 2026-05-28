@@ -2,7 +2,15 @@ import { z } from 'zod';
 
 // CREATE
 export const createUsuarioSchema = z.object({
-  nome: z.string()
+  nome: z.string({
+    error: (issue) => {
+      if (issue.input === undefined || issue.input === null) {
+        return 'Nome é um campo obrigatório, mas não foi informado!';
+      }
+
+      return 'Nome deve ser um texto válido.';
+    }
+  })
     .trim()
     .min(3, 'Nome deve ter no mínimo 3 caracteres')
     .max(100),

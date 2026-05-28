@@ -9,8 +9,9 @@ export const cadastrar = async ({ nome='', formula='', visivel=true }) => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao cadastrar nutriente',
-            reason: `Falha na execução do INSERT na tabela 'nutrientes'; verifique se há duplicidade de nome ou fórmula, ou se os dados fornecidos são inválidos. Detalhe: ${error.message}`,
+            title: 'Erro ao cadastrar nutriente',
+            message: 'Não foi possível cadastrar o nutriente. Verifique se há duplicidade de nome ou fórmula, ou se os dados são inválidos.',
+            details: error.message,
             code: 500
         });
     }
@@ -37,8 +38,9 @@ export const alterar = async (id, nutriente={}) => {
 
     } catch (error) {
         throw new AppError({
-            message: 'Erro ao alterar nutriente',
-            reason: `Falha na execução do UPDATE na tabela 'nutrientes'; verifique se o ID fornecido existe e se os dados são compatíveis com o esquema. Detalhe: ${error.message}`,
+            title: 'Erro ao alterar nutriente',
+            message: 'Não foi possível alterar o nutriente. Verifique se o ID existe e se os dados fornecidos são válidos.',
+            details: error.message,
             code: 500
         });
     }
@@ -52,8 +54,9 @@ export const consultar = async (filtro = '') => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao consultar nutrientes',
-            reason: `Falha na execução do SELECT na tabela 'nutrientes'; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            title: 'Erro ao consultar nutrientes',
+            message: 'Não foi possível consultar a lista de nutrientes. Verifique a conectividade com o banco de dados.',
+            details: error.message,
             code: 500
         });
     }
@@ -67,8 +70,9 @@ export const consultarPorId = async (id) => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao consultar nutriente por ID',
-            reason: `Falha na execução do SELECT na tabela 'nutrientes' filtrando por ID; verifique se o ID fornecido é válido. Detalhe: ${error.message}`,
+            title: 'Erro ao consultar nutriente',
+            message: 'Não foi possível consultar o nutriente pelo ID informado. Verifique se o ID é válido.',
+            details: error.message,
             code: 500
         });
     }
@@ -82,8 +86,9 @@ export const consultarPorNome = async (nome) => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao consultar nutriente por nome',
-            reason: `Falha na execução do SELECT na tabela 'nutrientes' filtrando pelo nome; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            title: 'Erro ao consultar nutriente',
+            message: 'Não foi possível consultar o nutriente pelo nome informado. Verifique a conectividade com o banco de dados.',
+            details: error.message,
             code: 500
         });
     }
@@ -97,8 +102,9 @@ export const consultarPorFormula = async (formula) => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao consultar nutriente por fórmula',
-            reason: `Falha na execução do SELECT na tabela 'nutrientes' filtrando pela fórmula química; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            title: 'Erro ao consultar nutriente',
+            message: 'Não foi possível consultar o nutriente pela fórmula química informada. Verifique a conectividade com o banco de dados.',
+            details: error.message,
             code: 500
         });
     }
@@ -112,8 +118,9 @@ export const deletar = async (id) => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao deletar nutriente',
-            reason: `Falha na execução do DELETE na tabela 'nutrientes'; o registro pode não existir ou possuir garantias vinculadas que impedem a exclusão. Detalhe: ${error.message}`,
+            title: 'Erro ao deletar nutriente',
+            message: 'Não foi possível excluir o nutriente. O registro pode não existir ou possuir garantias vinculadas que impedem a exclusão.',
+            details: error.message,
             code: 500
         });
     }

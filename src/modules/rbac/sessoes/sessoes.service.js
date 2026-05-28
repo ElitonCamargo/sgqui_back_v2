@@ -5,12 +5,20 @@ import crypto from "crypto";
 
 export const criar = async ({ usuario = 0, validade = 0 }) => {
   if (!usuario || !validade) {
-    throw new AppError("Usuário e validade são obrigatórios para criar uma sessão", 400);
+    throw new AppError({
+      title: 'Dados obrigatórios ausentes',
+      message: 'O usuário e a validade são obrigatórios para criar uma sessão.',
+      code: 400
+    });
   }
   const token = crypto.randomBytes(64).toString("hex"); // 128 caracteres
   const data = await sessoesModel.criar({ usuario, validade, token });
   if (!data) {
-    throw new AppError("Erro ao criar sessão", 500);
+    throw new AppError({
+      title: 'Erro ao criar sessão',
+      message: 'Não foi possível criar a sessão. Tente novamente ou contate o suporte.',
+      code: 500
+    });
   }
   return data;
 };

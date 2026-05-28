@@ -13,8 +13,8 @@ export const cadastrar = async (registro_producao={
     const data = await registros_producaoModel.cadastrar(registro_producao);
     if (!data) {
         throw new AppError({
-            message: 'Erro ao cadastrar registro de produção',
-            reason: 'Ocorreu um erro ao tentar cadastrar o registro de produção. Verifique os dados fornecidos e tente novamente.',
+            title: 'Erro ao cadastrar registro de produção',
+            message: 'Não foi possível cadastrar o registro de produção. Verifique os dados fornecidos e tente novamente.',
             code: 500
         });
     }
@@ -29,8 +29,8 @@ export const listar = async (query) => {
     const data = await registros_producaoModel.listar(filteredQuery);
     if (!data || data.length === 0) {
         throw new AppError({
-            message: 'Nenhum registro de produção encontrado',
-            reason: 'Não existem registros de produção que correspondam aos critérios de busca fornecidos. Verifique os parâmetros e tente novamente.',
+            title: 'Nenhum registro encontrado',
+            message: 'Nenhum registro de produção foi encontrado para os critérios de busca fornecidos.',
             code: 404
         });
     }
@@ -41,8 +41,8 @@ export const deletar = async (id, loginId) => {
     const result = await registros_producaoModel.deletar(id, loginId);
     if (!result) {
         throw new AppError({
-            message: 'Registro de produção não encontrado',
-            reason: `Não existe um registro de produção com o ID ${id}. Verifique o ID e tente novamente.`,
+            title: 'Registro de produção não encontrado',
+            message: `Não existe um registro de produção com o ID ${id}. Verifique o ID e tente novamente.`,
             code: 404
         });
     }
@@ -53,8 +53,8 @@ export const listarDeletados = async () => {
     const data = await registros_producaoModel.listarDeletados();
     if (!data || data.length === 0) {
         throw new AppError({
-            message: 'Nenhum registro de produção deletado encontrado',
-            reason: 'Não existem registros de produção deletados que correspondam aos critérios de busca fornecidos. Verifique os parâmetros e tente novamente.',
+            title: 'Nenhum registro deletado encontrado',
+            message: 'Nenhum registro de produção excluído foi encontrado.',
             code: 404
         });
     }
@@ -65,8 +65,8 @@ export const consultarPorId = async (id) => {
     const produto = await registros_producaoModel.consultarPorId(id);
     if (!produto) {
         throw new AppError({
-            message: 'Registro de produção não encontrado',
-            reason: `Não existe um registro de produção com o ID ${id}. Verifique o ID e tente novamente.`,
+            title: 'Registro de produção não encontrado',
+            message: `Não existe um registro de produção com o ID ${id}. Verifique o ID e tente novamente.`,
             code: 404
         });
     }
@@ -83,8 +83,8 @@ export const atualizar = async (id, registros_producao) => {
     const data = await registros_producaoModel.atualizar(id, registros_producao);
     if (!data) {
         throw new AppError({
-            message: 'Registro de produção não encontrado para atualização',
-            reason: `Não existe um registro de produção com o ID ${id} para atualizar. Verifique o ID e os dados fornecidos, e tente novamente.`,
+            title: 'Registro de produção não encontrado',
+            message: `Não existe um registro de produção com o ID ${id} para atualizar. Verifique o ID e os dados fornecidos.`,
             code: 404
         });
     }

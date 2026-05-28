@@ -9,8 +9,9 @@ export const consultarPorId = async (id) => {
     return rows[0];
   } catch (error) {
     throw new AppError({
-      message: 'Erro ao consultar vínculo de usuário e perfil por ID',
-      reason: `Falha na execução do SELECT na tabela 'usuario_perfis' filtrando por ID do vínculo; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+      title: 'Erro ao consultar vínculo',
+      message: 'Não foi possível consultar o vínculo de usuário e perfil pelo ID informado. Verifique a conectividade com o banco de dados.',
+      details: error.message,
       code: 500
     });
   }
@@ -24,8 +25,9 @@ export const vincular = async (usuarioId, perfilId) => {
     return await consultarPorId(result.insertId);
   } catch (error) {
     throw new AppError({
-      message: 'Erro ao vincular perfil ao usuário',
-      reason: `Falha na execução do INSERT na tabela 'usuario_perfis'; verifique se o usuário e o perfil informados existem ou se o vínculo já existe. Detalhe: ${error.message}`,
+      title: 'Erro ao vincular perfil ao usuário',
+      message: 'Não foi possível vincular o perfil ao usuário. Verifique se ambos existem ou se o vínculo já existe.',
+      details: error.message,
       code: 500
     });
   }
@@ -39,8 +41,9 @@ export const desvincular = async (vinculoID) => {
     return result.affectedRows > 0;
   } catch (error) {
     throw new AppError({
-      message: 'Erro ao desvincular perfil de usuário',
-      reason: `Falha na execução do DELETE na tabela 'usuario_perfis'; verifique se o ID do vínculo é válido e existe na base de dados. Detalhe: ${error.message}`,
+      title: 'Erro ao desvincular perfil de usuário',
+      message: 'Não foi possível desvincular o perfil do usuário. Verifique se o ID do vínculo é válido.',
+      details: error.message,
       code: 500
     });
   }
@@ -73,8 +76,9 @@ export const listar = async () => {
   }
   catch (error) {
     throw new AppError({
-      message: 'Erro ao listar vínculos de usuários por perfis',
-      reason: `Falha na execução da consulta JOIN entre 'usuario', 'usuario_perfis' e 'perfis'; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+      title: 'Erro ao listar vínculos',
+      message: 'Não foi possível listar os vínculos de usuários por perfis. Verifique a conectividade com o banco de dados.',
+      details: error.message,
       code: 500
     });
   }
@@ -94,8 +98,9 @@ export const listarPerfisPorUsuario = async (usuarioId) => {
     return dados;
   } catch (error) {
     throw new AppError({
-      message: 'Erro ao listar perfis por usuário',
-      reason: `Falha na execução do SELECT com JOIN entre 'usuario_perfis' e 'perfis' para o usuário informado; verifique a conectividade com o banco. Detalhe: ${error.message}`,
+      title: 'Erro ao listar perfis do usuário',
+      message: 'Não foi possível listar os perfis do usuário informado. Verifique a conectividade com o banco de dados.',
+      details: error.message,
       code: 500
     });
   }
@@ -115,8 +120,9 @@ export const listarUsuariosPorPerfil = async (perfilId) => {
     return dados;
   } catch (error) {
     throw new AppError({
-      message: 'Erro ao listar usuários por perfil',
-      reason: `Falha na execução do SELECT com JOIN entre 'usuario_perfis' e 'usuario' para o perfil informado; verifique a conectividade com o banco. Detalhe: ${error.message}`,
+      title: 'Erro ao listar usuários do perfil',
+      message: 'Não foi possível listar os usuários do perfil informado. Verifique a conectividade com o banco de dados.',
+      details: error.message,
       code: 500
     });
   }

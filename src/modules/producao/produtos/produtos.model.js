@@ -25,8 +25,9 @@ export const listar = async (query={projeto_id: 0, n_desenvolvimento: '', descri
         return rows;
     } catch (error) {
         throw new AppError({
-            message: 'Erro ao listar produtos',
-            reason: `Falha na execução do SELECT na tabela 'produtos'; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            title: 'Erro ao listar produtos',
+            message: 'Não foi possível consultar a lista de produtos. Verifique a conectividade com o banco de dados.',
+            details: error.message,
             code: 500
         });
     }
@@ -52,8 +53,9 @@ export const consultarPorId = async (id) => {
         return rows.length > 0 ? rows[0] : null;
     } catch (error) {
         throw new AppError({
-            message: 'Erro ao obter produto',
-            reason: `Falha na execução do SELECT na tabela 'produtos'; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            title: 'Erro ao consultar produto',
+            message: 'Não foi possível consultar o produto pelo ID informado. Verifique a conectividade com o banco de dados.',
+            details: error.message,
             code: 500
         });
     }

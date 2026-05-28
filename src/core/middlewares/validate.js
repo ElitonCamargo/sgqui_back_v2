@@ -6,8 +6,9 @@ export const validate = (schema) => (req, res, next) => {
     if (!result.success) {
         console.error('Validation error:', result.error);
         return next(new AppError({
-            message: 'Dados inválidos',
-            reason: result.error.issues.map(e => `${e.path.join('.')}: ${e.message}`).join(', '),
+            title: 'Dados inválidos',
+            message: result.error.issues.map(e => `${e.path.join('.')}: ${e.message}`).join(', '),
+            details: 'Os dados enviados não estão de acordo com o formato esperado. Verifique os campos e tente novamente.',
             code: 400
         }));
     }
@@ -22,10 +23,11 @@ export const validateQuery = (schema) => (req, res, next) => {
 
     if (!result.success) {
         return next(new AppError({
-            message: 'Dados inválidos',
-            reason: result.error.issues
+            title: 'Dados inválidos',
+            message: result.error.issues
                 .map((e) => `${e.path.join('.')}: ${e.message}`)
                 .join(', '),
+            details: 'Os dados enviados não estão de acordo com o formato esperado. Verifique os campos e tente novamente.',
             code: 400
         }));
     }
@@ -39,10 +41,11 @@ export const validateParams = (schema) => (req, res, next) => {
     console.log('Validation result for params:', result);
     if (!result.success) {
         return next(new AppError({
-            message: 'Dados inválidos',
-            reason: result.error.issues                
+            title: 'Dados inválidos',
+            message: result.error.issues                
                 .map((e) => `${e.path.join('.')}: ${e.message}`)
                 .join(', '),
+            details: 'Os dados enviados não estão de acordo com o formato esperado. Verifique os campos e tente novamente.',
             code: 400
         }));
     }

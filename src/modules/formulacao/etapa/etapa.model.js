@@ -18,8 +18,9 @@ export const cadastrar = async (etapa={}) => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao cadastrar etapa',
-            reason: `Falha na execução do INSERT na tabela 'etapas'; verifique se o projeto informado existe e se os dados fornecidos são válidos. Detalhe: ${error.message}`,
+            title: 'Erro ao cadastrar etapa',
+            message: 'Não foi possível cadastrar a etapa. Verifique se o projeto informado existe e se os dados são válidos.',
+            details: error.message,
             code: 500
         });
     }
@@ -38,8 +39,9 @@ export const alterar = async (id=0, etapa={}) => {
     }
     catch (error) {
         throw new AppError({
-            message: 'Erro ao alterar etapa',
-            reason: `Falha na execução do UPDATE na tabela 'etapas'; verifique se o registro existe e se os dados fornecidos são compatíveis com o esquema. Detalhe: ${error.message}`,
+            title: 'Erro ao alterar etapa',
+            message: 'Não foi possível alterar a etapa. Verifique se o registro existe e se os dados fornecidos são válidos.',
+            details: error.message,
             code: 500
         });
     }
@@ -66,8 +68,8 @@ export const alterarOrdem = async (ordemEtapa = []) => {
 
             if (result.affectedRows === 0) {
                 throw new AppError({
-                    message: 'Etapa não encontrada para reordenação',
-                    reason: `Nenhuma etapa foi encontrada com o ID ${id} informado para alteração de ordem.`,
+                    title: 'Etapa não encontrada',
+                    message: `Nenhuma etapa foi encontrada com o ID ${id} para reordenação.`,
                     code: 404
                 });
             }
@@ -90,8 +92,9 @@ export const alterarOrdem = async (ordemEtapa = []) => {
         }
 
         throw new AppError({
-            message: 'Erro ao alterar ordem das etapas',
-            reason: `Falha na execução do UPDATE para reordenar as etapas; verifique se os IDs fornecidos são válidos e se a estrutura do array está correta. Detalhe: ${error.message}`,
+            title: 'Erro ao reordenar etapas',
+            message: 'Não foi possível reordenar as etapas. Verifique se os IDs fornecidos são válidos.',
+            details: error.message,
             code: 500
         });
 
@@ -109,8 +112,9 @@ export const consultar = async (filtro = '') => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao consultar etapas',
-            reason: `Falha na execução do SELECT na tabela 'etapas'; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            title: 'Erro ao consultar etapas',
+            message: 'Não foi possível consultar a lista de etapas. Verifique a conectividade com o banco de dados.',
+            details: error.message,
             code: 500
         });
     }
@@ -124,8 +128,9 @@ export const consultarPorId = async (id) => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao consultar etapa por ID',
-            reason: `Falha na execução do SELECT na tabela 'etapas' filtrando por ID; verifique se o ID fornecido é válido e a conectividade com o banco. Detalhe: ${error.message}`,
+            title: 'Erro ao consultar etapa',
+            message: 'Não foi possível consultar a etapa pelo ID informado. Verifique se o ID é válido.',
+            details: error.message,
             code: 500
         });
     }
@@ -139,8 +144,9 @@ export const consultarPorNome = async (nome) => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao consultar etapa por nome',
-            reason: `Falha na execução do SELECT na tabela 'etapas' filtrando pelo nome; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            title: 'Erro ao consultar etapa',
+            message: 'Não foi possível consultar a etapa pelo nome informado. Verifique a conectividade com o banco de dados.',
+            details: error.message,
             code: 500
         });
     }
@@ -154,8 +160,9 @@ export const consultarPorProjeto = async (projeto_id) => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao consultar etapas por projeto',
-            reason: `Falha na execução do SELECT na tabela 'etapas' filtrando pelo ID do projeto; verifique se o projeto informado existe. Detalhe: ${error.message}`,
+            title: 'Erro ao consultar etapas do projeto',
+            message: 'Não foi possível consultar as etapas do projeto informado. Verifique se o projeto existe.',
+            details: error.message,
             code: 500
         });
     }
@@ -169,8 +176,9 @@ export const deletar = async (id) => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao deletar etapa',
-            reason: `Falha na execução do DELETE na tabela 'etapas'; o registro pode não existir ou possuir etapas de matéria-prima vinculadas que impedem a exclusão. Detalhe: ${error.message}`,
+            title: 'Erro ao deletar etapa',
+            message: 'Não foi possível excluir a etapa. O registro pode não existir ou possuir matérias-primas vinculadas que impedem a exclusão.',
+            details: error.message,
             code: 500
         });
     }

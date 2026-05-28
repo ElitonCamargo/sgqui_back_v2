@@ -10,8 +10,9 @@ export const visualizarFormulacao = async (id) => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao consultar detalhes do projeto',
-            reason: `Falha na execução do SELECT na view 'projeto_detalhado' filtrando por ID; verifique se o projeto existe e se a view está criada no banco de dados. Detalhe: ${error.message}`,
+            title: 'Erro ao consultar detalhes do projeto',
+            message: 'Não foi possível consultar os detalhes do projeto. Verifique se o projeto existe e se a view está criada no banco de dados.',
+            details: error.message,
             code: 500
         });
     }

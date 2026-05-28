@@ -8,7 +8,8 @@ export const vincular = async (usuarioId, perfilId) => {
   const vinculou = await UsuarioPerfisModel.vincular(usuarioIdNum, perfilIdNum);
   if (!vinculou) {
     throw new AppError({
-      message: 'Não foi possível vincular o usuário ao perfil, verifique se ambos existem e se o vínculo já não existe',
+      title: 'Erro ao vincular usuário ao perfil',
+      message: 'Não foi possível vincular o usuário ao perfil. Verifique se ambos existem e se o vínculo já não existe.',
       code: 400
     });
   }
@@ -22,7 +23,8 @@ export const desvincular = async (vinculoID) => {
   const desvinculou = await UsuarioPerfisModel.desvincular(vinculoIdNum);
   if (!desvinculou) {
     throw new AppError({
-      message: 'Vínculo não encontrado',
+      title: 'Vínculo não encontrado',
+      message: 'O vínculo informado não foi encontrado. Verifique se o ID é válido.',
       code: 404
     });
   }
@@ -34,7 +36,8 @@ export const listar = async () => {
   const dados = await UsuarioPerfisModel.listar();
   if (!dados || dados.length === 0) {
     throw new AppError({
-      message: 'Nenhum perfil vinculado a usuários encontrado',
+      title: 'Nenhum vínculo encontrado',
+      message: 'Nenhum perfil vinculado a usuários foi encontrado na base de dados.',
       code: 404
     });
   }
@@ -70,7 +73,8 @@ export const listarPerfisPorUsuario = async (usuarioId) => {
   const dados = await UsuarioPerfisModel.listarPerfisPorUsuario(usuarioIdNum);
   if (!dados || dados.length === 0) {
     throw new AppError({
-      message: 'Nenhum perfil vinculado ao usuário encontrado',
+      title: 'Nenhum perfil encontrado',
+      message: 'Nenhum perfil vinculado ao usuário informado foi encontrado.',
       code: 404
     });
   }
@@ -94,7 +98,8 @@ export const listarUsuariosPorPerfil = async (perfilId) => {
   const dados = await UsuarioPerfisModel.listarUsuariosPorPerfil(perfilIdNum);
   if (!dados || dados.length === 0) {
     throw new AppError({
-      message: 'Nenhum usuário vinculado ao perfil',
+      title: 'Nenhum usuário encontrado',
+      message: 'Nenhum usuário vinculado ao perfil informado foi encontrado.',
       code: 404
     });
   }

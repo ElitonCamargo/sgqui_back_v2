@@ -9,8 +9,9 @@ export const cadastrar = async ({ nome, descricao = null }) => {
     return await listarPorId(result.insertId);
   } catch (error) {
     throw new AppError({
-      message: 'Erro ao cadastrar perfil',
-      reason: `Falha na execução do INSERT na tabela 'perfis'; verifique se já existe um perfil com o mesmo nome ou se os dados fornecidos são inválidos. Detalhe: ${error.message}`,
+      title: 'Erro ao cadastrar perfil',
+      message: 'Não foi possível cadastrar o perfil. Verifique se já existe um perfil com o mesmo nome ou se os dados são inválidos.',
+      details: error.message,
       code: 500
     });
   }
@@ -23,8 +24,9 @@ export const listar = async () => {
     return dados;
   } catch (error) {
     throw new AppError({
-      message: 'Erro ao listar perfis',
-      reason: `Falha na execução do SELECT na tabela 'perfis'; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+      title: 'Erro ao listar perfis',
+      message: 'Não foi possível consultar a lista de perfis. Verifique a conectividade com o banco de dados.',
+      details: error.message,
       code: 500
     });
   }
@@ -38,8 +40,9 @@ export const listarPorId = async (perfilId) => {
     return dados[0];
   } catch (error) {
     throw new AppError({
-      message: 'Erro ao listar perfil por ID',
-      reason: `Falha na execução do SELECT na tabela 'perfis' filtrando por ID; verifique se o ID fornecido é válido e a conectividade com o banco. Detalhe: ${error.message}`,
+      title: 'Erro ao consultar perfil',
+      message: 'Não foi possível consultar o perfil pelo ID informado. Verifique se o ID é válido.',
+      details: error.message,
       code: 500
     });
   }
@@ -52,8 +55,9 @@ export const listarPorNome = async (perfilNome) => {
     return dados[0];
   } catch (error) {
     throw new AppError({
-      message: 'Erro ao listar perfil por nome',
-      reason: `Falha na execução do SELECT na tabela 'perfis' filtrando por nome; verifique se o nome fornecido é válido e a conectividade com o banco. Detalhe: ${error.message}`,
+      title: 'Erro ao consultar perfil',
+      message: 'Não foi possível consultar o perfil pelo nome informado. Verifique a conectividade com o banco de dados.',
+      details: error.message,
       code: 500
     });
   }
@@ -76,8 +80,9 @@ export const alterar = async (perfilId, dados = { nome:'', descricao:''}) => {
 
   } catch (error) {
     throw new AppError({
-      message: 'Erro ao alterar perfil',
-      reason: `Falha na execução do UPDATE na tabela 'perfis'; o perfil pode não existir ou os dados fornecidos são incompatíveis com o esquema. Detalhe: ${error.message}`,
+      title: 'Erro ao alterar perfil',
+      message: 'Não foi possível alterar o perfil. Verifique se o ID é válido e se os dados fornecidos são compatíveis.',
+      details: error.message,
       code: 500
     });
   }
@@ -90,8 +95,9 @@ export const remover = async (perfilId) => {
     return result.affectedRows > 0;
   } catch (error) {
     throw new AppError({
-      message: 'Erro ao remover perfil',
-      reason: `Falha na execução do DELETE na tabela 'perfis'; o perfil pode possuir permissões ou usuários vinculados que impedem a exclusão. Detalhe: ${error.message}`,
+      title: 'Erro ao remover perfil',
+      message: 'Não foi possível excluir o perfil. O registro pode possuir permissões ou usuários vinculados que impedem a exclusão.',
+      details: error.message,
       code: 500
     });
   }

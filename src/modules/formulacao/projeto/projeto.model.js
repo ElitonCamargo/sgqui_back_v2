@@ -44,8 +44,8 @@ export const cadastrar = async (projeto = {}, loginId = 0) => {
 
         if (campos.length === 0) {
             throw new AppError({
-                message: 'Nenhum dado informado para cadastro',
-                reason: 'Informe ao menos um campo válido para cadastrar o projeto.',
+                title: 'Dados insuficientes',
+                message: 'Informe ao menos um campo válido para cadastrar o projeto.',
                 code: 400
             });
         }
@@ -66,15 +66,16 @@ export const cadastrar = async (projeto = {}, loginId = 0) => {
 
         if (error.code === 'ER_DUP_ENTRY') {
             throw new AppError({
-                message: 'Projeto já cadastrado',
-                reason: 'Já existe um projeto cadastrado com os dados únicos informados, como código ou outro campo com restrição de unicidade.',
+                title: 'Projeto já cadastrado',
+                message: 'Já existe um projeto com o código ou outro campo único informado. Verifique os dados e tente novamente.',
                 code: 409
             });
         }
 
         throw new AppError({
-            message: 'Erro ao cadastrar projeto',
-            reason: `Falha na execução do INSERT na tabela 'projeto'; verifique se os campos obrigatórios foram fornecidos e se os valores de status e aplicação são válidos. Detalhe: ${error.message}`,
+            title: 'Erro ao cadastrar projeto',
+            message: 'Não foi possível cadastrar o projeto. Verifique se todos os campos obrigatórios foram fornecidos e se os valores de status e aplicação são válidos.',
+            details: error.message,
             code: 500
         });
     }
@@ -88,8 +89,9 @@ export const duplicar = async (id = 0, loginId = 0) => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao duplicar projeto',
-            reason: `Falha na execução da stored procedure 'duplicar_projeto'; verifique se o ID do projeto origem existe e se a procedure está criada no banco de dados. Detalhe: ${error.message}`,
+            title: 'Erro ao duplicar projeto',
+            message: 'Não foi possível duplicar o projeto. Verifique se o projeto origem existe e se a procedure está disponível no banco de dados.',
+            details: error.message,
             code: 500
         });
     }
@@ -122,8 +124,9 @@ export const alterar = async (id=0,projeto={},loginId=0) => {
     }
     catch (error) {
         throw new AppError({
-            message: 'Erro ao alterar projeto',
-            reason: `Falha na execução do UPDATE na tabela 'projeto'; verifique se o ID fornecido existe e se os campos de status e aplicação são válidos. Detalhe: ${error.message}`,
+            title: 'Erro ao alterar projeto',
+            message: 'Não foi possível atualizar os dados do projeto. Verifique se o ID existe e se os campos de status e aplicação são válidos.',
+            details: error.message,
             code: 500
         });
     }
@@ -140,8 +143,9 @@ export const addResultado = async (projetoId, resultado={}) => {
     }
     catch (error) {
         throw new AppError({
-            message: 'Erro ao adicionar resultado do projeto',
-            reason: `Falha na execução do UPDATE no campo 'resultado' da tabela 'projeto'; verifique se o ID do projeto existe e se o objeto de resultado é serealizável em JSON. Detalhe: ${error.message}`,
+            title: 'Erro ao adicionar resultado',
+            message: 'Não foi possível salvar o resultado do projeto. Verifique se o ID do projeto existe e se os dados do resultado são válidos.',
+            details: error.message,
             code: 500
         });
     }
@@ -155,8 +159,9 @@ export const consultar = async (filtro = '') => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao consultar projetos',
-            reason: `Falha na execução do SELECT na tabela 'projeto' com filtro por nome e descrição; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            title: 'Erro ao consultar projetos',
+            message: 'Não foi possível consultar a lista de projetos. Verifique a conectividade com o banco de dados.',
+            details: error.message,
             code: 500
         });
     }
@@ -203,8 +208,9 @@ export const consultarFiltroAvancado = async (filtroConsulta) => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao consultar projetos com filtro avançado',
-            reason: `Falha na execução da consulta de filtro avançado sobre a view 'projeto_detalhado'; verifique se o JSON de filtros é válido e se a view existe no banco. Detalhe: ${error.message}`,
+            title: 'Erro no filtro avançado',
+            message: 'Não foi possível executar a consulta de filtro avançado. Verifique se os parâmetros de filtro são válidos.',
+            details: error.message,
             code: 500
         });
     }
@@ -220,8 +226,9 @@ export const consultarPorId = async (id) => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao consultar projeto por ID',
-            reason: `Falha na execução do SELECT na tabela 'projeto' filtrando por ID; verifique se o ID fornecido é válido e a conectividade com o banco. Detalhe: ${error.message}`,
+            title: 'Erro ao consultar projeto',
+            message: 'Não foi possível consultar o projeto pelo ID informado. Verifique se o ID é válido.',
+            details: error.message,
             code: 500
         });
     }
@@ -235,8 +242,9 @@ export const consultarPorCodigo = async (codigo) => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao consultar projeto por código',
-            reason: `Falha na execução do SELECT na tabela 'projeto' filtrando por código; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            title: 'Erro ao consultar projeto',
+            message: 'Não foi possível consultar o projeto pelo código informado. Verifique a conectividade com o banco de dados.',
+            details: error.message,
             code: 500
         });
     }
@@ -257,8 +265,9 @@ export const consultarPorData = async (data_inicio="", data_termino="") => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao consultar projetos por data',
-            reason: `Falha na execução do SELECT na tabela 'projeto' filtrando por intervalo de datas; verifique se o formato de data informado é válido (YYYY-MM-DD). Detalhe: ${error.message}`,
+            title: 'Erro ao consultar projetos por data',
+            message: 'Não foi possível consultar os projetos no período informado. Verifique se o formato das datas está correto (AAAA-MM-DD).',
+            details: error.message,
             code: 500
         });
     }
@@ -273,8 +282,9 @@ export const consultarPorStatus = async (status='') => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao consultar projetos por status',
-            reason: `Falha na execução do SELECT na tabela 'projeto' usando JSON_EXTRACT sobre o campo 'status'; verifique se o valor de status fornecido é válido. Detalhe: ${error.message}`,
+            title: 'Erro ao consultar projetos por status',
+            message: 'Não foi possível consultar os projetos com o status informado. Verifique se o valor do status é válido.',
+            details: error.message,
             code: 500
         });
     }
@@ -288,8 +298,9 @@ export const deletar = async (id) => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao deletar projeto',
-            reason: `Falha na execução do DELETE na tabela 'projeto'; o registro pode não existir ou possuir etapas e resultados vinculados que impedem a exclusão. Detalhe: ${error.message}`,
+            title: 'Erro ao deletar projeto',
+            message: 'Não foi possível excluir o projeto. O registro pode não existir ou possuir etapas e resultados vinculados que impedem a exclusão.',
+            details: error.message,
             code: 500
         });
     }
@@ -307,8 +318,9 @@ export const auditarProjetoDelete = async (projeto = {}, loginId = 0) => {
 
     } catch (error) {
         throw new AppError({
-            message: 'Erro ao auditar deleção de projeto',
-            reason: `Falha na execução do INSERT na tabela 'projetos_deletados' para registrar a auditoria de deleção; verifique se a tabela de auditoria existe e se os campos correspondem aos do projeto. Detalhe: ${error.message}`,
+            title: 'Erro ao auditar exclusão de projeto',
+            message: 'Não foi possível registrar a auditoria de exclusão do projeto. Verifique se a tabela de auditoria existe no banco de dados.',
+            details: error.message,
             code: 500
         });
     }
@@ -322,8 +334,9 @@ export const consultarDeletados = async () => {
     }
     catch (error) {
         throw new AppError({
-            message: 'Erro ao consultar projetos deletados',
-            reason: `Falha na execução do SELECT na tabela 'projetos_deletados'; Detalhe: ${error.message}`,
+            title: 'Erro ao consultar projetos deletados',
+            message: 'Não foi possível consultar o histórico de projetos excluídos. Verifique a conectividade com o banco de dados.',
+            details: error.message,
             code: 500
         });
     }
@@ -340,8 +353,9 @@ export const consultaDetalhada = async (id) => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao consultar detalhes do projeto',
-            reason: `Falha na execução do SELECT na view 'projeto_detalhado' filtrando por ID; verifique se o projeto existe e se a view está criada no banco de dados. Detalhe: ${error.message}`,
+            title: 'Erro ao consultar detalhes do projeto',
+            message: 'Não foi possível obter os detalhes do projeto. Verifique se o projeto existe e se a view está disponível no banco de dados.',
+            details: error.message,
             code: 500
         });
     }

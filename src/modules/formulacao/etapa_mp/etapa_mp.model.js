@@ -43,8 +43,9 @@ export const cadastrar = async (etapa_mp) => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao cadastrar etapa de matéria-prima',
-            reason: `Falha na execução do INSERT na tabela 'etapa_mp'; verifique se a etapa e a matéria-prima informadas existem e se os dados são válidos. Detalhe: ${error.message}`,
+            title: 'Erro ao cadastrar etapa de matéria-prima',
+            message: 'Não foi possível cadastrar a etapa de matéria-prima. Verifique se a etapa e a matéria-prima informadas existem.',
+            details: error.message,
             code: 500
         });
     }
@@ -66,8 +67,9 @@ export const alterar = async (id,etapa_mp) => {
     }
     catch (error) {
         throw new AppError({
-            message: 'Erro ao alterar etapa de matéria-prima',
-            reason: `Falha na execução do UPDATE na tabela 'etapa_mp'; verifique se o registro existe e se os dados fornecidos são compatíveis com o esquema. Detalhe: ${error.message}`,
+            title: 'Erro ao alterar etapa de matéria-prima',
+            message: 'Não foi possível alterar a etapa de matéria-prima. Verifique se o registro existe e se os dados são válidos.',
+            details: error.message,
             code: 500
         });
     }
@@ -89,8 +91,8 @@ export const alterarOrdem = async (ordemEtapaMP = []) => {
 
             if (result.affectedRows === 0) {
                 throw new AppError({
-                    message: 'Matéria-prima não encontrada para reordenação',
-                    reason: `Nenhuma matéria-prima na etapa foi encontrada com o ID ${id} informado para alteração de ordem.`,
+                    title: 'Matéria-prima não encontrada',
+                    message: `Nenhuma matéria-prima da etapa foi encontrada com o ID ${id} para reordenação.`,
                     code: 404
                 });
             }
@@ -110,8 +112,9 @@ export const alterarOrdem = async (ordemEtapaMP = []) => {
         }
 
         throw new AppError({
-            message: 'Erro ao alterar ordem das etapas',
-            reason: `Falha na execução do UPDATE para reordenar as etapas; verifique se os IDs fornecidos são válidos e se a estrutura do array está correta. Detalhe: ${error.message}`,
+            title: 'Erro ao reordenar matérias-primas',
+            message: 'Não foi possível reordenar as matérias-primas da etapa. Verifique se os IDs fornecidos são válidos.',
+            details: error.message,
             code: 500
         });
 
@@ -128,8 +131,9 @@ export const consultar = async (filtro = '') => {
     } 
     catch (error) {    
         throw new AppError({
-            message: 'Erro ao consultar etapas de matéria-prima',
-            reason: `Falha na execução do SELECT na tabela 'etapa_mp'; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            title: 'Erro ao consultar etapas de matéria-prima',
+            message: 'Não foi possível consultar as etapas de matéria-prima. Verifique a conectividade com o banco de dados.',
+            details: error.message,
             code: 500
         });
     }
@@ -163,8 +167,9 @@ export const consultarPorId = async (id) => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao consultar etapa de matéria-prima por ID',
-            reason: `Falha na execução do SELECT na tabela 'etapa_mp' filtrando por ID; verifique se o ID fornecido é válido. Detalhe: ${error.message}`,
+            title: 'Erro ao consultar etapa de matéria-prima',
+            message: 'Não foi possível consultar a etapa de matéria-prima pelo ID informado. Verifique se o ID é válido.',
+            details: error.message,
             code: 500
         });
     }
@@ -178,8 +183,9 @@ export const consultarPorEtapa = async (etapa_id) => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao consultar etapas de matéria-prima por etapa',
-            reason: `Falha na execução do SELECT na tabela 'etapa_mp' filtrando pelo ID da etapa pai; verifique se a etapa informada existe. Detalhe: ${error.message}`,
+            title: 'Erro ao consultar etapas de matéria-prima',
+            message: 'Não foi possível consultar as etapas de matéria-prima da etapa informada. Verifique se a etapa existe.',
+            details: error.message,
             code: 500
         });
     }
@@ -193,8 +199,9 @@ export const deletar = async (id) => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao deletar etapa de matéria-prima',
-            reason: `Falha na execução do DELETE na tabela 'etapa_mp'; o registro pode não existir ou possuir dependências que impedem a exclusão. Detalhe: ${error.message}`,
+            title: 'Erro ao deletar etapa de matéria-prima',
+            message: 'Não foi possível excluir a etapa de matéria-prima. O registro pode não existir ou possuir dependências que impedem a exclusão.',
+            details: error.message,
             code: 500
         });
     }

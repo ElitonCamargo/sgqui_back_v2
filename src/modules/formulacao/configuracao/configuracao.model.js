@@ -16,8 +16,9 @@ export const cadastrar = async (configuracao={key:'', value:{}}) => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao cadastrar configuração',
-            reason: `Falha na execução do INSERT na tabela 'configuracoes'; verifique se já existe uma configuração com a mesma chave ou se os dados fornecidos são inválidos. Detalhe: ${error.message}`,
+            title: 'Erro ao cadastrar configuração',
+            message: 'Não foi possível cadastrar a configuração. Verifique se já existe uma configuração com a mesma chave ou se os dados são inválidos.',
+            details: error.message,
             code: 500
         });
     }
@@ -41,8 +42,9 @@ export const alterar = async (configuracao={}, responsavel) => {
     }
     catch (error) {
         throw new AppError({
-            message: 'Erro ao alterar configuração',
-            reason: `Falha na execução do UPDATE na tabela 'configuracoes'; verifique se a chave informada existe e se os dados fornecidos são válidos. Detalhe: ${error.message}`,
+            title: 'Erro ao alterar configuração',
+            message: 'Não foi possível alterar a configuração. Verifique se a chave informada existe e se os dados são válidos.',
+            details: error.message,
             code: 500
         });
     }
@@ -56,8 +58,9 @@ export const consultar = async () => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao consultar configurações',
-            reason: `Falha na execução do SELECT na tabela 'configuracoes'; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            title: 'Erro ao consultar configurações',
+            message: 'Não foi possível consultar a lista de configurações. Verifique a conectividade com o banco de dados.',
+            details: error.message,
             code: 500
         });
     }
@@ -71,8 +74,9 @@ export const consultarPorKey = async (key) => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao consultar configuração por chave',
-            reason: `Falha na execução do SELECT na tabela 'configuracoes' filtrando pela chave informada; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            title: 'Erro ao consultar configuração',
+            message: 'Não foi possível consultar a configuração pela chave informada. Verifique a conectividade com o banco de dados.',
+            details: error.message,
             code: 500
         });
     }
@@ -86,8 +90,9 @@ export const deletar = async (key) => {
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao deletar configuração',
-            reason: `Falha na execução do DELETE na tabela 'configuracoes'; a configuração pode não existir ou possuir dependências que impedem a exclusão. Detalhe: ${error.message}`,
+            title: 'Erro ao deletar configuração',
+            message: 'Não foi possível excluir a configuração. A chave pode não existir ou possuir dependências que impedem a exclusão.',
+            details: error.message,
             code: 500
         });
     }

@@ -2,22 +2,51 @@ import pool from '../../../core/database/data.js';
 import { AppError } from '../../../core/utils/AppError.js';
 
 
+/**
+ * Cadastra um novo usuário na tabela 'usuario'.
+ * 
+ * @param {Object} usuario - Objeto contendo os dados do usuário
+ * @param {string} usuario.nome - Nome do usuário (3-100 caracteres, trim)
+ * @param {string} usuario.email - Email único do usuário (válido, máx 100 caracteres, trim)
+ * @param {string} usuario.senha - Senha do usuário (mín 6, máx 255 caracteres)
+ * @param {string} [usuario.avatar] - URL válida do avatar (opcional, trim)
+ * @param {boolean} [usuario.status] - Status do usuário (opcional)
+ * 
+ * @returns {Promise<Object>} Retorna os dados completos do usuário cadastrado
+ * 
+ * @throws {AppError} Lança erro se houver falha no INSERT ou se já existe usuário com o mesmo email
+ * 
+ * @example
+ * const novoUsuario = await cadastrar({
+ *   nome: 'João Silva',
+ *   email: 'joao@example.com',
+ *   senha: 'senha123',
+ *   avatar: 'https://example.com/avatar.jpg',
+ *   status: true
+ * });
+ */
 export const cadastrar = async (usuario) => {
     try{
-        const keys = Object.keys(usuario);
-        const values = Object.values(usuario);
-        const setCollumns = keys.join(', ');
-        const setClause = keys.map(() => '?').join(', ');
-
-        const cmdSql = `INSERT INTO usuario (${setCollumns}) VALUES (${setClause});`;
-        const [result] = await pool.execute(cmdSql, values);
-
+        const cmdSql = `INSERT INTO usuario SET ?`;
+        const [result] = await pool.query(cmdSql, [usuario]);
         return await consultarPorId(result.insertId);
     }
     catch(error){
+        console.error('Erro ao cadastrar usuário:', error);
+        
+        if (error.code === 'ER_DUP_ENTRY') {
+            throw new AppError({
+                title: 'E-mail já cadastrado',
+                message: 'Já existe um usuário cadastrado com o e-mail informado.',
+                details: error.message,
+                code: 409
+            });
+        }
+
         throw new AppError({
-            message: 'Erro ao cadastrar usuário',
-            reason: `Falha na execução do INSERT na tabela 'usuario'; verifique se já existe um usuário com o mesmo e-mail ou se os dados fornecidos são inválidos. Detalhe: ${error.message}`,
+            title: 'Erro ao cadastrar usuário',
+            message: 'Falha ao tentar cadastrar um novo usuário.',
+            details: error.message,
             code: 500
         });
     }
@@ -40,8 +69,9 @@ export const alterar = async (id, usuario) => {
     }
     catch (error) {
         throw new AppError({
-            message: 'Erro ao alterar usuário',
-            reason: `Falha na execução do UPDATE na tabela 'usuario'; o ID pode ser inválido ou os dados fornecidos são incompatíveis com o esquema. Detalhe: ${error.message}`,
+            title: 'Erro ao alterar usuário',
+            message: 'Não foi possível alterar o usuário. Verifique se o ID existe e se os dados fornecidos são válidos.',
+            details: error.message,
             code: 500
         });
     }
@@ -56,8 +86,9 @@ export const consultarPorEmail = async (email) => {
     }
     catch (error) {
         throw new AppError({
-            message: 'Erro ao consultar usuário por email',
-            reason: `Falha na execução do SELECT na tabela 'usuario' filtrando por e-mail; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            title: 'Erro ao consultar usuário',
+            message: 'Não foi possível consultar o usuário pelo e-mail informado. Verifique a conectividade com o banco de dados.',
+            details: error.message,
             code: 500
         });
     }
@@ -72,8 +103,9 @@ export const consultar = async (filtro = '') => {
     }
     catch (error) {
         throw new AppError({
-            message: 'Erro ao consultar usuários',
-            reason: `Falha na execução do SELECT na tabela 'usuario'; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            title: 'Erro ao consultar usuários',
+            message: 'Não foi possível consultar a lista de usuários. Verifique a conectividade com o banco de dados.',
+            details: error.message,
             code: 500
         });
     }
@@ -88,8 +120,9 @@ export const consultarPorId = async (id) => {
     }
     catch (error) {
         throw new AppError({
-            message: 'Erro ao consultar usuário por ID',
-            reason: `Falha na execução do SELECT na tabela 'usuario' filtrando por ID; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            title: 'Erro ao consultar usuário',
+            message: 'Não foi possível consultar o usuário pelo ID informado. Verifique se o ID é válido.',
+            details: error.message,
             code: 500
         });
     }
@@ -104,8 +137,9 @@ export const deletar = async (id) => {
     }
     catch (error) {
         throw new AppError({
-            message: 'Erro ao deletar usuário',
-            reason: `Falha na execução do DELETE na tabela 'usuario'; o registro pode possuir dependências em outras tabelas que impedem a exclusão. Detalhe: ${error.message}`,
+            title: 'Erro ao deletar usuário',
+            message: 'Não foi possível excluir o usuário. O registro pode possuir dependências em outras tabelas que impedem a exclusão.',
+            details: error.message,
             code: 500
         });
     }

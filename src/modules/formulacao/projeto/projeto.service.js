@@ -5,8 +5,8 @@ export const cadastrar = async (projetoData={}, loginId=0) => {
     const data = await projetoModel.cadastrar(projetoData, loginId);
     if (!data) {
         throw new AppError({
-            message: 'Erro ao cadastrar projeto',
-            reason: 'Ocorreu um erro ao tentar cadastrar o projeto no banco de dados. Verifique os dados fornecidos e tente novamente.',
+            title: 'Erro ao cadastrar projeto',
+            message: 'Não foi possível cadastrar o projeto. Verifique os dados fornecidos e tente novamente.',
             code: 500
         });
     }
@@ -17,8 +17,8 @@ export const alterar = async (id=0, projetoData={}, loginId=0) => {
     const data = await projetoModel.alterar(id, projetoData, loginId);
     if (!data) {
         throw new AppError({
-            message: 'Erro ao alterar projeto',
-            reason: 'Ocorreu um erro ao tentar alterar o projeto. Verifique se o projeto existe e se algum dado foi realmente modificado.',
+            title: 'Projeto não encontrado',
+            message: 'Não foi possível alterar o projeto. Verifique se o ID é válido e se algum dado foi realmente modificado.',
             code: 404
         });
     }
@@ -30,8 +30,8 @@ export const duplicar = async (id, loginId) => {
     const data = await projetoModel.duplicar(id, loginId);
     if (!data) {
         throw new AppError({
-            message: 'Erro ao duplicar projeto',
-            reason: 'Ocorreu um erro ao tentar duplicar o projeto no banco de dados. Verifique se o ID do projeto origem existe e se a procedure está criada.',
+            title: 'Erro ao duplicar projeto',
+            message: 'Não foi possível duplicar o projeto. Verifique se o ID do projeto origem existe.',
             code: 500
         });
     }
@@ -42,16 +42,16 @@ export const duplicar = async (id, loginId) => {
 export const addResultado = async (projetoId, responsavelId, resultado={}) => {
     if(projetoId == null || projetoId.trim() === ''){
         throw new AppError({
-            message: 'ID do projeto é obrigatório',
-            reason: "O parâmetro 'projetoId' não foi fornecido ou está vazio; é necessário identificar o projeto ao qual o resultado será vinculado",
+            title: 'ID do projeto não informado',
+            message: 'O ID do projeto é obrigatório para vincular um resultado. Informe o ID do projeto e tente novamente.',
             code: 400
         });
     }
 
     if(resultado == null || Object.keys(resultado).length === 0){
         throw new AppError({
-            message: 'Dados do resultado são obrigatórios',
-            reason: "O parâmetro 'resultado' não foi fornecido ou está vazio; é necessário fornecer os dados do resultado a ser adicionado",
+            title: 'Dados do resultado não informados',
+            message: 'Os dados do resultado são obrigatórios. Informe os dados do resultado e tente novamente.',
             code: 400
         });
     }
@@ -64,8 +64,8 @@ export const consultar = async (filtro = '') => {
     const data = await projetoModel.consultar(filtro);
     if (data.length === 0) {
         throw new AppError({
-            message: 'Nenhum projeto encontrado',
-            reason: 'Nenhum projeto corresponde aos critérios de filtro fornecidos.',
+            title: 'Nenhum projeto encontrado',
+            message: 'Nenhum projeto corresponde ao filtro informado. Tente outros termos de busca.',
             code: 404
         });
     }
@@ -144,8 +144,8 @@ export const consultarFiltroAvancado = async (filtro = []) => {
     
     if (result.length === 0) {
         throw new AppError({
-            message: 'Nenhum projeto encontrado',
-            reason: 'Nenhum projeto corresponde aos critérios de filtro fornecidos.',
+            title: 'Nenhum projeto encontrado',
+            message: 'Nenhum projeto corresponde aos critérios do filtro avançado informado.',
             code: 404
         });
     }
@@ -165,8 +165,8 @@ export const consultarPorCodigo = async (codigo) => {
     const data = await projetoModel.consultarPorCodigo(codigo);
     if(data.length === 0){
         throw new AppError({
-            message: 'Projeto não encontrado',
-            reason: 'Não existe um projeto com o código fornecido. Verifique o código e tente novamente.',
+            title: 'Projeto não encontrado',
+            message: 'Não existe um projeto com o código informado. Verifique o código e tente novamente.',
             code: 404
         });
     }
@@ -177,8 +177,8 @@ export const consultarPorData = async (data_inicio="", data_termino="") => {
     const data = await projetoModel.consultarPorData(data_inicio, data_termino);
     if(data.length === 0){
         throw new AppError({
-            message: 'Nenhum projeto encontrado',
-            reason: 'Nenhum projeto foi encontrado dentro do período especificado. Verifique as datas fornecidas e tente novamente.',
+            title: 'Nenhum projeto encontrado',
+            message: 'Nenhum projeto foi encontrado no período informado. Verifique as datas e tente novamente.',
             code: 404
         });
     }
@@ -189,8 +189,8 @@ export const consultarPorStatus = async (status='') => {
     const data = await projetoModel.consultarPorStatus(status);
     if(data.length === 0){
         throw new AppError({
-            message: 'Nenhum projeto encontrado',
-            reason: 'Nenhum projeto foi encontrado com o status especificado. Aparentemente, não há projetos que correspondam ao status fornecido.',
+            title: 'Nenhum projeto encontrado',
+            message: 'Nenhum projeto foi encontrado com o status especificado.',
             code: 404
         });
     }
@@ -202,8 +202,8 @@ export const deletar = async (id, loginId) => {
     const result = await projetoModel.deletar(id, loginId);
     if(result === false){
         throw new AppError({
-            message: 'Erro ao deletar projeto',
-            reason: 'Ocorreu um erro ao tentar deletar o projeto no banco de dados. Verifique se o projeto possui etapas ou resultados vinculados e tente novamente.',
+            title: 'Erro ao deletar projeto',
+            message: 'Não foi possível excluir o projeto. Verifique se o projeto possui etapas ou resultados vinculados.',
             code: 500
         });
     }
@@ -217,8 +217,8 @@ export const consultaDetalhada = async (id) => {
     const data = await projetoModel.consultaDetalhada(id);
     if (data.length === 0) {
         throw new AppError({
-            message: 'Projeto não encontrado',
-            reason: 'Não existe um projeto com o ID fornecido. Verifique o ID e tente novamente.',
+            title: 'Projeto não encontrado',
+            message: 'Não existe um projeto com o ID informado. Verifique o ID e tente novamente.',
             code: 404
         });
     }

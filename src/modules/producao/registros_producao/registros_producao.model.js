@@ -15,8 +15,9 @@ export const cadastrar = async (registro_producao={
     } 
     catch (error) {
         throw new AppError({
-            message: 'Erro ao cadastrar registro de produção',
-            reason: `Falha na execução do INSERT na tabela 'registros_producao'; verifique os dados fornecidos. Detalhe: ${error.message}`,
+            title: 'Erro ao cadastrar registro de produção',
+            message: 'Não foi possível cadastrar o registro de produção. Verifique os dados fornecidos.',
+            details: error.message,
             code: 500
         });
     }
@@ -76,8 +77,9 @@ export const listar = async (query={produto_id: 0, usuario_id: 0, descricao: '',
         return rows;
     } catch (error) {
         throw new AppError({
-            message: 'Erro ao listar registros de produção',
-            reason: `Falha na execução do SELECT na tabela 'registros_producao'; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            title: 'Erro ao listar registros de produção',
+            message: 'Não foi possível consultar os registros de produção. Verifique a conectividade com o banco de dados.',
+            details: error.message,
             code: 500
         });
     }
@@ -114,8 +116,9 @@ export const listarDeletados = async () => {
         return rows;
     } catch (error) {
         throw new AppError({
-            message: 'Erro ao listar registros de produção deletados',
-            reason: `Falha na execução do SELECT na tabela 'registros_producao'; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            title: 'Erro ao listar registros deletados',
+            message: 'Não foi possível consultar os registros de produção excluídos. Verifique a conectividade com o banco de dados.',
+            details: error.message,
             code: 500
         });
     }
@@ -149,8 +152,9 @@ export const consultarPorId = async (id) => {
         return rows.length > 0 ? rows[0] : null;
     } catch (error) {
         throw new AppError({
-            message: 'Erro ao obter registro de produção',
-            reason: `Falha na execução do SELECT na tabela 'registros_producao'; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            title: 'Erro ao consultar registro de produção',
+            message: 'Não foi possível consultar o registro de produção pelo ID informado. Verifique a conectividade com o banco de dados.',
+            details: error.message,
             code: 500
         });
     }
@@ -163,8 +167,9 @@ export const atualizar = async (id, registros_producao={}) => {
         
     } catch (error) {
         throw new AppError({
-            message: 'Erro ao atualizar registro de produção',
-            reason: `Falha na execução do UPDATE na tabela 'registros_producao'; verifique os dados fornecidos e a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            title: 'Erro ao atualizar registro de produção',
+            message: 'Não foi possível atualizar o registro de produção. Verifique os dados fornecidos e tente novamente.',
+            details: error.message,
             code: 500
         });
     }
@@ -176,8 +181,9 @@ export const deletar = async (id, loginId) => {
         return result.affectedRows > 0;
     } catch (error) {
         throw new AppError({
-            message: 'Erro ao deletar registro de produção',
-            reason: `Falha na execução do SOFT DELETE na tabela 'registros_producao'; verifique a conectividade com o banco de dados. Detalhe: ${error.message}`,
+            title: 'Erro ao deletar registro de produção',
+            message: 'Não foi possível excluir o registro de produção. Verifique a conectividade com o banco de dados.',
+            details: error.message,
             code: 500
         });
     }
