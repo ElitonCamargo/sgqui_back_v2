@@ -27,7 +27,9 @@ allRoutesMaps.forEach((route) => {
 // Encaminha para o middleware global de erro padronizar a resposta.
 routes.use((req, res, next) => {
 	return next(new AppError({
-		message: 'Rota não encontrada',
+		title: 'Erro ao acessar rota',
+		message: 'O endpoint acessado não existe.',
+		details: `Rota não mapeada: ${req.method} ${req.originalUrl}.`,
 		code: 404
 	}));
 });

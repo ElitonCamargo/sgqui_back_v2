@@ -8,12 +8,12 @@ export const vincular = async (perfilId, permissoesIds = []) => {
   const permissoesIdsNum = permissoesIds.map(id => Number(id));
 
   if (!perfilIdNum || !Array.isArray(permissoesIds) || permissoesIds.length === 0) {
-    throw new AppError({ title: 'Dados obrigatórios ausentes', message: 'O ID do perfil e a lista de permissões são obrigatórios para vincular.' , code: 400 });
+    throw new AppError({ title: 'Erro ao vincular permissões ao perfil', message: 'Informe um perfil e ao menos uma permissão para realizar o vínculo.', details: `Perfil recebido: ${perfilId}; permissões recebidas: ${JSON.stringify(permissoesIds)}.`, code: 400 });
   }
 
   const vinculadas = await perfisPermissoes.vincular(perfilIdNum, permissoesIdsNum);
   if (vinculadas === 0) {
-    throw new AppError({ title: 'Nenhuma permissão vinculada', message: 'Nenhuma permissão foi vinculada ao perfil. Verifique se os IDs das permissões são válidos.' , code: 409 });
+    throw new AppError({ title: 'Erro ao vincular permissões ao perfil', message: 'Não foi possível vincular as permissões informadas ao perfil.', details: `Nenhuma permissão vinculada ao perfil ${perfilIdNum} para os IDs ${permissoesIdsNum.join(', ')}.`, code: 409 });
   }
 
   return { vinculadas };
@@ -27,7 +27,7 @@ export const listarVinculos = async (perfilId=undefined) => {
   const perfilIdNum = Number(perfilId);
 
   if (perfilId !== undefined && isNaN(perfilIdNum)) {
-    throw new AppError({ title: 'ID do perfil inválido', message: 'O ID do perfil informado é inválido. Informe um número inteiro positivo.' , code: 400 });
+    throw new AppError({ title: 'Erro ao listar permissões do perfil', message: 'Informe um identificador válido para o perfil.', details: `Valor recebido para o ID do perfil: ${perfilId}.`, code: 400 });
   }
 
   const permissoesJaVinculadas = await perfisPermissoes.listarVinculos(perfilIdNum);
@@ -97,7 +97,7 @@ export const listarVinculos = async (perfilId=undefined) => {
 export const permissoesPerfilAcessos = async (perfilId) => {
     const perfilIdNumber = Number(perfilId);
     if (!perfilIdNumber) {
-        throw new AppError({ title: 'ID do perfil inválido', message: 'O ID do perfil informado é inválido. Informe um número inteiro positivo.' , code: 400 });
+    throw new AppError({ title: 'Erro ao listar acessos do perfil', message: 'Informe um identificador válido para o perfil.', details: `Valor recebido para o ID do perfil: ${perfilId}.`, code: 400 });
     }
     const permissoesPerfil = await perfisPermissoes.permissoesPerfilAcessos(perfilIdNumber);
     const todasPermissoes = await PermissoesModel.listar();

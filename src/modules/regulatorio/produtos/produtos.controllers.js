@@ -14,6 +14,11 @@ export const listar = asyncHandler(async (req, res, next) => {
     return responses.success(res, { message: 'Produtos encontrados com sucesso', data });
 });
 
+export const listarStatus = asyncHandler(async (req, res, next) => {
+    const data = await produtosService.listarStatus();
+    return responses.success(res, { message: 'Status encontrados com sucesso', data });
+});
+
 export const deletar = asyncHandler(async (req, res, next) => {
     const { id } = req.params;
     const loginId = req.loginId;

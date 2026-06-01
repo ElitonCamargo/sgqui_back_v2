@@ -36,6 +36,11 @@ export const consultarDeletados = asyncHandler(async (req, res, next) => {
     return responses.success(res, { message: 'Projetos encontrados', data });
 });
 
+export const listarStatus = asyncHandler(async (req, res, next) => {
+    const data = await projetoService.listarStatus();
+    return responses.success(res, { message: 'Status encontrados', data });
+});
+
 export const consultarPorId = asyncHandler(async (req, res, next) => {    
     let id = req.params.id;
     const data = await projetoService.consultarPorId(id);

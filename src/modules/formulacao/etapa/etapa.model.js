@@ -68,8 +68,9 @@ export const alterarOrdem = async (ordemEtapa = []) => {
 
             if (result.affectedRows === 0) {
                 throw new AppError({
-                    title: 'Etapa não encontrada',
-                    message: `Nenhuma etapa foi encontrada com o ID ${id} para reordenação.`,
+                    title: 'Erro ao reordenar etapas',
+                    message: 'Não foi possível reordenar a etapa informada.',
+                    details: `Nenhuma etapa encontrada para reordenação com o ID ${id}.`,
                     code: 404
                 });
             }

@@ -17,6 +17,17 @@ export default [
     ehPublica: false
   },
   {
+    codigo: 'projeto:consultarPorId',
+    metodo: 'GET',
+    modulo: 'formulacao',
+    rota: 'projeto/:id',
+    middlewares: [autenticar, autorizar],
+    functionExec: projeto.consultaDetalhada,
+    recurso: 'Projetos',
+    descricao: 'Visualização detalhada de um projeto',
+    ehPublica: false
+  },
+  {
     codigo: 'projeto:consultarPorCodigo',
     metodo: 'GET',
     modulo: 'formulacao',
@@ -25,17 +36,6 @@ export default [
     functionExec: projeto.consultarPorCodigo,
     recurso: 'Projetos',
     descricao: 'Consultar um projeto pelo seu código',
-    ehPublica: false
-  },
-  {
-    codigo: 'projeto:consultarPorId',
-    metodo: 'GET',
-    modulo: 'formulacao',
-		rota: 'projeto/:id',
-    middlewares: [autenticar, autorizar],
-    functionExec: projeto.consultaDetalhada,
-    recurso: 'Projetos',
-    descricao: 'Visualização detalhada de um projeto',
     ehPublica: false
   },
   {
@@ -59,6 +59,17 @@ export default [
     recurso: 'Projetos',
     descricao: 'Listar projetos deletados',
     ehPublica: false
+  },
+  {
+    codigo: 'projeto:listarStatus',
+    metodo: 'GET',
+    modulo: 'formulacao',
+		rota: 'projeto/list/status',
+    middlewares: [autenticar, autorizar],
+    functionExec: projeto.listarStatus,
+    recurso: 'Projetos',
+    descricao: 'Listar status possíveis de projetos',
+    ehPublica: true
   },
   {
     codigo: 'projeto:cadastrar',

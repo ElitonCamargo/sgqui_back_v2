@@ -21,8 +21,9 @@ export const deletar = async (key) => {
     const data = await ConfiguracaoModel.deletar(key);
     if(!data) {
         throw new AppError({
-            title: 'Configuração não encontrada',
-            message: `Não foi possível encontrar uma configuração com a chave '${key}' para excluir. Verifique se a chave informada está correta.`,
+            title: 'Erro ao excluir configuração',
+            message: 'Não foi possível excluir a configuração informada.',
+            details: `Nenhuma configuração encontrada para exclusão com a chave "${key}".`,
             code: 404
         });
     }

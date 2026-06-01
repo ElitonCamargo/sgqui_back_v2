@@ -77,8 +77,9 @@ export const cadastrar = async (garantia={}) => {
         
         if (error.code === 'ER_DUP_ENTRY') {
             throw new AppError({
-                title: 'Garantia duplicada',
-                message: 'Já existe uma garantia cadastrada com o mesmo nutriente e matéria-prima informados.',
+                title: 'Erro ao cadastrar garantia',
+                message: 'Já existe uma garantia cadastrada com os dados informados.',
+                details: `Conflito de unicidade ao cadastrar garantia para matéria-prima ${garantia.materia_prima ?? 'não informada'} e nutriente ${garantia.nutriente ?? 'não informado'}: ${error.message}`,
                 code: 409
             });
         }

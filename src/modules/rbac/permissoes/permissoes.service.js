@@ -59,8 +59,9 @@ export const listarPermissoesPorUsuario = async (usuarioId) => {
     const usuarioIdNumber = Number(usuarioId);
     if (!usuarioIdNumber) {
         throw new AppError({
-            title: 'ID do usuário inválido',
-            message: 'O ID do usuário informado é inválido. Informe um número inteiro positivo.',
+      title: 'Erro ao listar permissões do usuário',
+      message: 'Informe um identificador válido para o usuário.',
+      details: `Valor recebido para o ID do usuário: ${usuarioId}.`,
             code: 400
         });
     }
@@ -90,8 +91,9 @@ export const listarPermissoesPorUsuarioDetalhada = async (usuarioId) => {
   const usuarioIdNumber = Number(usuarioId);
   if (!usuarioIdNumber) {
       throw new AppError({
-          title: 'ID do usuário inválido',
-          message: 'O ID do usuário informado é inválido. Informe um número inteiro positivo.',
+      title: 'Erro ao listar permissões detalhadas do usuário',
+      message: 'Informe um identificador válido para o usuário.',
+      details: `Valor recebido para o ID do usuário: ${usuarioId}.`,
           code: 400
       });
   }
@@ -161,8 +163,9 @@ export const listarPermissoesChavePorUsuario = async (usuarioId) => {
     const usuarioIdNumber = Number(usuarioId);
     if (!usuarioIdNumber) {
         throw new AppError({
-            title: 'ID do usuário inválido',
-            message: 'O ID do usuário informado é inválido. Informe um número inteiro positivo.',
+      title: 'Erro ao listar chaves de permissão do usuário',
+      message: 'Informe um identificador válido para o usuário.',
+      details: `Valor recebido para o ID do usuário: ${usuarioId}.`,
             code: 400
         });
     }

@@ -174,21 +174,12 @@ export const alterar = async (materia_prima) => {
         const [result] = await pool.execute(cmdSql, valores);
         if (result.affectedRows === 0) {
             return null;
-            // throw new AppError({
-            //     message: 'Matéria-prima não encontrada para atualização',
-            //     reason: `Nenhuma matéria-prima foi encontrada com o ID ${id} informado para atualização na base de dados.`,
-            //     code: 404
-            // });
         }
 
         return await consultarPorId(id);
 
     } 
     catch (error) {
-        // if (error instanceof AppError) {
-        //     throw error;
-        // }
-
         throw new AppError({
             title: 'Erro ao alterar matéria-prima',
             message: 'Não foi possível alterar a matéria-prima. Verifique se o ID existe e se os dados fornecidos são válidos.',

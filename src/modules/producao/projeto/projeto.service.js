@@ -6,8 +6,9 @@ export const visualizarFormulacao = async (id) => {
     const data = await projetoModel.visualizarFormulacao(id);
     if (data.length === 0) {
         throw new AppError({
-            title: 'Projeto não encontrado',
-            message: 'Não existe um projeto com o ID fornecido. Verifique o ID e tente novamente.',
+            title: 'Erro ao visualizar formulação',
+            message: 'O projeto informado não foi encontrado para visualização da formulação.',
+            details: `Nenhum projeto encontrado para visualização da formulação com o ID ${id}.`,
             code: 404
         });
     }

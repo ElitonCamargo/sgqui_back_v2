@@ -1,0 +1,46 @@
+Plano técnico - Migração global da classe AppError
+
+Data: 2026-06-01
+
+Objetivo
+- Padronizar todas as instanciações de AppError para o formato oficial { title, message, details, code }.
+- Adequar title para representar a operação que falhou.
+- Adequar message para linguagem de usuário final.
+- Preservar ou criar details técnicos úteis sem alterar regras de negócio, fluxo ou códigos HTTP.
+
+Inventário inicial
+- Total de AppErrors explícitos encontrados em src: 228.
+- Total de arquivos com AppError: 41.
+- Estimativa inicial de AppErrors sem details: 107.
+- Ocorrências legadas em código ativo com reason/detail/description/msg: 0.
+- Ocorrências legadas comentadas identificadas: 1 comentário com reason em src/modules/formulacao/materia_prima/materia_prima.model.js.
+
+Hipótese de trabalho
+- A classe AppError e o middleware global já suportam o contrato oficial com details.
+- A não conformidade atual está concentrada principalmente nos services e em alguns models com títulos orientados ao recurso em vez da operação.
+- A correção pode ser feita apenas ajustando os objetos passados para AppError, preservando code e fluxo de execução.
+
+Estratégia de execução
+1. Revisar por módulo os arquivos com AppError, priorizando services com ausência de details.
+2. Ajustar cada AppError de forma contextual, identificando a operação real que falhou.
+3. Adicionar details com dados técnicos disponíveis, como id, filtro, payload inválido, error.message, error.code e contexto de regra de negócio.
+4. Preservar exatamente os códigos HTTP já existentes.
+5. Não alterar consultas, regras de negócio, controllers ou contratos de retorno além do conteúdo do AppError.
+6. Validar ao final a ausência de AppErrors sem details sempre que houver contexto técnico disponível.
+
+Critérios de validação
+- Todas as ocorrências de AppError em código ativo devem conter title, message, details e code, salvo exceção tecnicamente justificada.
+- Não pode restar uso ativo de reason, detail, description ou msg em AppError.
+- Não pode haver mudança de código HTTP nem de fluxo de controle.
+- Executar checagem sintática/lint após a migração e busca final por AppError sem details.
+
+Locais com maior atenção manual
+- src/modules/formulacao/projeto/projeto.model.js
+- src/modules/regulatorio/projeto/projeto.model.js
+- src/modules/regulatorio/produtos/produtos.service.js
+- src/modules/producao/registros_producao/registros_producao.model.js
+- src/modules/producao/registros_producao/registros_producao.service.js
+
+Observações
+- Há arquivos já parcialmente adequados, especialmente models que usam details: error.message.
+- O middleware de erro já devolve details ao cliente; a migração é semântica e documental nos lançamentos.

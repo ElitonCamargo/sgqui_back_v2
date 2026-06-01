@@ -33,8 +33,9 @@ export const consultar = async (query = {}) => {
     }
      if (!data || data.length === 0) {
         throw new AppError({
-            title: 'Nenhuma matéria-prima encontrada',
-            message: 'Nenhuma matéria-prima foi encontrada para o filtro aplicado.',
+            title: 'Erro ao buscar matérias-primas',
+            message: 'Nenhuma matéria-prima foi encontrada para o filtro informado.',
+            details: `Consulta de matérias-primas sem resultado para filtros: ${JSON.stringify(query)}.`,
             code: 404
         });
     }
@@ -45,16 +46,18 @@ export const consultar = async (query = {}) => {
 export const consultarPorId = async (id) => {
     if (!id || isNaN(id)) {
         throw new AppError({
-            title: 'ID inválido',
-            message: 'O ID fornecido para consulta de matéria-prima é inválido. Certifique-se de que é um número inteiro positivo.',
+            title: 'Erro ao buscar matéria-prima',
+            message: 'Informe um identificador válido para consultar a matéria-prima.',
+            details: `Valor recebido para o ID da matéria-prima: ${id}.`,
             code: 400
         });
     }
     const data = await MateriaPrimaModel.consultarPorId(id);
     if (!data) {
         throw new AppError({
-            title: 'Matéria-prima não encontrada',
-            message: `Nenhuma matéria-prima foi encontrada com o ID ${id} na base de dados.`,
+            title: 'Erro ao buscar matéria-prima',
+            message: 'A matéria-prima informada não foi encontrada.',
+            details: `Nenhuma matéria-prima encontrada para o ID ${id}.`,
             code: 404
         });
     }
@@ -64,8 +67,9 @@ export const consultarPorId = async (id) => {
 export const consultarPorCodigo = async (codigo) => {
     if (!codigo) {
         throw new AppError({
-            title: 'Código inválido',
-            message: 'O código fornecido para consulta de matéria-prima é inválido.',
+            title: 'Erro ao buscar matéria-prima',
+            message: 'Informe um código válido para consultar a matéria-prima.',
+            details: `Valor recebido para o código da matéria-prima: ${codigo}.`,
             code: 400
         });
     }
@@ -75,8 +79,9 @@ export const consultarPorCodigo = async (codigo) => {
 export const consultarPorCas_number = async (cas_number) => {
     if (!cas_number) {
         throw new AppError({
-            title: 'CAS Number inválido',
-            message: 'O CAS Number fornecido para consulta de matéria-prima é inválido.',
+            title: 'Erro ao buscar matéria-prima',
+            message: 'Informe um CAS Number válido para consultar a matéria-prima.',
+            details: `Valor recebido para o CAS Number: ${cas_number}.`,
             code: 400
         });
     }
@@ -86,16 +91,18 @@ export const consultarPorCas_number = async (cas_number) => {
 export const consultarPorFormula = async (formula) => {
     if (!formula) {
         throw new AppError({
-            title: 'Fórmula inválida',
-            message: 'A fórmula química fornecida para consulta de matéria-prima é inválida.',
+            title: 'Erro ao buscar matéria-prima',
+            message: 'Informe uma fórmula válida para consultar a matéria-prima.',
+            details: `Valor recebido para a fórmula da matéria-prima: ${formula}.`,
             code: 400
         });
     }
     const data = await MateriaPrimaModel.consultarPorFormula(formula);
     if (!data || data.length === 0) {
         throw new AppError({
-            title: 'Nenhuma matéria-prima encontrada',
-            message: 'Nenhuma matéria-prima foi encontrada para a fórmula química informada.',
+            title: 'Erro ao buscar matérias-primas',
+            message: 'Nenhuma matéria-prima foi encontrada para a fórmula informada.',
+            details: `Nenhuma matéria-prima encontrada para a fórmula ${formula}.`,
             code: 404
         });
     }
@@ -105,23 +112,26 @@ export const consultarPorFormula = async (formula) => {
 export const consultarMP_precentual_nutriente = async (nutrienteID=0,percentual=0.0) => {
     if (!nutrienteID || isNaN(nutrienteID)) {
         throw new AppError({
-            title: 'ID do nutriente inválido',
-            message: 'O ID do nutriente fornecido para consulta é inválido. Informe um número inteiro positivo.',
+            title: 'Erro ao buscar matérias-primas por nutriente',
+            message: 'Informe um identificador válido para o nutriente.',
+            details: `Valor recebido para o ID do nutriente: ${nutrienteID}.`,
             code: 400
         });
     }
     if (!percentual || isNaN(percentual)) {
         throw new AppError({
-            title: 'Percentual inválido',
-            message: 'O percentual fornecido para consulta é inválido. Informe um valor numérico positivo.',
+            title: 'Erro ao buscar matérias-primas por nutriente',
+            message: 'Informe um percentual válido para realizar a consulta.',
+            details: `Valor recebido para o percentual: ${percentual}.`,
             code: 400
         });
     }
     const data = await MateriaPrimaModel.consultarMP_precentual_nutriente(nutrienteID, percentual);
     if (!data || data.length === 0) {
         throw new AppError({
-            title: 'Nenhuma matéria-prima encontrada',
+            title: 'Erro ao buscar matérias-primas por nutriente',
             message: 'Nenhuma matéria-prima foi encontrada para o nutriente e percentual informados.',
+            details: `Nenhuma matéria-prima encontrada para nutriente ${nutrienteID} com percentual ${percentual}.`,
             code: 404
         });
     }
@@ -133,7 +143,8 @@ export const cadastrar = async (materia_prima) => {
     if (!novoMateria_prima) {
         throw new AppError({
             title: 'Erro ao cadastrar matéria-prima',
-            message: 'Não foi possível cadastrar a matéria-prima. Verifique os dados e tente novamente.',
+            message: 'Não foi possível cadastrar a matéria-prima.',
+            details: `O cadastro da matéria-prima não retornou registro válido para código ${materia_prima?.codigo ?? 'não informado'}.`,
             code: 500
         });
     }
@@ -144,8 +155,9 @@ export const alterar = async (materia_prima) => {
     const resultado = await MateriaPrimaModel.alterar(materia_prima);
     if (!resultado) {
         throw new AppError({
-            title: 'Matéria-prima não encontrada',
-            message: `Nenhuma matéria-prima foi encontrada com o ID ${materia_prima.id} para atualização.`,
+            title: 'Erro ao atualizar matéria-prima',
+            message: 'Não foi possível atualizar a matéria-prima informada.',
+            details: `Nenhuma matéria-prima encontrada para atualização com o ID ${materia_prima.id}.`,
             code: 404
         });
     }
@@ -155,16 +167,18 @@ export const alterar = async (materia_prima) => {
 export const deletar = async (id) => {
     if (!id || isNaN(id)) {
         throw new AppError({
-            title: 'ID inválido',
-            message: 'O ID fornecido para remoção de matéria-prima é inválido. Certifique-se de que é um número inteiro positivo.',
+            title: 'Erro ao excluir matéria-prima',
+            message: 'Informe um identificador válido para excluir a matéria-prima.',
+            details: `Valor recebido para o ID da matéria-prima: ${id}.`,
             code: 400
         });
     }
     const resultado = await MateriaPrimaModel.deletar(id);
     if (!resultado) {
         throw new AppError({
-            title: 'Erro ao deletar matéria-prima',
-            message: 'Não foi possível excluir a matéria-prima. Verifique se o ID é válido e tente novamente.',
+            title: 'Erro ao excluir matéria-prima',
+            message: 'Não foi possível excluir a matéria-prima informada.',
+            details: `Falha ao excluir a matéria-prima com ID ${id}; o registro pode não existir ou possuir vínculos que impedem a exclusão.`,
             code: 500
         });
     }

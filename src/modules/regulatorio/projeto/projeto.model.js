@@ -11,8 +11,9 @@ export const listarLiberados = async (filtro = {}) => {
         keys.forEach(key => {
             if (!querysValidos.includes(key)) {
                 throw new AppError({
-                    title: 'Filtro inválido',
-                    message: `O filtro '${key}' não é permitido. Os filtros válidos são: ${querysValidos.join(', ')}.`,
+                    title: 'Erro ao listar formulações liberadas',
+                    message: 'Um ou mais filtros informados não são permitidos.',
+                    details: `Filtro inválido recebido: ${key}. Filtros válidos: ${querysValidos.join(', ')}.`,
                     code: 400
                 });
             }

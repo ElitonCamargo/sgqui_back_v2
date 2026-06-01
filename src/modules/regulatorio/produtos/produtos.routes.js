@@ -18,6 +18,17 @@ export default [
     ehPublica: false
   },
   {
+    codigo: 'produtos:deletar',
+    metodo: 'DELETE',
+    modulo: 'regulatorio',
+    rota: 'produtos/:id',
+    middlewares: [autenticar, autorizar],
+    functionExec: produtos.deletar,
+    recurso: 'Produtos',
+    descricao: 'Deletar um produto',
+    ehPublica: false
+  },
+  {
     codigo: 'produtos:listar',
     metodo: 'GET',
     modulo: 'regulatorio',
@@ -29,14 +40,14 @@ export default [
     ehPublica: false
   },
   {
-    codigo: 'produtos:deletar',
-    metodo: 'DELETE',
+    codigo: 'produtos:consultarPorId',
+    metodo: 'GET',
     modulo: 'regulatorio',
     rota: 'produtos/:id',
     middlewares: [autenticar, autorizar],
-    functionExec: produtos.deletar,
+    functionExec: produtos.consultarPorId,
     recurso: 'Produtos',
-    descricao: 'Deletar um produto',
+    descricao: 'Consultar um produto por ID',
     ehPublica: false
   },
   {
@@ -51,15 +62,15 @@ export default [
     ehPublica: false
   },
   {
-    codigo: 'produtos:consultarPorId',
+    codigo: 'produtos:listarStatus',
     metodo: 'GET',
     modulo: 'regulatorio',
-    rota: 'produtos/:id',
+    rota: 'produtos/listar/status',
     middlewares: [autenticar, autorizar],
-    functionExec: produtos.consultarPorId,
+    functionExec: produtos.listarStatus,
     recurso: 'Produtos',
-    descricao: 'Consultar um produto por ID',
-    ehPublica: false
+    descricao: 'Listar status disponíveis para os produtos',
+    ehPublica: true
   },
   {
     codigo: 'produtos:atualizar',

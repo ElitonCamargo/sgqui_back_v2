@@ -6,7 +6,8 @@ export const cadastrar = async (garantia={}) => {
     if (!data) {
         throw new AppError({
             title: 'Erro ao cadastrar garantia',
-            message: 'Não foi possível cadastrar a garantia. Verifique os dados enviados e tente novamente.',
+            message: 'Não foi possível cadastrar a garantia.',
+            details: `O cadastro da garantia não retornou registro válido para matéria-prima ${garantia.materia_prima_id ?? 'não informada'} e nutriente ${garantia.nutriente_id ?? 'não informado'}.`,
             code: 400
         });
     }
@@ -16,16 +17,18 @@ export const cadastrar = async (garantia={}) => {
 export const consultarPorMateria_prima = async (materia_primaId) => {
     if(isNaN(materia_primaId) || materia_primaId <= 0) {
         throw new AppError({
-            title: 'ID da matéria-prima inválido',
-            message: 'O ID da matéria-prima deve ser um número inteiro positivo.',
+            title: 'Erro ao buscar garantias da matéria-prima',
+            message: 'Informe um identificador válido para a matéria-prima.',
+            details: `Valor recebido para o ID da matéria-prima: ${materia_primaId}.`,
             code: 400
         });
     }
     const data = await GarantiaModel.consultarPorMateria_prima(materia_primaId);
     if (!data || data.length === 0) {
         throw new AppError({
-            title: 'Nenhuma garantia encontrada',
-            message: 'Nenhuma garantia foi encontrada para a matéria-prima especificada.',
+            title: 'Erro ao buscar garantias da matéria-prima',
+            message: 'Nenhuma garantia foi encontrada para a matéria-prima informada.',
+            details: `Nenhuma garantia encontrada para a matéria-prima ${materia_primaId}.`,
             code: 404
         });
     }
@@ -35,16 +38,18 @@ export const consultarPorMateria_prima = async (materia_primaId) => {
 export const consultarPorNutriente = async (nutrienteId) => {
     if(isNaN(nutrienteId) || nutrienteId <= 0) {
         throw new AppError({
-            title: 'ID do nutriente inválido',
-            message: 'O ID do nutriente deve ser um número inteiro positivo.',
+            title: 'Erro ao buscar garantias do nutriente',
+            message: 'Informe um identificador válido para o nutriente.',
+            details: `Valor recebido para o ID do nutriente: ${nutrienteId}.`,
             code: 400
         });
     }
     const data = await GarantiaModel.consultarPorNutriente(nutrienteId);
     if (!data || data.length === 0) {
         throw new AppError({
-            title: 'Nenhuma garantia encontrada',
-            message: 'Nenhuma garantia foi encontrada para o nutriente especificado.',
+            title: 'Erro ao buscar garantias do nutriente',
+            message: 'Nenhuma garantia foi encontrada para o nutriente informado.',
+            details: `Nenhuma garantia encontrada para o nutriente ${nutrienteId}.`,
             code: 404
         });
     }
@@ -56,16 +61,18 @@ export const consultarPorNutriente = async (nutrienteId) => {
 export const alterar = async (garantia={}) => {
     if(isNaN(garantia.id) || garantia.id <= 0) {
         throw new AppError({
-            title: 'ID da garantia inválido',
-            message: 'O ID da garantia deve ser um número inteiro positivo.',
+            title: 'Erro ao atualizar garantia',
+            message: 'Informe um identificador válido para a garantia.',
+            details: `Valor recebido para o ID da garantia: ${garantia.id}.`,
             code: 400
         });
     }
     const data = await GarantiaModel.alterar(garantia);
     if (!data) {
         throw new AppError({
-            title: 'Garantia não encontrada',
-            message: 'Não foi possível alterar a garantia. Verifique se o ID é válido e se a garantia existe.',
+            title: 'Erro ao atualizar garantia',
+            message: 'Não foi possível atualizar a garantia informada.',
+            details: `Nenhuma garantia encontrada para atualização com o ID ${garantia.id}.`,
             code: 400
         });
     }
@@ -83,8 +90,9 @@ export const consultarPorId = async (id) => {
 export const consultarPorMP = async (mp_id) => {
     if(isNaN(mp_id) || mp_id <= 0) {
         throw new AppError({
-            title: 'ID da matéria-prima inválido',
-            message: 'O ID da matéria-prima deve ser um número inteiro positivo.',
+            title: 'Erro ao buscar garantias da matéria-prima',
+            message: 'Informe um identificador válido para a matéria-prima.',
+            details: `Valor recebido para o ID da matéria-prima: ${mp_id}.`,
             code: 400
         });
     }
@@ -94,16 +102,18 @@ export const consultarPorMP = async (mp_id) => {
 export const deletar = async (id) => {
     if(isNaN(id) || id <= 0) {
         throw new AppError({
-            title: 'ID da garantia inválido',
-            message: 'O ID da garantia deve ser um número inteiro positivo.',
+            title: 'Erro ao excluir garantia',
+            message: 'Informe um identificador válido para excluir a garantia.',
+            details: `Valor recebido para o ID da garantia: ${id}.`,
             code: 400
         });
     }
     const data = await GarantiaModel.deletar(id);
     if (!data) {
         throw new AppError({
-            title: 'Garantia não encontrada',
-            message: 'Não foi possível excluir a garantia. Verifique se o ID é válido e se a garantia existe.',
+            title: 'Erro ao excluir garantia',
+            message: 'Não foi possível excluir a garantia informada.',
+            details: `Nenhuma garantia encontrada para exclusão com o ID ${id}.`,
             code: 400
         });
     }

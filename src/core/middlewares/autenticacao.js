@@ -5,7 +5,6 @@ import * as helpers from '../utils/helpers.js';
 import * as upService from '../../modules/rbac/usuarioPerfis/usuarioPerfis.service.js';
 import * as pService from '../../modules/rbac/permissoes/permissoes.service.js';
 import { AppError } from '../utils/AppError.js';
-import { th } from 'zod/locales';
 
 export default async function autenticar(req, res, next) {
     try {        
@@ -71,8 +70,9 @@ export default async function autenticar(req, res, next) {
                
     } catch (error) {
         throw new AppError({
-            message: 'Erro ao autenticar usuário',
-            reason: `Ocorreu um erro inesperado durante o processo de autenticação. Detalhes: ${error.message}`,
+            title: 'Erro ao autenticar usuário',
+            message: 'Ocorreu um erro inesperado durante a autenticação. Tente novamente ou contate o suporte.',
+            details: error.message,
             code: 500
         });    
     }

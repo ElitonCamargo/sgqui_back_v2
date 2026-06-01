@@ -9,7 +9,8 @@ export const vincular = async (usuarioId, perfilId) => {
   if (!vinculou) {
     throw new AppError({
       title: 'Erro ao vincular usuário ao perfil',
-      message: 'Não foi possível vincular o usuário ao perfil. Verifique se ambos existem e se o vínculo já não existe.',
+      message: 'Não foi possível vincular o usuário ao perfil informado.',
+      details: `Falha ao vincular o usuário ${usuarioIdNum} ao perfil ${perfilIdNum}.`,
       code: 400
     });
   }
@@ -23,8 +24,9 @@ export const desvincular = async (vinculoID) => {
   const desvinculou = await UsuarioPerfisModel.desvincular(vinculoIdNum);
   if (!desvinculou) {
     throw new AppError({
-      title: 'Vínculo não encontrado',
-      message: 'O vínculo informado não foi encontrado. Verifique se o ID é válido.',
+      title: 'Erro ao desvincular perfil do usuário',
+      message: 'O vínculo informado não foi encontrado.',
+      details: `Nenhum vínculo encontrado para remoção com o ID ${vinculoIdNum}.`,
       code: 404
     });
   }
@@ -36,8 +38,9 @@ export const listar = async () => {
   const dados = await UsuarioPerfisModel.listar();
   if (!dados || dados.length === 0) {
     throw new AppError({
-      title: 'Nenhum vínculo encontrado',
-      message: 'Nenhum perfil vinculado a usuários foi encontrado na base de dados.',
+      title: 'Erro ao listar vínculos de perfis',
+      message: 'Nenhum vínculo entre usuários e perfis foi encontrado.',
+      details: 'A listagem de vínculos entre usuários e perfis não retornou registros.',
       code: 404
     });
   }
@@ -73,8 +76,9 @@ export const listarPerfisPorUsuario = async (usuarioId) => {
   const dados = await UsuarioPerfisModel.listarPerfisPorUsuario(usuarioIdNum);
   if (!dados || dados.length === 0) {
     throw new AppError({
-      title: 'Nenhum perfil encontrado',
-      message: 'Nenhum perfil vinculado ao usuário informado foi encontrado.',
+      title: 'Erro ao listar perfis do usuário',
+      message: 'Nenhum perfil foi encontrado para o usuário informado.',
+      details: `Nenhum perfil encontrado para o usuário ${usuarioIdNum}.`,
       code: 404
     });
   }
@@ -98,8 +102,9 @@ export const listarUsuariosPorPerfil = async (perfilId) => {
   const dados = await UsuarioPerfisModel.listarUsuariosPorPerfil(perfilIdNum);
   if (!dados || dados.length === 0) {
     throw new AppError({
-      title: 'Nenhum usuário encontrado',
-      message: 'Nenhum usuário vinculado ao perfil informado foi encontrado.',
+      title: 'Erro ao listar usuários do perfil',
+      message: 'Nenhum usuário foi encontrado para o perfil informado.',
+      details: `Nenhum usuário vinculado ao perfil ${perfilIdNum}.`,
       code: 404
     });
   }

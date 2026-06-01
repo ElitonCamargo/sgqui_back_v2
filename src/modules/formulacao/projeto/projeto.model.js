@@ -44,8 +44,9 @@ export const cadastrar = async (projeto = {}, loginId = 0) => {
 
         if (campos.length === 0) {
             throw new AppError({
-                title: 'Dados insuficientes',
+                title: 'Erro ao cadastrar projeto',
                 message: 'Informe ao menos um campo válido para cadastrar o projeto.',
+                details: `Payload sem campos permitidos para cadastro de projeto. Campos recebidos: ${Object.keys(projeto).join(', ')}.`,
                 code: 400
             });
         }
@@ -66,8 +67,9 @@ export const cadastrar = async (projeto = {}, loginId = 0) => {
 
         if (error.code === 'ER_DUP_ENTRY') {
             throw new AppError({
-                title: 'Projeto já cadastrado',
-                message: 'Já existe um projeto com o código ou outro campo único informado. Verifique os dados e tente novamente.',
+                title: 'Erro ao cadastrar projeto',
+                message: 'Já existe um projeto cadastrado com os dados informados.',
+                details: error.message,
                 code: 409
             });
         }

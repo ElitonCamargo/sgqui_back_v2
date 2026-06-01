@@ -6,8 +6,9 @@ import crypto from "crypto";
 export const criar = async ({ usuario = 0, validade = 0 }) => {
   if (!usuario || !validade) {
     throw new AppError({
-      title: 'Dados obrigatórios ausentes',
-      message: 'O usuário e a validade são obrigatórios para criar uma sessão.',
+      title: 'Erro ao criar sessão',
+      message: 'Informe o usuário e a validade para criar a sessão.',
+      details: `Dados recebidos para criação de sessão: usuario=${usuario}, validade=${validade}.`,
       code: 400
     });
   }
@@ -16,7 +17,8 @@ export const criar = async ({ usuario = 0, validade = 0 }) => {
   if (!data) {
     throw new AppError({
       title: 'Erro ao criar sessão',
-      message: 'Não foi possível criar a sessão. Tente novamente ou contate o suporte.',
+      message: 'Não foi possível criar a sessão.',
+      details: `A criação da sessão para o usuário ${usuario} com validade ${validade} não retornou registro válido.`,
       code: 500
     });
   }

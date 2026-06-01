@@ -6,7 +6,8 @@ export const cadastrar = async (etapa={}) => {
     if(!novoEtapa) {
         throw new AppError({
             title: 'Erro ao cadastrar etapa',
-            message: 'Não foi possível cadastrar a etapa. Verifique se os dados são válidos e se o projeto associado existe.',
+            message: 'Não foi possível cadastrar a etapa.',
+            details: `O cadastro da etapa não retornou um registro válido para o projeto ${etapa.projeto ?? 'não informado'}.`,
             code: 500
         });
     }
@@ -17,8 +18,9 @@ export const alterar = async (id=0, etapa={}) => {
     const result = await EtapaModel.alterar(id, etapa);
     if(!result) {
         throw new AppError({
-            title: 'Etapa não encontrada',
-            message: 'Não foi possível alterar a etapa. Verifique se o ID é válido e se os dados estão corretos.',
+            title: 'Erro ao atualizar etapa',
+            message: 'Não foi possível atualizar a etapa informada.',
+            details: `Nenhuma etapa encontrada para atualização com o ID ${id}.`,
             code: 404
         });
     }
@@ -30,7 +32,8 @@ export const alterarOrdem = async (ordemEtapa = []) => {
     if(!result) {
         throw new AppError({
             title: 'Erro ao reordenar etapas',
-            message: 'Não foi possível alterar a ordem das etapas. Verifique se os IDs fornecidos são válidos.',
+            message: 'Não foi possível alterar a ordem das etapas informadas.',
+            details: `Nenhuma etapa foi atualizada na reordenação. IDs recebidos: ${ordemEtapa.map(({ id }) => id).join(', ')}.`,
             code: 404
         });
     }
@@ -45,8 +48,9 @@ export const consultarPorId = async (id) => {
     const data = await EtapaModel.consultarPorId(id);
     if(!data) {
         throw new AppError({
-            title: 'Etapa não encontrada',
-            message: `A etapa com ID ${id} não foi encontrada.`,
+            title: 'Erro ao buscar etapa',
+            message: 'A etapa informada não foi encontrada.',
+            details: `Nenhuma etapa encontrada para o ID ${id}.`,
             code: 404
         });
     }
@@ -61,8 +65,9 @@ export const consultarPorProjeto = async (projeto_id) => {
     const data = await EtapaModel.consultarPorProjeto(projeto_id);
     if(data.length === 0) {
         throw new AppError({
-            title: 'Nenhuma etapa encontrada',
-            message: `Nenhuma etapa foi encontrada associada ao projeto com ID ${projeto_id}. Verifique se o projeto existe e se possui etapas cadastradas.`,
+            title: 'Erro ao buscar etapas do projeto',
+            message: 'Nenhuma etapa foi encontrada para o projeto informado.',
+            details: `Nenhuma etapa encontrada para o projeto ${projeto_id}.`,
             code: 404
         });
     }
@@ -73,8 +78,9 @@ export const deletar = async (id) => {
     const result = await EtapaModel.deletar(id);
     if(!result) {
         throw new AppError({
-            title: 'Etapa não encontrada',
-            message: 'A etapa que você está tentando excluir não existe ou já foi excluída. Verifique o ID fornecido.',
+            title: 'Erro ao excluir etapa',
+            message: 'Não foi possível excluir a etapa informada.',
+            details: `Nenhuma etapa encontrada para exclusão com o ID ${id}.`,
             code: 404
         });
     }

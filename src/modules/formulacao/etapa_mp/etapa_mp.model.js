@@ -91,8 +91,9 @@ export const alterarOrdem = async (ordemEtapaMP = []) => {
 
             if (result.affectedRows === 0) {
                 throw new AppError({
-                    title: 'Matéria-prima não encontrada',
-                    message: `Nenhuma matéria-prima da etapa foi encontrada com o ID ${id} para reordenação.`,
+                    title: 'Erro ao reordenar matérias-primas da etapa',
+                    message: 'Não foi possível reordenar a etapa de matéria-prima informada.',
+                    details: `Nenhum registro de etapa de matéria-prima encontrado para reordenação com ID ${id} e etapa ${etapa}.`,
                     code: 404
                 });
             }
