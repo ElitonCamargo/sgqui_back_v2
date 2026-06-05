@@ -11,7 +11,7 @@ export const obterInfoSistema = asyncHandler(async (req, res, next) => {
         status_server: '(DEV - v2) ok - API SGQUI v2.5',
         connection_state: dbConnection.state,
         dominio_raiz : rootDomain,
-        atualização: '01/05/2026',
+        atualização: '04/06/2026 - 22:43',
         endpoints_disponiveis: `${rootDomain}/rbac/endpoints`,
         
     };
