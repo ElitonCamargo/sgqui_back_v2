@@ -1,14 +1,45 @@
 import pool from '../../../core/database/data.js';
 import { AppError } from '../../../core/utils/AppError.js';
 
-export const cadastrar = async (registro_producao={
-    produto_id: 0,
-    usuario_id: 0,
-    quantidade: 0,
-    unid_medida: 'L',
-    tanque: '',
-    observacao: ''
-}) => {
+/**
+ * Cadastra um novo registro de produção.
+ *
+ * @async
+ * @function cadastrar
+ * @param {Object} registro_producao - Dados do registro de produção a ser cadastrado.
+ * @param {number} [registro_producao.produto_id] - ID do produto (inteiro positivo).
+ * @param {number} [registro_producao.usuario_id] - ID do usuário (inteiro positivo).
+ * @param {number} [registro_producao.quantidade] - Quantidade produzida (não negativa).
+ * @param {'L'|'Kg'} [registro_producao.unid_medida] - Unidade de medida: "L" (Litros) ou "Kg" (Quilogramas).
+ * @param {string} [registro_producao.lote_pa] - Lote do produto acabado (máx. 100 caracteres).
+ * @param {string} [registro_producao.codigo] - Código do registro (máx. 100 caracteres).
+ * @param {string} [registro_producao.tanque] - Identificação do tanque (máx. 50 caracteres).
+ * @param {string} [registro_producao.data_inspecao] - Data de inspeção no formato YYYY-MM-DD.
+ * @param {string} [registro_producao.inspecionado_por] - Nome do responsável pela inspeção (máx. 100 caracteres).
+ * @param {string} [registro_producao.validado_por] - Nome do responsável pela validação (máx. 100 caracteres).
+ * @param {string} [registro_producao.data_separacao] - Data de separação no formato YYYY-MM-DD.
+ * @param {string} [registro_producao.hora_separacao] - Hora de separação no formato HH:MM ou HH:MM:SS.
+ * @param {string} [registro_producao.responsavel_separacao] - Nome do responsável pela separação (máx. 100 caracteres).
+ * @param {string} [registro_producao.data_inicio_envase] - Data de início do envase no formato YYYY-MM-DD.
+ * @param {string} [registro_producao.data_fim_envase] - Data de fim do envase no formato YYYY-MM-DD.
+ * @param {string} [registro_producao.responsavel_linha_envase] - Nome do responsável pela linha de envase (máx. 100 caracteres).
+ * @param {string} [registro_producao.amostra_laboratorio] - Descrição da amostra de laboratório (máx. 255 caracteres).
+ * @param {string} [registro_producao.responsavel_laboratorio] - Nome do responsável pelo laboratório (máx. 100 caracteres).
+ * @param {string} [registro_producao.separado_operador] - Nome do operador responsável pela separação (máx. 100 caracteres).
+ * @param {string} [registro_producao.hora_inicio] - Hora de início no formato HH:MM ou HH:MM:SS.
+ * @param {string} [registro_producao.data_inicio] - Data de início no formato YYYY-MM-DD.
+ * @param {string} [registro_producao.hora_final] - Hora final no formato HH:MM ou HH:MM:SS.
+ * @param {string} [registro_producao.data_final] - Data final no formato YYYY-MM-DD.
+ * @param {string} [registro_producao.conferido_por] - Nome do responsável pela conferência (máx. 100 caracteres).
+ * @param {string} [registro_producao.nome_responsavel_laboratorio] - Nome do responsável pelo laboratório (máx. 100 caracteres).
+ * @param {string} [registro_producao.volumes_embalagens] - Informações de volumes e embalagens.
+ * @param {string} [registro_producao.observacao] - Observação adicional.
+ * @param {Record<string, unknown>} [registro_producao.op_extra] - Dados extras em formato JSON.
+ * @param {Record<string, unknown>} [registro_producao.orde_servico] - Ordem de serviço em formato JSON.
+ * @returns {Promise<Object>} Dados do registro de produção cadastrado.
+ * @throws {AppError} Se o cadastro não retornar um resultado válido (HTTP 500).
+ */
+export const cadastrar = async (registro_producao={}) => {
     try {
         const [result] = await pool.query('INSERT INTO registros_producao SET ?', [registro_producao]);
        return await consultarPorId(result.insertId);
@@ -50,17 +81,40 @@ export const listar = async (query={produto_id: 0, usuario_id: 0, descricao: '',
         const whereClause = keys.map(key => { return key ==='unid_medida' ? `registros_producao.${key} LIKE ?` : `${key} LIKE ?`; }).join(' AND ');
         const sql = `
             SELECT
-                registros_producao.id           AS id,
-                registros_producao.quantidade   AS quantidade,
-                registros_producao.unid_medida  AS unid_medida,
-                registros_producao.tanque       AS tanque,
-                registros_producao.observacao   AS observacao,
+                registros_producao.id,
+                registros_producao.quantidade,
+                registros_producao.unid_medida,
+                registros_producao.tanque,
                 registros_producao.createdAt    AS data_registro,
-                registros_producao.produto_id   AS produto_id,
+                registros_producao.produto_id,                
                 produtos.descricao              AS produto_descricao,
                 produtos.n_desenvolvimento      AS produto_n_desenvolvimento,
                 registros_producao.usuario_id   AS usuario_id,
-                usuario.nome                    AS usuario_criador_nome
+                usuario.nome                    AS usuario_criador_nome,
+                registros_producao.lote_pa,
+                registros_producao.codigo,                
+                registros_producao.data_inspecao,
+                registros_producao.inspecionado_por,
+                registros_producao.validado_por,
+                registros_producao.data_separacao,
+                registros_producao.hora_separacao,
+                registros_producao.responsavel_separacao,
+                registros_producao.data_inicio_envase,
+                registros_producao.data_fim_envase,
+                registros_producao.responsavel_linha_envase,
+                registros_producao.amostra_laboratorio,
+                registros_producao.responsavel_laboratorio,
+                registros_producao.separado_operador,
+                registros_producao.hora_inicio,
+                registros_producao.data_inicio,
+                registros_producao.hora_final,
+                registros_producao.data_final,
+                registros_producao.conferido_por,
+                registros_producao.nome_responsavel_laboratorio,
+                registros_producao.volumes_embalagens,
+                registros_producao.observacao,
+                registros_producao.op_extra,
+                registros_producao.orde_servico
             from
                 usuario
                     JOIN
@@ -89,15 +143,40 @@ export const listarDeletados = async () => {
     try {
         const sql = `
             SELECT
-                registros_producao.id           AS id,
-                registros_producao.quantidade   AS quantidade,
-                registros_producao.unid_medida  AS unid_medida,
-                registros_producao.tanque       AS tanque,
-                registros_producao.observacao   AS observacao,
+                registros_producao.id,
+                registros_producao.quantidade,
+                registros_producao.unid_medida,
+                registros_producao.tanque,
                 registros_producao.createdAt    AS data_registro,
-                registros_producao.produto_id   AS produto_id,
+                registros_producao.produto_id,                
                 produtos.descricao              AS produto_descricao,
                 produtos.n_desenvolvimento      AS produto_n_desenvolvimento,
+                registros_producao.usuario_id   AS usuario_id,
+                usuario.nome                    AS usuario_criador_nome,
+                registros_producao.lote_pa,
+                registros_producao.codigo,                
+                registros_producao.data_inspecao,
+                registros_producao.inspecionado_por,
+                registros_producao.validado_por,
+                registros_producao.data_separacao,
+                registros_producao.hora_separacao,
+                registros_producao.responsavel_separacao,
+                registros_producao.data_inicio_envase,
+                registros_producao.data_fim_envase,
+                registros_producao.responsavel_linha_envase,
+                registros_producao.amostra_laboratorio,
+                registros_producao.responsavel_laboratorio,
+                registros_producao.separado_operador,
+                registros_producao.hora_inicio,
+                registros_producao.data_inicio,
+                registros_producao.hora_final,
+                registros_producao.data_final,
+                registros_producao.conferido_por,
+                registros_producao.nome_responsavel_laboratorio,
+                registros_producao.volumes_embalagens,
+                registros_producao.observacao,
+                registros_producao.op_extra,
+                registros_producao.orde_servico,
                 registros_producao.usuario_id   AS usuario_id_criador,
                 registros_producao.deletedBy    AS usuario_id_deletor,
                 usuario.nome                    AS usuario_deletor_nome
@@ -128,17 +207,40 @@ export const consultarPorId = async (id) => {
     try {
         const sql = `
             SELECT
-                registros_producao.id           AS id,
-                registros_producao.quantidade   AS quantidade,
-                registros_producao.unid_medida  AS unid_medida,
-                registros_producao.tanque       AS tanque,
-                registros_producao.observacao   AS observacao,
+                registros_producao.id,
+                registros_producao.quantidade,
+                registros_producao.unid_medida,
+                registros_producao.tanque,
                 registros_producao.createdAt    AS data_registro,
-                registros_producao.produto_id   AS produto_id,
+                registros_producao.produto_id,                
                 produtos.descricao              AS produto_descricao,
                 produtos.n_desenvolvimento      AS produto_n_desenvolvimento,
                 registros_producao.usuario_id   AS usuario_id,
-                usuario.nome                    AS usuario_criador_nome
+                usuario.nome                    AS usuario_criador_nome,
+                registros_producao.lote_pa,
+                registros_producao.codigo,                
+                registros_producao.data_inspecao,
+                registros_producao.inspecionado_por,
+                registros_producao.validado_por,
+                registros_producao.data_separacao,
+                registros_producao.hora_separacao,
+                registros_producao.responsavel_separacao,
+                registros_producao.data_inicio_envase,
+                registros_producao.data_fim_envase,
+                registros_producao.responsavel_linha_envase,
+                registros_producao.amostra_laboratorio,
+                registros_producao.responsavel_laboratorio,
+                registros_producao.separado_operador,
+                registros_producao.hora_inicio,
+                registros_producao.data_inicio,
+                registros_producao.hora_final,
+                registros_producao.data_final,
+                registros_producao.conferido_por,
+                registros_producao.nome_responsavel_laboratorio,
+                registros_producao.volumes_embalagens,
+                registros_producao.observacao,
+                registros_producao.op_extra,
+                registros_producao.orde_servico
             from
                 usuario
                     JOIN

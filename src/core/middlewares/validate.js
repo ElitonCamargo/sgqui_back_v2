@@ -6,7 +6,7 @@ export const validate = (schema) => (req, res, next) => {
     if (!result.success) {
         console.error('Validation error:', result.error);
         return next(new AppError({
-            title: 'Erro ao validar dados da requisição',
+            title: 'Dados de entrada inválidos',
             message: 'Os dados enviados são inválidos. Revise os campos e tente novamente.',
             details: result.error.issues.map(e => `${e.path.join('.')}: ${e.message}`).join(', '),
             code: 400
@@ -23,7 +23,7 @@ export const validateQuery = (schema) => (req, res, next) => {
 
     if (!result.success) {
         return next(new AppError({
-            title: 'Erro ao validar parâmetros de consulta',
+            title: 'Parâmetros de consulta inválidos',
             message: 'Os parâmetros informados são inválidos. Revise os filtros e tente novamente.',
             details: result.error.issues
                 .map((e) => `${e.path.join('.')}: ${e.message}`)
@@ -41,7 +41,7 @@ export const validateParams = (schema) => (req, res, next) => {
     console.log('Validation result for params:', result);
     if (!result.success) {
         return next(new AppError({
-            title: 'Erro ao validar parâmetros da rota',
+            title: 'Parâmetros da rota inválidos',
             message: 'Os parâmetros da rota são inválidos. Revise os valores informados e tente novamente.',
             details: result.error.issues                
                 .map((e) => `${e.path.join('.')}: ${e.message}`)

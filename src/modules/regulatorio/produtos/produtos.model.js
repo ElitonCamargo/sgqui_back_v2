@@ -3,6 +3,7 @@ import { AppError } from '../../../core/utils/AppError.js';
 
 
 export const cadastrar = async (produto={}) => {
+    console.log('Produto a ser cadastrado:', produto);
     try {  
        const [result] = await pool.query('INSERT INTO produtos SET ?', [produto]);
        return await consultarPorId(result.insertId);
