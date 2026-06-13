@@ -45,10 +45,12 @@ const proporcaoMp = (densidade_projeto, etapas=[], quant_producao=1) => {
         return {
         ...etapa,
         etapa_mp: etapa.etapa_mp.map(mp => {        
-            const qtd_materia_prima = densidade_projeto * (mp.percentual / 100) * quant_producao;
+            const qtd_materia_prima_L = densidade_projeto * (mp.percentual / 100) * quant_producao;
+            const qtd_materia_prima_Kg = qtd_materia_prima_L * mp.mp_densidade;
             return {
                 ...mp,
-                qtd_materia_prima
+                qtd_materia_prima_L,
+                qtd_materia_prima_Kg
             };
         })
         }

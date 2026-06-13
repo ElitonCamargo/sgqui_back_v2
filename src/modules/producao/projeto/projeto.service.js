@@ -57,6 +57,7 @@ const estruturarProjeto = (dados) => {
                     "mp_id": etapa_mp.materia_prima_id,
                     "mp_codigo": etapa_mp.materia_prima_codigo,
                     "materia_prima": etapa_mp.materia_prima_nome,
+                    "mp_densidade": etapa_mp.materia_prima_densidade,
                     "percentual": etapa_mp.etapa_mp_percentual,
                     "tempo_agitacao": etapa_mp.etapa_mp_tempo_agitacao,
                     "observacao": etapa_mp.etapa_mp_observacao,
